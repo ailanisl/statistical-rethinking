@@ -1,0 +1,327 @@
+---
+title: "SR_Lec03_notes"
+format: html
+editor: visual
+---
+
+# LEC 03: Geocentric Models Notes
+
+```{r setup, include=FALSE}
+library(rethinking)
+data(Howell1)
+d <- Howell1
+d2 <- d[d$age >= 18,]
+```
+
+Why normal?
+
+1.  generative: summed fluctuations tend toward normal distribution
+2.  inferential: for estimating mean and variance, normal distribution is least informative distribution (max entropy → fewest assumptions)
+
+## Step 1: Question/goal/estimand
+
+-   describe association between adult weight and height
+
+## Step 2: Scientific model 
+
+How does height causally influence weight?
+
+-   DAG:
+
+$$
+H → W ← U
+$$
+
+$$
+W = f(H, U)
+$$
+
+-   "Weight is some function of height and unobserved stuff"
+
+### Generative models
+
+Options
+
+1.  **Dynamic**: incremental growth of organism; both mass and height (length) derive from growth pattern; Gaussian variation result of summed fluctuations
+2.  **Static**: (what we're doing) imagine association between variables w and h at particular age ranges but no mechanism, still at Gaussian variation, imagined as a result of growth history (but not modeled)
+
+For adults, weight is a proportion of height plus the influence of unobserved causes:
+
+$$
+ W = \beta H + U
+$$
+
+Generative code:
+
+```{r}
+# function to simulate weights of individuals from height 
+sim_weight <- function(H,b, sd) { 
+  "simulate U using rnorm for each individual in H, using mean of 0 and sd = standard 
+  deviation of U, unobserved noise"
+  U <- rnorm(length(H), 0, sd) 
+  W <- b*H + U
+  return(W)
+}
+```
+
+-   Goal - estimate $\beta$ but right now, simulating what data look like for any given value of beta
+
+```{r}
+H <- runif(200, min=130, max=170)
+W <- sim_weight(H, b=0.5, sd=5)
+plot(W~H, col=2, lwd=3)
+```
+
+-   Simulated individuals → biologically realistic relationships between weight and height
+
+## Step 3: Statistical model(s) 
+
+**quadratic approximation**: approximate the posterior distribution as a multivariate Gaussian distribution
+
+-   Posterior distributions are very often multivariate Gaussian distributions if the sample is reasonably large
+
+-   `quap` tool so that students enter a list of deterministic and distributional assumptions that define a statistical model - runs it and finds the quadratic approximation of the posterior distribution
+
+In statistical model, UNLIKE generative model, you need priors (when there's no observations, what does the model believe?)
+
+-   Conventionally: you could use flat priors
+
+-   Recommended: concentrated priors, these do NOT build in the answer but in fact, build AWAY from the learning from the data intentionally .
+
+    -   Constrain implied observations of the model to scientifically realistic ranges
+
+### Prior predictive distribution → same as posterior predictive distributions (same animal, same golem) 
+
+-   Priors should express scientific knowledge, but **softly**
+
+    -   don't want predictions that mimic our sample because we haven't looked at our sample yet, we want boundaries that are realistic and reasonable
+
+    -   Often generative process in nature is different than we imagine → want stat model to see and learn about those violations
+
+    -   Scientific knowledge in this case: human biology...
+
+-   When H = 0, W = 0 (someone with 0 height, should also weight 0 kg)
+
+    -   **Strong constraint on alpha (intercept)**: should be close to 0, so give wide (soft) variance: $Normal(0,10)$
+
+-   Weight INC (on avg) with height (POSITIVE); Weight (kg) is less than height (cm) (BETWEEN ZERO AND ONE)
+
+    -   **Constraint on slope**: beta should be positive, between 0 and 1: $Uniform(0,1)$
+
+-   Standard deviations are positive so
+
+    -   Sigma must be positive → greater than 0, SD of 10 is variance of 100 kg and there's not a variance of 100 kg around avg weight so must be in this range: $Uniform(0,1)$
+
+::: callout-important
+## Normal VS Uniform Distribution
+
+**Normal distributions**:
+
+-   Bell-shaped: data clusters around a central mean
+
+-   Model natural phenomena
+
+**Uniform distributions**:
+
+-   Rectangular - all outcomes are equally likely across a range
+
+-   Model consistent, equal probability scenarios
+:::
+
+Perform prior predictive **simulation**
+
+-   Draw the observable implications of these priors in the observable outcome space. I.e., make some lines
+
+```{r}
+n <- 1e3 # num simulations 
+a <- rnorm(n, 0,10) # draw n random alpha from prior distribution
+b <- runif(n, 0,1) # draw n random beta from prior distribution
+
+# Plot implied lines (50), set NULL plot has no points, 
+plot(NULL, xlim=c(130,170), ylim=c(30,70), xlab="height (cm)", ylab="weight (kg)")
+for (j in 1:50) abline(a=a[j], b=b[j], lwd=2, col=2)
+```
+
+This is what the golem imagines before seeing any data... a bit wild.
+
+-   Constraint on beta from 0 to 1 is reasonable - so the slopes are not bad.
+
+-   However, many lines are too low... impossibly so. Someone who is 170cm is not gonna be, on avg 30kg. High lines are impossibly high.
+
+To see this prior predictive distribution (and the implications of your assumptions), as an expert in your field, in this visual way - you realize your assumptions are bad
+
+-   Leave these priors for now. Won't do damage in this simple model. Bayesian is gonna learn the proper relationships among the variables quickly right away.
+
+    ::: callout-note
+    ## Sermon on priors
+
+    -   FALSE ASSUMPTION: Bayesian stats is frequentism + priors
+
+    <!-- -->
+
+    -   Priors are just posterior distributions. It's the posterior distribution, and how it's computed, that's diff from frequentist stats
+
+    -   There are no correct priors, only scientifically justifiable priors (same with posteriors)
+
+        -   Scientific assumptions justify the generative model, which justify the estimator
+
+        -   Justify with info outside the data - like the rest of model
+
+        -   Priors are not so important in simple models
+
+        -   Very important/useful in complex models
+
+            -   Need to practice not: simulate, understand
+    :::
+
+## Step 4: Validate model 
+
+### Simulation-based validation
+
+-   Bare minimum: test statistical model with simulated obs from scientific model
+
+-   Golem might be broken
+
+-   But regardless of what package you're using (like `quap`), even working golems might not deliver what you hoped
+
+    -   Generative process - write it as code to generate synthetic data to show that your estimator, whatever structure it has, can work even in principle
+
+-   Strong test: **Simulation-based calibration**
+
+    -   More stringent tests, how calibrated Bayesian estimators are over full shape
+
+When validating your model with simulations
+
+-   Vary slope and make sure posterior mean tracks it
+
+-   Use large sample to see that it converges to data-generating value
+
+-   Same for other unknowns (parameters)
+
+```{r simulate}
+# Simulate a sample of 10 people 
+set.seed(93)
+H <- runif(10, 130, 170)
+W <- sim_weight(H, b=0.5, sd=5) #data-generating slope will be 0.5, sd=5 or var of 25kg
+
+# run the model to compare
+library(rethinking)
+m3.1 <- quap( 
+  alist(        #quap takes a formula list that mirrors the stat model
+    W ~ dnorm(mu, sigma), 
+    mu <- a + b*H,
+    a ~ dnorm(0,10),
+    b ~ dunif(0,1),
+    sigma ~ dunif(0,10)
+  ), data=list(W=W, H=H))
+
+# summary 
+precis(m3.1)
+```
+
+-   As you see in the precis: the model converges to the data-generating slope $\beta$ we gave, as well as the standard deviation $\sigma$
+
+    -   But having trouble with the intercept $\alpha$
+
+## Step 5: Analyze data 
+
+After tiresome rounds of model validation (takes very long with more complex models), you can take real data sample and the model will run.
+
+Take Howell's data and use it in your model
+
+```{r analysis}
+dat <- list(W=d2$weight, H=d2$height)
+m3.2 <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- a + b*H,
+    a ~ dnorm(0,10),
+    b ~ dunif(0,1),
+    sigma ~ dunif(0,10)
+  ), data=dat
+)
+precis(m3.2)
+```
+
+-   beta is around 0.5 yay
+
+-   sigma is around 5
+
+-   but intercept alpha is definitely not zero → suggests that there's something globally nonlinear about the relationship between height and weight (cuz you can't have negative weights)
+
+    -   But works for ADULT w and h
+
+    -   This intercept is just a weird, non-biological term that's needed to make the line fit
+
+**Pairs plot** plots the pairs of unknowns from the posterior distrib against one another
+
+```{r pairs}
+pairs(m3.2)
+```
+
+-   [Diagonal]{.underline}: density of each unknown (a,b, sigma) → Gaussian bc that's what quap produces
+
+-   [Upper right 3 cells]{.underline}: Posterior distributions as plotted from above for each pair
+
+    -   Intercept and slope are very correlated - strong covariation along tight line (how linear regressions often work)
+
+    -   Can't interpret intercept and slope separately
+
+#### First Law of statistical interpretation: 
+
+-   the parameters are not independent of one another and cannot be independently interpreted
+
+-   Instead, push out posterior predictions and describe/interpret those
+
+    -   `extract.samples` creates synthetic data table of samples from the posterior distributions that adhere to the covariance structure
+
+### Posterior predictive distribution 
+
+**The posterior is full of lines**
+
+```{r}
+# extract samples from the model of weight as a function of height for the actual Howell sample 
+post <- extract.samples(m3.2)
+
+# Plot the Howell sample, each red dot is person in Howell's dataset 
+plot(d2$height, d2$weight, col=2, lwd=3, xlab="height (cm)", ylab="weight (kg)")
+
+# Draw 20 lines randomly sampled from the posterior distributions
+for (j in 1:20)
+  abline(a=post$a[j], b=post$b[j], lwd=1)
+```
+
+Bayesian updating perspective
+
+-   ... more red dots - more narrow range of lines
+
+**The posterior is full of people**
+
+-   Lines of posterior - slopes very little bit but in a fairly narrow range
+
+    -   Estimates ONLY the AVERAGE relationship between weight and height
+
+-   Most of red dots are not on the line → Lots of variation from the U (unobserved stuff)
+
+Sometimes you want the U on the graph, which comes from sigma
+
+```{r}
+# Plot the Howell sample, each red dot is person in Howell's dataset 
+plot(d2$height, d2$weight, col=2, lwd=3, xlab="height (cm)", ylab="weight (kg)")
+
+# Draw 20 lines randomly sampled from the posterior distributions
+for (j in 1:20)
+  abline(a=post$a[j], b=post$b[j], lwd=1)
+
+# put some new data ranging between 130-190 cm
+height_seq <- seq(130, 190, len=20) 
+
+# use sim, give it the fit quap model and the new data 
+W_postpred <- sim(m3.2,
+                  data=list(H=height_seq))
+
+#take percentile interval for each height value 
+W_PI <- apply(W_postpred, 2, PI)
+lines(height_seq, W_PI[1,], lty=2, lwd=2)
+lines(height_seq, W_PI[2,], lty=2, lwd=2)
+```

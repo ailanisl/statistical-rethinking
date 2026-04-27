@@ -1,0 +1,498 @@
+---
+title: "SR_02_notes"
+output: html_document
+date: "2026-04-10"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(rethinking)
+```
+
+
+### Workflow 
+1. Define generative model of sample 
+2. Define a specific estimand 
+3. Design a statistical way to produce estimate
+4. Test (3) using (1)
+5. Analyze sample, summarize 
+
+### Probability 
+
+Think of the Earth as a 4-sided globe. 
+
+```{r 2.1}
+sample <- c("W","L","W","W", "W", "L", "W","L","W")
+W <- sum(sample=="W") #number of W observed 
+L <- sum(sample=="L") # number of L observed 
+p <- c(0,0.25,0.5,0.75, 1) # proportions W
+ways <- sapply(p, function(q) (q *4)^W *((1-q)*4)^L)
+prob <- ways/sum(ways)
+cbind(p, ways, prob)
+```
+
+# Test Before You Est(imate)
+## (1) Code a generative simulation 
+
+###2.3 function to toss a globe covered p by water N times 
+```{r function to toss a globe covered p by water N times}
+sim_globe <- function(p=0.7, N=9) {
+  sample(c("W","L"), size=N, prob=c(p, 1-p), replace=TRUE)
+}
+
+sim_globe()
+replicate(sim_globe(p=0.5,N=9), n=10)
+```
+
+### 2.5-2.6 Test the simulation on extreme settings 
+```{r 2.5-6}
+sim_globe(p=1, N=11)
+sum(sim_globe(p=0.5, N=1e4) == "W") / 1e4  #the proportion of water should be very close to 0.5 
+```
+
+
+*If you test nothing, you miss everything*
+
+## (2) Code the estimator
+Ways for p to produce $W,L = (4p)^W * (4-4p)^L$
+
+### 2.7 Function to compute posterior distribution
+```{r 2.7}
+compute_posterior <- function(the_sample, poss=c(0,0.25,0.5,0.75,1)) {
+  W <- sum(the_sample=="W") # number of W observed
+  L <- sum(sample=="L") # number of L observed 
+  ways <- sapply(poss, function(q) (q *4)^W *((1-q)*4)^L)
+  post <- ways/sum(ways)
+  bars <- sapply(post, function(q) make_bar(q))
+  data.frame(poss, ways, post=round(post,3), bars)
+  #cbind(poss, ways, post)
+}
+```
+
+## (3) Test (2) with (1)
+### 2.9 Use the estimator on our generative simulations
+``` {r 2.9}
+compute_posterior(sim_globe())
+```
+The posterior probability is the probability of seeing W on the next toss (I think?)
+
+Simulate the experiment many times to see the sampling variation across experiments and how that changes with sample size and assumptions about the generative process. 
+
+1. Test the estimator where the answer is known. 
+2. Explore different sampling designs 
+3. Develop intuition for sampling and estimation 
+
+
+# Adding More Possibilities 
+Instead of just a 4-sided globe, there are infinite sides. We need every possible proportion. 
+* 4-sided globe: 5 possibilities for the proportion of W [0, 0.25, 0.5, 0.75, 1.0]
+* 10-sided globe: 11 possibilities: [0, 0.1, 0.2, 0.3, 0.4,0.5,0.6,0.7,0.8,0.9,1]
+* 20-sided globe: 21 possibilities 
+
+With greater n possibilities, the hill of posterior possibilities gets smoother (and shorter)
+
+Globe: polyhedron with an infinite number of sides
+
+* The posterior probability of any "side" p is proportional to: 
+      $p^{W}(1-p)^{L}$
+
+* The product is the relative number of ways that any value p could produce any particular sample with W and L
+
+* Only trick is normalizing to probability. After a little calculus: 
+
+Posterior probability of 
+$p = \frac{(W+L+1)!}{W!L!}p^{W}(1-p)^{L}$
+
+With infinite number of possibilities, we call the post prob _density_
+
+```{r infinite}
+par(mfrow = c(2, 3))
+p <- seq(0,1, length.out=200)
+
+plot(p, p, type = "l",main = "W", ylab="density")
+plot(p, (p*(1-p)), type = "l",main="W L", ylab="density")
+plot(p, (p^2 *(1-p)),type = "l", main="W L W", ylab="density")
+plot(p, (p^3 *(1-p)),type = "l", main="W L W W", ylab="density")
+plot(p, (p^4 * (1-p)),type = "l", main="W L W W W", ylab="density")
+plot(p, (p^4 * (1-p)^2 ),type = "l", main="W L W W W L", ylab="density")
+```
+
+More tosses, higher density in narrower p space (above 0.5 and we know the Earth is covered by more W than L).
+
+Last three tosses: 
+```{r last-tosses }
+par(mfrow = c(2, 3))
+p <- seq(0,1, length.out=200)
+plot(p, (p^5 * (1-p)^2), type = "l", main="W L W W W L W", ylab="density")
+plot(p, (p^5 * (1-p)^3), type = "l",main="W L W W W L W L", ylab="density")
+plot(p, (p^6 * (1-p)^3), type = "l", main="W L W W W L W L W", ylab="density")
+
+```
+
+### Proper code 
+
+```{r echo= FALSE, fig.width=8, fig.height=8}
+# Define a grid 
+p <- seq(0,1, length.out=200)
+
+#Define update function 
+update_posterior <- function(W, L, p) {
+  p^W * (1 -p)^L 
+}
+
+# Define sequences 
+obs <- c("W","L","W","W","W","L","W","L","W")
+prefixes <- lapply(1:length(obs), function(i) obs[1:i])
+
+prior <- rep(1, length(p))
+prior <- prior / sum(prior)
+
+par(mfrow = c(3, 3), mar = c(3, 3, 2, 1))
+
+for (i in seq_along(prefixes)) {
+  
+  obs_i <- prefixes[[i]]
+  
+  W <- sum(obs_i == "W")
+  L <- sum(obs_i == "L")
+
+  
+  dens <- update_posterior(W,L, p)
+  dens <- dens / sum(dens)
+
+  # plot PRIOR (dashed, light)
+  plot(p, prior,
+       type = "l",
+       lty = 2,
+       lwd = 2,
+       col = "gray50",
+       ylim = c(0, max(dens) * 1.1),
+       xlab = "p (water)",
+       ylab = "density",
+       main = paste(obs_i, collapse = " "))
+  
+  lines(p, dens,
+        lwd = 3,
+        col = "lightblue") 
+  prior <- dens # update prior 
+}
+
+```
+
+
+## Some important points about Bayesian Inference
+1. __There is no minimum sample size (minimum is 1)__
+
+    + Not informative, but accurately representing the relative confidence we should assign to each of the possible proportions. 
+  
+2. __Shape embodies sample size (all info about the generative process, proportion)__
+    + Post distribution embodies the sample size 
+
+    + When we observe more data, no need to go to original dataset, just take the post distribution and update it (where each possibility can produce new obs)
+    
+3. __No point estimates: the posterior distribution _is_ the point distribution__
+
+    + When we work with it, we're working with the whole distribution everytime 
+    
+    + Mode: max of the hill 
+    + Mean: central probability estimate 
+    
+    + No point by itself is sufficient 
+    
+    + when we compute things from the post distribution, we use the __entire distribution, never a point from the distribution__ 
+    
+4. __No one true interval of the distribution__ 
+
+    + Intervals are unimportant. 
+    
+    + merely quick __summaries of the shape of posterior distribution__
+    
+        - Confidence intervals - 50%, 89%, 99% (the lower and upper bounds)
+      
+        - nothing special happens at the boundary (arbitrary)
+        
+        - only thing 95% intervals try to do is reduce Type I error (significance testing), but that's not what we're trying to do here. We're trying to estimate something. 
+        
+# From Posterior to Prediction (analyze sample, summarize)
+We produced the posterior distribution, we got an estimate in principle, but you need to know what you can do with that curve on your screen. 
+
+### What can we do with the posterior distribution (a kind of estimate?)
+Depends on the scientific purpose in the particular context/stage of the research project 
+
+__Whatever you do with it__
+
+- Implications of model depend upon __entire__ posterior 
+
+- __Must__ average any inference over the entire posterior (averaging over the uncertainty in the post)
+
+- This usually requires integral calculus 
+
+- Or, we can just take samples from the posterior 
+
+
+## Sampling the posterior 
+
+- Draw 1000 (1e3) samples from the posterior distribution = post_samples (proportions of water)
+
+- (6+1) and (3+1) are the way that the beta distribution arguments represent the data (??)
+``` {r 2.19}
+post_samples <- rbeta(1e3, 6+1, 3+1)
+
+dens(post_samples, lwd=4, col=2, xlab="proportion water", adj=0.1)
+curve( dbeta(x,6+1,3+1), add=TRUE, lty=2, lwd=3)
+```
+
+
+- Red jagged thing is very narrowly estimated density from the samples
+
+    + It's a sample = finite, local areas = jaggy, produces great approx of real distribution shape 
+
+    + better distribution = more samples 
+    
+What do you want to calculate from this? 
+
+### Posterior Predictive Distribution
+Prediction for future experiment made from existing estimate. 
+
+Given what we've learned about globe so far, what would we bet if we got more samples/tosses from it?
+
+Ten more tosses, how many W's do we expect to see. 
+
+Randomly sampling any particular value from the posterior distribution. Drawing random samples in proportion to posterior distribution. 
+
+- For each of the particular samples, we can calculate the sampling/predictive distribution for p for possible experiments (9 more tosses)
+
+- Count the number of W tosses in 9 more tosses 
+
+- Comes from the sim_globe function 
+
+- Red bar is central tendency
+
+- Then add it to the posterior predictive distribution 
+
+    + flatter and more spread out because it contains samples from all the of the predictive distributions, but it contains samples in proportion to how plausible they are 
+    
+    + contains samples from predictive distributions that are more plausible 
+    
+    + accurately characterizes all the uncertainty in our estimate (posterior distr) about what would happen if we do the experiment again 
+    
+``` {r }
+#post_samples <- rbeta(1e4, 6+1,3+1)
+#pred_post <- sapply(post_samples, function(p){sum(sim_globe(p,10)=="W")})
+#tab_post <- table(pred_post)
+#for (i in 0:10) lines(c(i,i), c(0,tab_post[i+1]), lwd=4, col=4)
+
+```
+Numerical Monte-Carlo way to do the interval calculus 
+
+### Sampling is easy and fun 
+
+- Sample from posterior, compute desired quantity for each sample, profit
+
+- Much easier than doing integrals 
+
+- Turn a calc problem into a data summary problem 
+
+- MCMC produces only samples anyway 
+
+# Summary 
+### Bayesian Data Analysis
+
+> for each possible explanation of data,
+>
+> count all the ways the data can happen.
+>
+> Explanations with more ways to produce the data are more plausible. 
+
+### Bayesian modesty 
+Bayesian inference gives no guarantees except that it's logical. 
+
+Probability theory is a method of logically deducing implications of data under assumptions that you must choose. 
+
+- Doesn't really tell us what's happening in the world, but helps us figure out what's happening in the world because it lets us work with logical implications of assumptions and compare those with data. Then, theory-development loop thru that action 
+
+- Quantitative asset that activates our qualitative knowledge as scientists 
+    
+    + Bayesian inference = objective 
+    + Inputs into it = subjective (expertise, revise beliefs, activate objective procedure, etc.)
+
+Any framework selling you more is hiding assumptions. 
+
+
+
+
+
+# Textbook Notes 
+
+## Components of the model 
+### Variables 
+
+- __Parameters__: unobserved variables 
+
+    + target of inference, p, the proportion of water on the globe  (the estimand defined)
+
+- __Observed variables__: counts of water and land 
+
+    + __Likelihood__: a distribution function assigned to an observed variable 
+
+### Observed Variables
+#### Binomial Distribution
+The common "coin tossing" distribution. Assumptions that (1) every toss is independent of the other tosses and (2) the prob of W is the same on every toss 
+
+> The counts of "water" W and "land" L are distributed binomially, with probability p of "water" on each toss 
+
+Binomial function is built into R (dbinom, or density binomial)
+Compute likelihood of the data (6 Ws in 9 tosses) under any value of p with: 
+``` {r}
+dbinom(6, size=9, prob=0.5)
+```
+
+__Maximum entropy__: There are two events, and the probabilities of each in each trial are p and 1-p. 
+
+### Unobserved Variables 
+A Bayesian machine must have an initial plausibility (prior) assignment for each possible value of the parameter. 
+
+Where do priors come from? Engineering assumptions chosen to help the machine learn, and Scientific assumptions chosen to reflect what we know about the phenomenon. 
+
+- Flat priors (when N=0) are common, but hardly the base prior 
+
+- Can try out different priors when at a loss for a strong argument for any particular prior 
+
+> Because the prior is an assumption, it should be interrogated like other assumptions: by altering it and checking how sensitive inference is to the assumption.
+
+### Summarize model 
+The observed vars W and l are given relative counts thru the binomial distribution. Shortcut: 
+$ W ~ Binomial(N,p) $ 
+where $ N = W + L $. Assumption here is the relative counts of ways to realize W in N trials with probability p on each trial comes from the binomial distribution. And the unobserved parameter p similarly gets: 
+$ p ~ Uniform(0,1) $ 
+Which means that p has a uniform (FLAT) prior over its entire possible range, from 0 to one. 
+
+- this is obviously not the best we could do, since we know the Earth has more water than land, even if we do not know the exact proportion yet.
+
+## Bayes Theorem 
+Def of posterior distribution. 
+
+Joint prob of data W and L and any particular value of $p$ is: 
+
+$Pr(W, L, p) = Pr(W,L | p)Pr(p)$
+
+- _Probability of rain and cold on same day is equal to prob of rain, given it's cold multiplied by the prob that it's cold_
+
+Take the reverse: _Probability of rain and cold on the same day is also equal to the prob of cold, given that it's rainy, multiplied by the prob that it's rainy._ 
+
+$Pr(W,L,p) = Pr(p|W,L)Pr(W,L)$
+
+These two defs equal each other so: 
+
+$Pr(W,L | p)Pr(p) = Pr(p|W,L)Pr(W,L)$
+
+So to solve for $Pr(p|W,L)$: 
+
+$Pr(p|W,L) = \frac{Pr(W,L|p)Pr(p)}{Pr(W,L)}$ 
+
+What's the weird thing in the denom? It;s the average probability of the data, which standardizes the posterior (ensure it sums to 1)
+
+The posterior is proportional to the product of the prior and the probability of the data. 
+
+## Fitting the Model 
+### Grid approximation 
+Can get a great approx of continuous posterior with only a finite grid of parameter values 
+
+Mainly useful as pedagogical tool, but scales poorly when parameters INC. 
+```{r grid_approx}
+# define grid
+p_grid <- seq( from=0 , to=1 , length.out=20 )
+
+# define prior
+prior <- rep( 1 , 20 )
+
+# compute likelihood at each value in grid
+likelihood <- dbinom( 6 , size=9 , prob=p_grid )
+
+#compute unstandardized posterior at each parameter value (product of likelihood and prior) 
+unstd.posterior <- likelihood * prior
+
+# standardize the posterior, so it sums to 1
+posterior <- unstd.posterior / sum(unstd.posterior)
+
+# DISPLAY 
+plot(p_grid, posterior, type="b", xlab="prob of water", ylab ="posterior prob")
+
+```
+
+```{r }
+step_prior <- ifelse( p_grid < 0.5 , 0 , 1 )
+plot(step_prior, type ="l")
+```
+
+#### Let's try the prior where we assume a 0% chance of the true proportion of water being less than 50%
+
+``` {r 2.52}
+
+p_grid <- seq( from=0 , to=1 , length.out=200 )
+
+#define prior
+step_prior <- ifelse( p_grid < 0.5 , 0 , 1 )
+
+# compute likelihood at each value in grid
+likelihood <- dbinom( 6 , size=9 , prob=p_grid )
+
+#compute unstandardized posterior at each parameter value (product of likelihood and prior) 
+unstd.posterior <- likelihood * step_prior
+
+# standardize the posterior, so it sums to 1
+posterior <- unstd.posterior / sum(unstd.posterior)
+
+# DISPLAY 
+plot(p_grid, posterior, type="l", xlab="prob of water", ylab ="posterior prob")
+
+```
+
+
+#### Let's try that with a peaked prior that shifts and skews the posterior, relative to the likelihood.
+``` {r}
+#define prior
+peaked_prior <- exp( -5*abs( p_grid - 0.5 ) )
+
+plot(peaked_prior, type ="l")
+```
+
+``` {r 2.53}
+
+p_grid <- seq( from=0 , to=1 , length.out=200 )
+
+#define prior
+peaked_prior <- exp( -5*abs( p_grid - 0.5 ) )
+
+# compute likelihood at each value in grid
+likelihood <- dbinom( 6 , size=9 , prob=p_grid )
+
+#compute unstandardized posterior at each parameter value (product of likelihood and prior) 
+unstd.posterior <- likelihood * peaked_prior
+
+# standardize the posterior, so it sums to 1
+posterior <- unstd.posterior / sum(unstd.posterior)
+
+# DISPLAY 
+plot(p_grid, posterior, type="l", xlab="prob of water", ylab ="posterior prob")
+
+```
+
+
+### Quadratic approximation
+Under quite general conditions, the region near the peak of the posterior distribution will be nearly Gaussian—or “normal”—in shape. This means the posterior distribution can be usefully approximated by a __Gaussian distribution__. A Gaussian distribution is convenient, because it can be completely described by only two numbers: the location of its center (mean) and its spread (variance).
+
+- A Gaussian approximation is called “quadratic approximation” because the logarithm of a Gaussian distribution forms a parabola. And a parabola is a quadratic function. So this approximation essentially represents any log-posterior with a parabola.
+
+More Later 
+
+### 3. Markov chain Monte-Carlo 
+
+- Capable of handling highly complex models 
+
+- Counter-intuitive model fitting 
+
+    + MCMC draws samples from the posterior, where you end up with a collection of parameter values, and the frequencies of these values correspond to the posterior plausibilities 
+    
+    + Build a picture of the posterior from the histogram of these samples 
+

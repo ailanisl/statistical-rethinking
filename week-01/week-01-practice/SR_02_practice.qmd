@@ -1,0 +1,418 @@
+---
+title: "SR_week1_practice"
+format: html
+editor: visual
+---
+
+# Week 1 Practice & Homework
+
+```{r setup, include=FALSE}
+library(rethinking)
+```
+
+Statistical Rethinking (2ed)
+
+## Chapter 2 Practice Problems
+
+**2E1**. Which of the expressions below correspond to the statement: the probability of rain on Monday?
+
+(1) Pr(rain)
+
+(2) **Pr(rain\|Monday)**
+
+(3) Pr(Monday\|rain)
+
+(4) Pr(rain, Monday)/ Pr(Monday)
+
+**2E2**. Which of the following statements corresponds to the expression: Pr(Monday\|rain)?
+
+(1) The probability of rain on Monday.
+
+(2) The probability of rain, given that it is Monday.
+
+(3) **The probability that it is Monday, given that it is raining.**
+
+(4) The probability that it is Monday and that it is raining.
+
+**2E3**. Which of the expressions below correspond to the statement: the probability that it is Monday, given that it is raining?
+
+**(1) Pr(Monday\|rain)**
+
+(2) Pr(rain\|Monday)
+
+(3) Pr(rain\|Monday) Pr(Monday)
+
+(4) **Pr(rain\|Monday) Pr(Monday)/ Pr(rain)**
+
+(5) Pr(Monday\|rain) Pr(rain)/ Pr(Monday)
+
+**2E4.** The Bayesian statistician Bruno de Finetti (1906–1985) began his book on probability theory with the declaration: “PROBABILITY DOES NOT EXIST.” The capitals appeared in the original, so I imagine de Finetti wanted us to shout this statement. What he meant is that probability is a device for describing uncertainty from the perspective of an observer with limited knowledge; it has no objective reality. Discuss the globe tossing example from the chapter, in light of this statement. What does it mean to say “the probability of water is 0.7”?
+
+-   **This just means that it is our assumption that the probability of water is 0.7, given our pre-given knowledge that most of the Earth is covered by water. This assumption is not based on certainty, rather on second-hand knowledge from books and science courses, which in turn use measurements (inherently indirect and human-based) to arrive at that proportion.**
+
+**2M1.** Recall the globe tossing model from the chapter. Compute and plot the *grid approximate* posterior distribution for each of the following sets of observations. In each case, assume a *uniform prior* for p.
+
+```{r fig.width=12, fig.height=4}
+grid_approx_binomial <- function(W, tosses, points) {
+  p_grid <- seq(0,1, length.out = points)
+  prior <- rep(1, points)
+  likelihood <- dbinom(W, tosses, p_grid)
+  post_unstd<-likelihood * prior 
+  post_std <- post_unstd / sum(post_unstd)
+  return(list(p_grid = p_grid, posterior = post_std))
+}
+
+par(mfrow = c(1,3))
+#1 W W W
+res1 <- grid_approx_binomial(3, 3, 200)
+plot(res1$p_grid, res1$posterior, type="l", xlab = "proportion water", ylab= "posterior prob", main="W W W")
+
+#2 W W W L 
+res2 <- grid_approx_binomial(3, 4, 200)
+plot(res2$p_grid, res2$posterior, type="l", xlab = "proportion water", ylab= "posterior prob", main="W W W L")
+
+
+#3 L W W L W W W
+res2 <- grid_approx_binomial(5, 7, 200)
+plot(res2$p_grid, res2$posterior, type="l", xlab = "proportion water", ylab= "posterior prob", main="L W W L W W W")
+
+```
+
+**2M2** Now assume a prior for p that is equal to zero when p \< 0.5 and is a positive constant when p ≥0.5. Again compute and plot the grid approximate posterior distribution for each of the sets of observations in the problem just above.
+
+```{r fig.width=12, fig.height=4}
+grid_approx_step <- function(W, tosses, points) {
+  p_grid <- seq(0,1, length.out = points)
+  prior_step <- ifelse( p_grid < 0.5 , 0 , 1 )
+  likelihood <- dbinom(W, tosses, p_grid)
+  post_unstd<-likelihood * prior_step 
+  post_std <- post_unstd / sum(post_unstd)
+  return(list(p_grid = p_grid, posterior = post_std))
+}
+
+par(mfrow = c(1,3))
+#1 W W W
+res1 <- grid_approx_step(3, 3, 200)
+plot(res1$p_grid, res1$posterior, type="l", xlab = "proportion water", ylab= "posterior prob", main="W W W")
+
+#2 W W W L 
+res2 <- grid_approx_step(3, 4, 200)
+plot(res2$p_grid, res2$posterior, type="l", xlab = "proportion water", ylab= "posterior prob", main="W W W L")
+
+#3 L W W L W W W
+res2 <- grid_approx_step(5, 7, 200)
+plot(res2$p_grid, res2$posterior, type="l", xlab = "proportion water", ylab= "posterior prob", main="L W W L W W W")
+```
+
+**2M3**. Suppose there are two globes, one for Earth and one for Mars. The Earth globe is 70% covered in water. The Mars globe is 100% land. Further suppose that one of these globes—you don’t know which—was tossed in the air and produced a “land” observation. Assume that each globe was equally likely to be tossed. Show that the posterior probability that the globe was the Earth, conditional on seeing “land” (Pr(Earth\|land)), is 0.23.
+
+```{r 2M3}
+set.seed(42)
+
+N <- 10000  #number of simulations 
+
+# Simulate globe toss, either Mars or Earth
+globe <- sample(c("Mars", "Earth"), size=N, replace=TRUE)
+
+# simulate observations 
+obs <- ifelse( 
+      globe == "Earth", 
+        sample(c("W", "L"), size = N, replace = TRUE, prob = c(0.7,0.3)),
+      #else
+      "L" # Mars will always be L 
+  )
+
+# Count how many times L was seen 
+land_cases <- obs == "L"
+
+# Find how many of those L cases were from Earth tosses, on average 
+posterior_est <- mean(globe[land_cases] == "Earth")
+
+sprintf("When we get land, the globe was Earth approx %f of the time", posterior_est)
+
+```
+
+## Chapter 3 Practice Problems
+
+#### Easy
+
+```{r 3.27}
+p_grid <- seq(0,1,length.out=1000)
+prior <- rep(1, 1000)
+likelihood <- dbinom(6, size=9, prob=p_grid)
+posterior <- likelihood * prior
+posterior <- posterior/sum(posterior)
+set.seed(100)
+samples <- sample(p_grid, prob=posterior, size=1e4, replace=TRUE)
+```
+
+**3E1**. How much posterior probability lies below p = 0.2?
+
+```{r}
+sum(samples < 0.2) / sum(samples)
+```
+
+**3E2**. How much posterior probability lies above p = 0.8?
+
+```{r}
+sum(samples > 0.8 ) / sum(samples)
+```
+
+**3E3**. How much posterior probability lies between p = 0.2 and p = 0.8?
+
+```{r}
+sum(samples > 0.2 & samples < 0.8) / sum(samples)
+```
+
+**3E4.** 20% of the posterior probability lies below which value of p?
+
+```{r}
+quantile(samples, 0.2)
+```
+
+**3E5**. 20% of the posterior probability lies above which value of p?
+
+```{r}
+quantile(samples, 0.8)
+```
+
+**3E6.** Which values of p contain the narrowest interval equal to 66% of the posterior probability?
+
+```{r}
+HPDI(samples, p=0.66)
+```
+
+**3E7**. Which values of p contain 66% of the posterior probability, assuming equal posterior probability both below and above the interval?
+
+```{r 3E7}
+PI(samples, p=0.66)
+```
+
+#### Medium
+
+**3M1**. Suppose the globe tossing data had turned out to be 8 water in 15 tosses. Construct the posterior distribution, using grid approximation. Use the same flat prior as before.
+
+```{r}
+p_grid <- seq(0,1, length.out = 1000)
+prior <- rep(1, 1000)
+likelihood <- dbinom(8, size=15, prob=p_grid)
+posterior <- likelihood * prior
+posterior <- posterior/sum(posterior)
+plot(p_grid, posterior, type="l", xlab="prob water", ylab="posterior prob")
+```
+
+**3M2.** Draw 10,000 samples from the grid approximation from above. Then use the samples to calculate the 90% HPDI for p.
+
+```{r}
+samples_3M <- sample(p_grid, prob=posterior, size=1e4, replace=TRUE)
+HPDI(samples_3M, p=0.9)
+PI(samples_3M, p=0.9)
+```
+
+**3M3**. Construct a posterior predictive check for this model and data. This means simulate the distribution of samples, averaging over the posterior uncertainty in p. What is the probability of observing 8 water in 15 tosses?
+
+```{r}
+dummy <- rbinom(1e5, size=15, p=(8/15))
+simplehist(dummy, xlab="dummy water count")
+```
+
+```{r 3M}
+pred_post_3M <- rbinom(1e5, size=15, p=samples_3M)
+simplehist(pred_post_3M)
+```
+
+**3M4**. Using the posterior distribution constructed from the new (8/15) data, now calculate the probability of observing 6 water in 9 tosses.
+
+```{r 3M4}
+sum(pred_post_3M == 6)/1e5
+```
+
+3M5. Start over at 3M1, but now use a prior that is zero below p= 0.5 and a constant above p= 0.5. This corresponds to prior information that a majority of the Earth’s surface is water. Repeat each problem above and compare the inferences. What difference does the better prior make? If it helps, compare inferences (using both priors) to the true value p= 0.7.
+
+```{r 3M5}
+step_post <- grid_approx_step(8, 15, 1000)
+samples_step <- sample(p_grid, prob=step_post$posterior, size=1e4, replace=TRUE)
+print(HPDI(samples_step, 0.9))
+
+# sampling: dummy counts
+dummy_step <- rbinom(p_grid, size=15, prob=(8/15))
+simplehist(dummy_step, xlab="dummy water counts") 
+
+# posterior predictive check
+post_pred_step <- rbinom(p_grid, size=15, prob=samples_step)
+simplehist(post_pred_step)
+print(sum(post_pred_step==8)/sum(post_pred_step))
+
+# prob of 6W seen in 9 tosses
+print(sum(post_pred_step==6)/sum(post_pred_step))
+```
+
+**3M6.** Suppose you want to estimate the Earth’s proportion of water very precisely. Specifically, you want the 99% percentile interval of the posterior distribution of p to be only 0.05 wide. This means the distance between the upper and lower bound of the interval should be 0.05. How many times will you have to toss the globe to do this?
+
+```{r}
+1e4
+```
+
+#### Hard
+
+```{r}
+data(homeworkch3)
+boys_total <- sum(birth1) + sum(birth2) #total num of boys born across all births
+births_total <- length(birth1) + length(birth2)
+
+boys_total
+births_total
+```
+
+These data indicate the gender (male=1, female=0) of officially reported first and second born children in 100 two-child families.
+
+**3H1**. Using grid approximation, compute the posterior distribution for the probability of a birth being a boy. Assume a uniform prior probability. Which parameter value maximizes the posterior probability?
+
+```{r 3H1}
+p_grid <- seq(0,1, length.out = 1000)
+priors_birth <- rep(1, 1000)
+likelihood_birth <- dbinom(boys_total, size=births_total, p_grid)
+posterior_birth <- priors_birth * likelihood_birth 
+posterior_birth <- posterior_birth / sum(posterior_birth)
+
+plot(p_grid, posterior_birth, type="l")
+
+p_grid[which.max(posterior_birth)]
+```
+
+**3H2**. Using the sample function, draw 10,000 random parameter values from the posterior distribution you calculated above. Use these samples to estimate the 50%, 89%, and 97% highest posterior density intervals.
+
+```{r 3H2}
+birth_samples <- sample(p_grid, prob=posterior_birth, size=1e4, replace=TRUE)
+
+HPDI(birth_samples, prob=0.5)
+HPDI(birth_samples, prob=0.89)
+HPDI(birth_samples, prob=0.97)
+```
+
+**3H3**. Use rbinom to simulate 10,000 replicates of 200 births. You should end up with 10,000 numbers, each one a count of boys out of 200 births. Compare the distribution of predicted numbers of boys to the actual count in the data (111 boys out of 200 births). There are many good ways to visualize the simulations, but the dens command (part of the rethinking package) is probably the easiest way in this case. Does it look like the model fits the data well? That is, does the distribution of predictions include the actual observation as a central, likely outcome?
+
+```{r 3H3}
+dummy_births <- rbinom(1e4, size=200, prob=birth_samples)
+dens(dummy_births)
+simplehist(dummy_births, xlab="dummy boy counts")
+```
+
+```{r}
+mean(dummy_births)
+median(dummy_births)
+```
+
+**3H4**. Now compare 10,000 counts of boys from 100 simulated first borns only to the number of boys in the first births, birth1. How does the model look in this light?
+
+```{r 3H4}
+# This question is asking: does the model (built on all 200 births) predict first borns well on their own? It's a model check. 
+dummy_fb <- rbinom(1e4, size=100, prob=birth_samples)
+dens(dummy_fb)
+
+abline(v=sum(birth1), col="red")
+```
+
+-   The model check shows that there's a higher proportion of boys in the first births, according to the model. The model expects \~55 boys in 100 first births (it learned a rate of 0.555 from all 200 births). I.e., it overestimates boys in first births because it was polluted by the unusually high male rate in 2nd births.
+
+    -   But actually observed only 51 boys in first births
+
+-   This seems like it should mean fewer boys in first births, but...
+
+    -   First births: 51 boys out of 100 = 51% boys
+
+    -   Second births: 111-51 = 60 boys out of 100 = 60% boys
+
+-   So the overall rate of 55.5% is being dragged up by the second births. The first births alone are pretty close to 50/50, while 2nd births are heavily male-skewed.
+
+**Compare this to the simulation computed from the posterior distribution of ONLY birth1 data.**
+
+```{r}
+# Compare this to the simulation computed from the posterior distribution of ONLY birth1 data 
+likelihood_firstbirth <- dbinom(sum(birth1), size=100, p_grid)
+posterior_firstbirth <- priors_birth * likelihood_firstbirth 
+posterior_firstbirth <- posterior_firstbirth / sum(posterior_birth)
+
+# sampling 
+samples_fb <- sample(p_grid, size=1e5, prob=posterior_firstbirth, replace=TRUE)
+
+first_born_sim <- rbinom(1e4, size=100, prob=samples_fb)
+dens(first_born_sim)
+abline(v=sum(birth1), col="red")
+```
+
+**3H5**. The model assumes that sex of first and second births are independent. To check this assumption, focus now on second births that followed female firstborns. Compare 10,000 simulated counts of boys to only those second births that followed girls. To do this correctly, you need to count the number of firstborns who were girls and simulate that many births, 10,000 times. Compare the counts of boys in your simulations to the actual observed count of boys following girls. How does the model look in this light? Any guesses what is going on in these data?
+
+```{r 3H5}
+n_girls1 = sum(birth1 == 0)
+
+# Filter to find boy2 given girl1
+n_boys2 <- sum(birth2[(birth1 == 0)]) # the sum of second born boys after firstborn girl
+
+# simulate 
+dummy_check <- rbinom(1e4, size=n_girls1, prob = birth_samples)
+simplehist(dummy_check)
+abline(v=n_boys2,col="red")
+```
+
+-   The model underestimates the number of second-born boys after first-born girls. This shows that gender is not independent between birth1 and birth2.
+
+## Homework
+
+**1)** Suppose the globe tossing data (Lec2, Ch2) had turned out to be 3 W and 11 L. Construct the posterior distribution.
+
+```{r}
+compute_posterior <- function(W, L, poss=c(0,0.25,0.5,0.75,1)) {
+  ways <- sapply(poss, function(q) q^W * (1-q)^L )
+  post <- ways/sum(ways)
+  data.frame(poss, ways, post=round(post,3))
+}
+compute_posterior(3,11, poss=seq(from=0 ,to=1, len=11))
+
+```
+
+```{r}
+
+p <- seq(0,1, length.out=11)
+
+prior <- rep(1, 11)
+
+likelihood <- dbinom(3, 14, p)
+
+posterior_unstd <- likelihood * prior 
+posterior_std <- posterior_unstd / sum(posterior_unstd)
+
+plot(p, posterior_std, type="l", xlab = "proportion W", ylab= "posterior prob", main = "3 W, 11 L")
+
+```
+
+::: {.callout-note appearance="minimal"}
+## Note about the number of points used in grid approximation
+
+Using more points for your grid approx will flatten out the distribution. Why? Because you are estimating more possible p's (proportions of water i.e., more "sides" of the globe) - so the posterior probability for each p will be smaller. When you are estimating less p's, you're covering a smaller amount of possibility space (which is more lossy/blurry), but there's a higher certainty that the posterior prob will be in that space. Basically, everything needs to sum to 1.
+
+but the dbeta function converts the discrete probabilities into probability densities, which equals the probability divided by the bin width.
+
+Grid *approximation* is a discrete approximation of continuous posterior density.
+:::
+
+```{r}
+curve(dbeta(x,3+1,11+1), from=0, to=1, xlab="p")
+```
+
+2\) Using the posterior distribution from (1), compute the [posterior predictive distribution]{.underline} for the next 5 tosses of the same globe. I recommend you use the sampling method.
+
+```{r}
+samples <- sample(p, prob=posterior_std, size=1e4, replace=TRUE)
+simplehist(rbinom(1e4, size=5, prob=samples))
+```
+
+```{r 2_solution}
+p_samples <- rbeta(1e4, 3+1, 11+1)
+W_sim <- rbinom(1e4, size=5,p=p_samples)
+plot(table(W_sim))
+```
+
+3.  Suppose you observe W =7, but forgot to write down how many times the globe was tossed, so you don't know the number of L. Assume p=0.7 and compute the posterior distribution of the number of tosses N. Hint: use the binomial distribution.
+
+### 

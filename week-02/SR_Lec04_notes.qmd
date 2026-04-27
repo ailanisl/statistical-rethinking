@@ -1,0 +1,283 @@
+---
+title: "SR_Lec04_notes"
+format: html
+editor: visual
+---
+
+# LEC 03: Geocentric Models Notes
+
+```{r setup, include=FALSE}
+library(rethinking)
+data(Howell1)
+d <- Howell1
+```
+
+## Categories 
+
+-   Discrete, unordered types
+
+-   Want to stratify by category: fit a separate regression line for each category
+
+### 1) Question/Goal/Estimand
+
+How are height, weight, and sex **causally** related?\
+How are height, weight, and sex **statistically** weighted?
+
+### 2) Scientific model
+
+The causes aren't in the data
+
+-   H → W: the arrow does from height to weight because there are fewer interventions on height than on weight (you can change your diet, exercise, etc. to change your weight, but not height). Height necessarily influences weight.
+
+-   S → H: human biology, height does not influence sex; but sex does
+
+-   S → H: same as above
+
+![](images/clipboard-2458933047.png){fig-align="center" width="300"}
+
+-   Weight is influenced by both height (directly) and sex (both directly *and* indirectly via H)
+
+#### Translate DAGs into generative models by turning them into functions
+
+$$
+H = f_{H}(S)
+$$
+
+$$
+W = f_{W}(H,S)
+$$
+
+Indirect causes do not show up in generative functions \
+Unobserved causes are ignorable unless shared among generative causes (H, W, S)
+
+#### Synthetic people 
+
+```{r}
+# S=1 female; S=2 male 
+sim_HW <- function(S,b,a){
+  N <- length(S)
+  H <- ifelse(S==1, 150, 160) + rnorm(N, 0, 5) # add Gaussian noise with variance of 25cm
+  W <- a[S] + b[S]*H + rnorm(N,0,5) 
+  data.frame(S,H,W)
+}
+
+S <- rbern(100) + 1 # 100 individuals with male and female drawn at random 
+dat <- sim_HW(S, b=c(0.5, 0.6), a=c(0,0)) 
+# both alphas are zero - no sex effect on intercept
+# slightly diff slopes: 0.5 for women, 0.6 for men 
+
+head(dat)
+```
+
+### Scientific Questions 
+
+-   Q: Causal effect on H on W? ← Already did this in last lecture
+
+-   **Q: Causal effect of S on W?**
+
+    -   involves two sub-causes, direct and indirect
+
+-   **Q: Direct causal effect of S on W?**
+
+    -   only direct cause = different stat model
+
+Need to stratify by S: different estimate for each value S can take. How?
+
+### 3) Statistical model(s)
+
+::: {.callout-note appearance="simple"}
+## Coding categorical variables
+
+1.  **Indicator** (0/1) variables
+2.  **Index** variables: 1,2,3,4
+    1.  One of the sexes becomes the default, while the other becomes the adjustment
+
+-   We will use index variables
+
+    -   Extend to many categories with no change in code
+
+    -   Better for specifying priors
+
+    -   Extend effortlessly to multilevel models
+
+Vector of parameters, with index
+
+$$
+\alpha_{S[i]}
+$$
+
+$$
+\alpha = [\alpha_{1}, \alpha_{2}]
+$$
+:::
+
+Statistical Model
+
+$$
+W_{i} \sim {\sf Normal}(µ_{i}, \sigma)
+$$
+
+$$
+µ_{i} = \alpha_{s[i]}
+$$
+
+Priors
+
+$$
+\alpha_{i} \sim {\sf Normal}(60,10)
+$$
+
+$$
+\sigma \sim {\sf Uniform}(0,10)
+$$
+
+#### Testing 
+
+What is the [total causal effect of sex]{.underline}? Causal effect of sex = difference made intervening (i.e., mean male weight - mean female weight)
+
+```{r}
+# Female sample 
+S <- rep(1,100)
+simF <- sim_HW(S, b=c(0.5,0.6), a=c(0,0))
+
+# Male sample 
+S <- rep(2,100)
+simM <- sim_HW(S, b=c(0.5,0.6), a=c(0,0))
+
+# Effect of sex (male - female)
+mean(simM$W - simF$W)
+```
+
+-   When we test the estimator, these are the sample values we want to find
+
+Now run the estimator and synthetic sample
+
+```{r}
+# Observe samples - list of 1s or 2s, for females or males 
+S <- rbern(100) + 1 # BTW, the +1 is because R is 1-indexed, rbern creates list of 0s,1s 
+dat <- sim_HW(S,b=c(0.5,0.6), a=c(0,0))
+
+# Estimate posterior 
+m_SW <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- a[S],
+    a[S] ~ dnorm(60,10),
+    sigma ~ dunif(0,10)
+  ), data=dat
+)
+precis(m_SW, depth=2)
+
+```
+
+-   Difference between a\[1\] and a\[2\] is the estimate we're looking for: the total causal effect (indirect and direct)
+
+-   E.g., 97-75 = 22
+
+#### Analyze real sample 
+
+```{r}
+d <- Howell1
+d <- d[d$age>=18,]
+dat <- list(
+  W = d$weight,
+  S = d$male + 1 ) #S = 1 female; S =2 male
+
+m_SW <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- a[S],
+    a[S] ~ dnorm(60,10),
+    sigma ~ dunif(0,10)
+  ), data=dat
+)
+```
+
+#### Post processing 
+
+-   The unknowns themselves, a\[1\] and a\[2\], are not what we want; we have to do comparisons between these posterior distributions
+
+-   The diff of mean weight is not in the posterior, the mean weight of each category is. But we'd like to look at the contrast between category 1 and 2
+
+-   Need to use whole posterior distribution
+
+```{r}
+par(mfrow=c(1,2))
+
+# posterior mean W
+post <- extract.samples(m_SW)
+dens(post$a[,1], xlim=c(39,50), lwd=3, col=2, xlab="posterior mean weight (kg") 
+dens(post$a[,2], lwd=3, col=4, add=TRUE)
+
+# posterior W distributions, need to include SDs
+W1 <- rnorm(1000,post$a[,1], post$sigma)
+W2 <- rnorm(1000, post$a[,2], post$sigma)
+dens(W1, xlim=c(20,70), ylim=c(0,0.085), lwd=3, col=2)
+dens(W2, lwd=3, col=4, add=TRUE)
+```
+
+-   The densities of the means don't overlap at all - indication that they're reliably different
+
+::: callout-note
+## Always be contrasting
+
+-   Contrast is often what we want, the difference between categories
+
+-   It's never legitimate to compare **overlap** in distributions - in parameters or lines
+
+    -   Overlap doesn't reliably tell you much; the difference is reliably the same??
+
+    -   This means no comparing confidence intervals or p-values either
+
+-   Must compute contrast distribution
+:::
+
+#### Causal contrast of means
+
+```{r}
+str(post)
+
+#causal contrast (in means)
+mu_contrast <- post$a[,2] - post$a[,1] # subtract a[1] from a[2]
+dens(mu_contrast, xlim=c(3,10), lwd=3, col=1, xlab="posterior mean weight contrast (kg)")
+```
+
+-   Posterior distribution of difference: knowledge about the average weight difference in women and men in this sample - between 5 and 9, centered around a little less than 7kg
+
+#### Causal contrast of weight 
+
+-   What bout individual people's body weights? What's the contrast between these distributions?
+
+```{r}
+# causal contrast of weight 
+W_contrast <- W2 - W1
+dens(W_contrast, xlim=c(-25,35), lwd=3, col=1, xlab="posterior weight contrast (kg")
+
+#proportion above zero, men heavier than women
+sum(W_contrast>0)/1000
+
+#proportion below zero, women heavier than men
+sum(W_contrast<0)/1000
+abline(v=0)
+```
+
+-   Most of the time, men are heavier than women in this population, though some overlap
+
+What's the direct causal effect of S on W (no indirect effect via H)?
+
+-   Now we need to block association thru H
+
+-   Need to **stratify by H**
+
+```{r}
+S <- rbern(100)+1 # simulate sample of sexes
+dat <- sim_HW(S, b=c(0.5,0.5), a=c(0,10)) #different alpha, assume +10kg for men - direct effect
+
+plot(dat$H, dat$W, col=c("red","blue")[S], xlab="height(cm)", ylab="weight (kg)")
+```
+
+-   indirect: H influences W differently (slopes)
+
+-   Direct: W differs net any slope differences
+
+Index Variables and Lines
