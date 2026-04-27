@@ -47,3 +47,16 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Quarto output
+/.quarto/
+*_files/
+*_cache/
+
+# R artifacts
+*.Rhistory
+*.RData
+*.rds
+
+# Large model objects (optional)
+models/
