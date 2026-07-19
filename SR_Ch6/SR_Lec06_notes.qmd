@@ -1,0 +1,471 @@
+---
+title: "SR_Lec06_notes"
+format: html
+editor: visual
+---
+
+## Lec 6: Good and Bad Controls
+
+```{r}
+#| output: false
+#| error: false
+#| warning: false
+#| message: false
+library(rethinking)
+library(dagitty)
+```
+
+**Backdoor Criterion**: Rule to find a set of variables to stratify by to yield $P(Y|do(X))$
+
+1.  Identify all **paths** connecting the treatment X to the outcome Y
+    1.  The causes follow arrows but associations go both ways
+2.  Paths with arrows **entering** X are backdoor paths (non-causal paths; confounding path)
+    1.  if you intervene on X, the change will not flow into backdoor path
+    2.  only arrows leaving X will be affected when changing X
+3.  Find **adjustment set** that closes/blocks all backdoor paths
+
+#### Example Flow
+
+```{r}
+#| echo: false
+dag_e1 <- dagitty( "dag {
+  U [unobserved]
+  X -> Y
+  X <- Z 
+  Z <- U 
+  U -> Y 
+}")
+coordinates( dag_e1 ) <- list( x=c(X=0, Z=0.25, U=0.5,Y=1) ,
+                              y=c(X=1, Z= 0.5, U=0, Y=1) )
+drawdag( dag_e1 )
+```
+
+1\) Identify all paths
+
+- $X→ Y$
+
+- $X ← Z ← U → Y$
+
+2\) Identify backdoor paths
+
+- $X ← Z ← U → Y$ is a backdoor path
+
+3\) Minimal adjustment set
+
+> Block the pipe by stratifying by Z: X \_ \|\| \_ U \| Z
+
+$$P(Y|do(X)) = \sum_z P(Y|X,Z) P(Z=z)$$
+
+$$Y_i \sim {\sf Normal}(\mu_i,\sigma)$$
+
+$$\mu_i = \alpha + \beta_XX_i + \beta_ZZ_i$$
+
+```{r}
+# simulate confounded Y 
+N <- 200 
+b_XY <- 0 
+b_UY <- -1
+b_UZ <- -1
+b_ZX <- 1 
+
+set.seed(10)
+U <- rbern(N)
+Z <- rnorm(N, b_UZ*U)
+X <- rnorm(N, b_ZX*Z)
+Y <- rnorm(N, b_XY*X + b_UY*U)
+d <- list(Y=Y, X=X, Z=Z)
+
+# ignore U and Z (to compare first path vs second) 
+m_YX <- quap(
+  alist(
+    Y ~ dnorm(mu, sigma),
+    mu <- a + b_XY*X,
+    a ~ dnorm(0,1),
+    b_XY ~ dnorm(0,1),
+    sigma ~ dexp(1)
+  ), data=d
+)
+
+# Stratify by Z 
+m_YXZ <- quap(
+  alist(
+    Y ~ dnorm(mu, sigma),
+    mu <- a + b_XY*X +b_Z*Z,
+    a ~ dnorm(0,1),
+    b_XY ~ dnorm(0,1),
+    b_Z ~ dnorm(0,1),
+    sigma ~ dexp(1)
+  ), data=d
+)
+
+post <- extract.samples(m_YX)
+post2 <- extract.samples(m_YXZ)
+dens(post$b_XY, lwd=3, col=1, xlab="posterior b_XY", xlim=c(-0.3,0.3))
+dens(post2$b_XY, lwd=3, col=2, add=TRUE)
+
+```
+
+- Remember, the true effect of X on Y is 0.
+
+```{r}
+precis(m_YXZ)
+```
+
+- in the model `m_YXZ` the coefficient for `b_Z` is [meaningless]{.underline} (it does NOT mean that 0.24 is coefficient for Z on Y)
+
+  - It's a control variable - fallacy to intepret the coefficients of control variables!!
+
+> For any variable you add to the model as part of the adjustment set (in order to make it possible to get an estimate of some other variable's coefficient) - usually its coefficients are **not interpretabl**e (Table 2 Fallacy)
+
+#### More complicated example
+
+```{r}
+#| echo: false
+dag_e2 <- dagitty( "dag {
+  X -> Y
+  X <- A -> Z <- B -> Y
+  X <- Z -> Y
+  X <- C -> Y
+}")
+coordinates( dag_e2 ) <- list( x=c(A=0, Z=0.5, B=1, X=0, Y=1, C=0.5) ,
+                                 y=c(A=0, Z=0, B=0, X=1, Y=1, C=1.5) )
+drawdag( dag_e2 )
+```
+
+**1) List all the paths connecting X and Y. Which need to be closed to estimate the effect of X on Y?**
+
+$X → Y$: direct causal path, necessarily open
+
+Try to find mathematical way to delete the arrows that are entering X
+
+1.  $X ← C → Y$: non-causal, open
+    1.  Close by stratifying by $C$ (add $C$ to adjustment set)
+2.  $X ← Z → Y$: non-causal, open
+    1.  Close by stratifying by $Z$; add $Z$ to adjustment set
+3.  $X ←  A → Z ← B → Y$: non-causal, [closed]{.underline} (opened by stratifying on Z)
+    1.  Use A and/or B to close
+4.  $X ← A → Z → Y$: non-causal, open
+    1.  Already closed because we are stratifying by $Z$
+5.  $X ← Z ← B → Y$: non-causal, open
+    1.  Effectively closed because we are stratifying by $Z$ (existing adjustment set)
+
+> Minimum adjustment set: C, Z, and *either A or B*. (B is better choice)
+
+- B is more statistically efficient than A
+
+#### Example
+
+```{r}
+#| echo: false
+dag_e3 <- dagitty("dag {
+  U [unobserved]
+  G -> P -> C
+  G -> C
+  P <- U -> C}"
+)
+
+coordinates(dag_e3) <- list(x=c(G=0, P=1,C=1, U=1.5), 
+                            y=c(G=0,P=0, C=1,U=0.5))
+drawdag(dag_e3)
+```
+
+G: grandparent education\
+P: parent education\
+C: child education\
+U: unobserved confound
+
+1\)
+
+1.  $G→ C$
+2.  $G → P → C$: Pipe (P is a mediator)
+3.  $G → P ← U → C$: P is a collider
+
+To find the direct causal effect of $G$ on $C$, we need to stratify by $P$ (close the pipe). However, if we do that, then we open up Path 3 $G → P ← U → C$, defined by the fork $C← U → P$ (e.g., neighborhood variable). Can't get the direct causal effect of G on C because we activate the confounds. It is possible to calculate the total effect of G on C, but that isn't our research question.
+
++----------------------------------------+-----------------------------------------------------------------------+
+| Can estimate TOTAL effect of G on C    | Cannot estimate the DIRECT effect                                     |
++========================================+=======================================================================+
+| $C_i \sim {\sf Normal}(\mu_i, \sigma)$ | $C_i \sim {\sf Normal}(\mu_i, \sigma)$                                |
+|                                        |                                                                       |
+| $\mu_i = \alpha + \beta_G G_i$         | $\mu_i = \alpha + \beta_G G_i + \beta_PP_i$                           |
++----------------------------------------+-----------------------------------------------------------------------+
+|                                        | Confounded estimate, may end up concluding that G hurts C's education |
++----------------------------------------+-----------------------------------------------------------------------+
+
+## Controls
+
+**control variable:** variable introduced to an analysis so that a causal estimate is possible
+
+Wrong heuristics for choosing control variables:
+
+- anything goes
+
+- any variables not highly **collinear**
+
+- Any pre-treatment measurement (baseline)
+
+```{r}
+#| echo: false
+dag_e4 <- dagitty("dag {
+  u [unobserved]
+  v [unobserved]
+  X -> Y 
+  X <- u -> Z <- v -> Y
+  } ")
+
+coordinates(dag_e4) <- list(x=c(X=0, u=0, Z=0.5, v=1, Y=1),
+                            y=c(X=1,u=0, Z=0.5, v=0, Y=1))
+drawdag(dag_e4)
+```
+
+1.  $X → Y$ frontdoor and closed
+2.  $X ← u → Z ← v → Y$ backdoor and closed
+    1.  $Z$ is collider
+    2.  Remains closed as long as we don't condition on $Z$
+    3.  Not safe
+
+```{r}
+#| echo: false
+dag_e5 <- dagitty("dag {
+                  u [unobserved]
+                  X -> Z -> Y 
+                  Z <- u -> Y
+}")
+
+coordinates(dag_e5) <- list(x=c(X=0, Z=1, u=1.5, Y=2),
+                            y=c(X=0.2, Z=0.2, u=0, Y=0.2))
+drawdag(dag_e5)
+```
+
+X: win lottery\
+Y: Lifespan\
+Z: Happiness\
+u: contextual confounds
+
+Conditioning on $u$ is harmless UNLESS you try to stratify by $Z$! You can estimate the total causal effect of winning the lottery, but not direct causal effect.
+
+- Post-treatment variables are often risky controls
+
+1.  $X → Z → Y$
+
+2.  $X → Z ← u → Y$
+
+    ::: callout-note
+    No backdoor path, no need to control for Z!!!
+    :::
+
+**Simulate the DAG**
+
+Assume all arrows have effect of 1:
+
+```{r}
+f <- function(n=100, bXZ=1, bZY=1){
+  X <- rnorm(n)
+  u <- rnorm(n)
+  Z <- rnorm(n, bXZ*X + u)
+  Y <- rnorm(n, bZY*Z + u)
+  bX <- coef(lm(Y ~ X))['X']
+  bXZ <- coef(lm(Y ~ X + Z))['X']
+  return(c(bX,bXZ))
+}
+
+sim <- mcreplicate(1e4, f(), mc.cores = 8)
+
+dens(sim[1,], lwd=3, xlab="posterior mean",xlim=c(-1,2), ylim=c(0,2.75))
+dens(sim[2,], lwd=3, col=2, add=TRUE)
+```
+
+- Adding Z in `Y ~ X + Z` makes it look like the effect is negative because it activates the confound
+
+- `Y ~ X` is correctly centered on `1.0`
+
+Now, assume all are 1 except `bZY = 0` :
+
+```{r}
+sim <- mcreplicate(1e4, f(bZY=0), mc.cores = 8)
+
+dens(sim[1,], lwd=3, xlab="posterior mean",xlim=c(-1,0.5), ylim=c(0,3))
+dens(sim[2,], lwd=3, col=2, add=TRUE)
+```
+
+- Again, `Y ~ X` is correctly centered on 0 ($X$ has no causal influence on $Y$ )
+
+- While `Y ~ X + Z` mistakenly shows a negative relationship
+
+::: callout-note
+Statistical significance is not a guide to model structure.
+:::
+
+#### Colliders
+
+::: callout-note
+Do not touch the collider! Colliders are BAD CONTROLS
+:::
+
+Colliders are not always obvious:
+
+```{r}
+#| echo: false
+dag_e6 <- dagitty("dag {
+                  u [unobserved]
+                  X -> Z <- u -> Y
+                  X -> Y
+}")
+
+coordinates(dag_e6) <- list(x=c(X=0, Z=0.5, u=1, Y=1),
+                            y=c(X=1, Z=0, u=0, Y=1))
+drawdag(dag_e6)
+```
+
+- Z becomes a collider if you consider the possibility of unmeasured causes between Z and Y
+
+X: education\
+Y: income\
+Z: values\
+u: family
+
+EX: How does education affect income? Imagine you have data on people's values based on survey results, so you decide to condition on values (Z). But, you could be conditioning on a collider and accidentally get estimates that are higher SPURIOUS. Because values are often associated with family/upbringing (u), which can be associated with income (Y).
+
+### Non-backdoor examples
+
+#### Case-control bias (selection on the outcome)
+
+$$X (education) → Y (occupation) → Z (Income) $$
+
+- If you stratify based on income (Z), you're weakly stratifying on the occupation Y, the outcome itself. It narrows the range of occupations that experiences a narrower range of education levels (false inferences)
+
+Let's see a simulation of this: (assume all arrows have coefficient of 1)
+
+```{r}
+f <- function(n=100, bXY=1, bYZ=1){
+  X <- rnorm(n)
+  Y <- rnorm(n, bXY*X)
+  Z <- rnorm(n, bYZ*Y)
+  bX <- coef(lm(Y ~ X))['X']
+  bXZ <- coef(lm(Y ~ X + Z))['X']
+  return(c(bX,bXZ))
+}
+
+sim <- mcreplicate(1e4, f(), mc.cores = 8)
+
+dens(sim[1,], lwd=3, xlab="posterior mean",xlim=c(0,1.5), ylim=c(0,5))
+dens(sim[2,], lwd=3, col=2, add=TRUE)
+```
+
+- Conditioning on $Z$ gives a weaker association (by half)
+
+#### Precision parasite
+
+- Stratifying on the parent of X
+
+  $$Z → X → Y $$
+
+Simulate the DAG
+
+```{r}
+f <- function(n=100, bZX=1, bXY=1){
+  Z <- rnorm(n)
+  X <- rnorm(n, bZX*Z)
+  Y <- rnorm(n, bXY*X)
+  bX <- coef(lm(Y ~ X))['X']
+  bXZ <- coef(lm(Y ~ X + Z))['X']
+  return(c(bX,bXZ))
+}
+
+sim <- mcreplicate(1e4, f(), mc.cores = 8)
+
+dens(sim[1,], lwd=3, xlab="posterior mean")
+dens(sim[2,], lwd=3, col=2, add=TRUE)
+```
+
+- Centers on the correct value, but it inflates the uncertainty (wider distribution)
+
+#### Bias amplification
+
+- X and Y confounded by u
+
+- Something truly awful happens when we add Z
+
+  - double activates the confound
+
+```{r}
+#| echo: false
+dag_e7 <- dagitty("dag {
+                  u [unobserved]
+                  Z -> X <- u -> Y
+                  X -> Y
+}")
+
+coordinates(dag_e7) <- list(x=c(X=0, Z=0, u=0.5, Y=1),
+                            y=c(X=1, Z=0, u=0, Y=1))
+drawdag(dag_e7)
+```
+
+X: occupation\
+Y: income\
+Z: education\
+u: regional/cultural factors
+
+EX: Examining the association between occupation and income. Lots of regional and cultural factors that influences both. Stratifying by education seems reasonable... but this is a bias amplification problem.
+
+Simulate: assume bXY is 0
+
+```{r}
+f <- function(n=100, bZX=1, bXY=1){
+  Z <- rnorm(n)
+  u <- rnorm(n)
+  X <- rnorm(n, bZX*Z + u)
+  Y <- rnorm(n, bXY*X + u)
+  bX <- coef(lm(Y ~ X))['X']
+  bXZ <- coef(lm(Y ~ X + Z))['X']
+  return(c(bX,bXZ))
+}
+
+sim <- mcreplicate(1e4, f(bXY=0), mc.cores = 8)
+
+dens(sim[1,], lwd=3, xlab="posterior mean")
+dens(sim[2,], lwd=3, col=2, add=TRUE)
+```
+
+- Real value is 0 (no association between X and Y)... but the model finds association
+
+- The default model is already biased (we knew that - just the effect of an unobserved confound)
+
+- Conditioning on Z increases the bias
+
+Why?
+
+- Covariation between X and Y can only exist if there's variation in their causes
+
+  - The cause of Y is X, and if X doesn't vary then Y can't vary
+
+  - Then Z is a cause of X... so if Z doesn't vary then X can't vary
+
+- Within each level of Z, there is less variation in X
+
+  - When we stratify by Z, we remove the variation in Z that causes X
+
+  - Therefore the covariation between X and Y must be smaller within each level of Z
+
+- Consequently, confound $u$ becomes relatively more important within each Z (when we condition on Z)
+
+  - When you average across the levels of Z, you find more association between X and Y
+
+```{r}
+n <- 1000 
+Z <- rbern(n) # make Z binary to make viz of stratification easier (either 0 or 1)
+u <- rnorm(n)
+X <- rnorm(n, 7*Z + u)
+Y <- rnorm(n, 0*X + u)
+
+# looking for a slope of 0 = no association 
+
+```
+
+::: callout-note
+Control variable: variable introduced to an analysis so that a causal estimate is possible
+
+Heuristics fail – adding control variables can be worse than omitting
+
+Make assumptions explicit (must do scientific modeling \[DAGs\] to do scientific data analysis)
+:::

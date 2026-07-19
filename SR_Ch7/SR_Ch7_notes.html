@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>SR_Ch07_notes</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="SR_Ch7_notes_files/libs/clipboard/clipboard.min.js"></script>
+<script src="SR_Ch7_notes_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="SR_Ch7_notes_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="SR_Ch7_notes_files/libs/quarto-html/popper.min.js"></script>
+<script src="SR_Ch7_notes_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="SR_Ch7_notes_files/libs/quarto-html/anchor.min.js"></script>
+<link href="SR_Ch7_notes_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="SR_Ch7_notes_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="SR_Ch7_notes_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="SR_Ch7_notes_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="SR_Ch7_notes_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">SR_Ch07_notes</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="chapter-7-ulysses-compass" class="level2">
+<h2 class="anchored" data-anchor-id="chapter-7-ulysses-compass">Chapter 7: Ulysses’ Compass</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Chapter Overview
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Overfitting as a universal phenomenon by which models with more parameters fit a sample better, even when additional parameters are meaningless. Two tools to overcome overfitting problems: regularizing priors and estimate of <strong>out-of-sample accuracy</strong> (WAIC and PSIS).</p>
+<p><strong>Regularizing priors</strong> reduce overfitting during <em>estimation</em>, and <strong>WAIC</strong> and <strong>PSIS</strong> help estimate the <em>degree of overfitting</em>.</p>
+<p>Practical functions <code>compare</code> help analyze collections of models fit to the same data.</p>
+<p>If after causal estimates, then these tools will mislead. Models must be designed through some other method, not selected on the basis of out-of-sample predictive accuracy. But any causal estimate will still overfit the sample. So you always have to worry about overfitting, measuring it with WAIC /PSIS and reducing it with regularization.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Terms
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<dl>
+<dt>overfitting</dt>
+<dd>
+<p>occurs when a model learns too much from the sample (having too many parameters), and leads to poor prediction</p>
+</dd>
+<dt>underfitting</dt>
+<dd>
+<p>placeholder</p>
+</dd>
+<dt>information theory</dt>
+<dd>
+<p>placeholder</p>
+</dd>
+<dt>information</dt>
+<dd>
+<p>the reduction of uncertainty when we learn an outcome</p>
+</dd>
+<dt>information entropy</dt>
+<dd>
+<p>the uncertainty contained in a probability distribution is the average log-probability of an event</p>
+</dd>
+<dt>Kullback-Leibler (KL) divergence</dt>
+<dd>
+<p>the additional uncertainty induced by using probabilities from one distribution to describe another distribution</p>
+</dd>
+<dt>log-probability</dt>
+<dd>
+<p>logarithm of standard probability value</p>
+</dd>
+<dt><strong>log-pointwise-predictive-density</strong></dt>
+<dd>
+<p>Bayesian version of log-probability score; used to evaluate and compare the out-of-sample predictive accuracy of statistical models; measures how well a model predicts new data by summing the logarithm of the predictive probability of each data point.</p>
+</dd>
+<dt>deviance</dt>
+<dd>
+<p>measure of a model’s predictive inaccuracy; -2 * maximum log-likelihood of a fitted model</p>
+<p>Indicated how well a model fits the observed data, with lower deviance being better fit</p>
+</dd>
+<dt>regularizing priors</dt>
+<dd>
+<p>skeptical prior to reduce overfitting while still allowing the model to learn sample’s regular features. Represents prior beliefs that model parameters should be smaller or closer to 0 but rarely exactly 0.</p>
+</dd>
+<dt>cross-validation</dt>
+<dd>
+<p>Splitting the train data into k folds to fit model with some folds and testing it on others to avoid overfitting</p>
+<p>Used to estimate out-of-sample predictive accuracy via testing the model’s predictive accuracy on a small part of the sample</p>
+</dd>
+<dt>leave-one-out cross-validation</dt>
+<dd>
+<p>model evaluation technique where model is trained on all by one observation and tested on single left-out observation. Repeats for every single observation.</p>
+<p>Overall performance calculated by averaging error scores across all observations</p>
+</dd>
+<dt>Pareto-smoothed importance sampling (PSIS) leave-one-out cross-validation</dt>
+<dd>
+<p>Highly efficient method of estimating out-of-sample predictive accuracy of model by bypassing the refitting process of leave-one-out cross-validation. via importance sampling (where the weight of an observation depends on its larger impact on the posterior distribution).</p>
+</dd>
+<dt>information criteria</dt>
+<dd>
+<p>Statistical metric used to compare models by constructing a theoretical estimate of the relative out-of-sample K-L Divergence</p>
+</dd>
+<dt>Widely Applicable Information Criterion (WAIC)</dt>
+<dd>
+<p>Information criterion more general than AIC or DIC, making no assumption about the shape of the posterior. Provides an approximation of the out-of-sample deviance that converges to the cross-validation approximation in a large sample. Target is to guess the K-L Divergence</p>
+<p>Lower values of WAIC indicate better performance</p>
+</dd>
+<dt>effective number of parameters (“overfitting penalty”)</dt>
+<dd>
+<p>penalty term that measures the model’s complexity; quantifies how much the model’s parameters adapt to the training data, correcting for overfitting</p>
+</dd>
+<dt>model comparison</dt>
+<dd>
+<p>analyzing multiple models to understand (1) how different variables influence predictions and (2) in combination with a causal model, implied conditional independencies among variables help us infer causal relationships</p>
+</dd>
+<dt>robust regression</dt>
+<dd>
+<p>linear model in which the influence of extreme observations is reduced</p>
+</dd>
+<dt>Student-t distribution</dt>
+<dd>
+<p>thicker-tailed distribution that arises from a mixture of Gaussian distributions with different variances.</p>
+Can be used to replace Gaussian distribution in order to reduce outlier influence in model estimation
+</dd>
+</dl>
+</div>
+</div>
+<p><u>Ockham’s Razor</u>: the model with fewer assumptions is to be preferred</p>
+<ul>
+<li>Doesn’t tell us how to navigate the tradeoff between simplicity and accuracy</li>
+</ul>
+<p>Better tool: <strong>Ulysses’ compass</strong></p>
+<ul>
+<li><p>Scylla = Overfitting, which leads to poor prediction by learning too much from the data</p></li>
+<li><p>Charybdis = Underfitting, which leads to poor prediction by learning too little from the data</p></li>
+<li><p>Third monster = confounding (produce good <em>predictions</em> but can lead to faulty causal inferences)</p></li>
+</ul>
+<blockquote class="blockquote">
+<p>Need to decide what we want from the model: do we want to understand causes OR to just predict</p>
+</blockquote>
+<p>Two families of approaches to navigate</p>
+<ol type="1">
+<li>Regularizing prior: tell model not to get too excited about the data</li>
+<li>Information Criteria or Cross Validation: model the prediction task and estimate predictive accuracy</li>
+</ol>
+<blockquote class="blockquote">
+<p>Both used in social sciences, get used to both families</p>
+</blockquote>
+<p><strong>Information Theory</strong></p>
+<p><strong>The Problem with Parameters</strong></p>
+<ul>
+<li><p>We shouldn’t just add more variables to our models (even when we only care about predictions, rather than causal inferences)</p></li>
+<li><p>Adding variables (making the model more complex) always improves the fit of the data (i.e., how well a model can retrodict the data used to fit the model)</p></li>
+<li><p>Measure of fit example: <span class="math inline">\(R^2\)</span> “variance explained”</p>
+<ul>
+<li><p>easy to compute</p></li>
+<li><p><span class="math inline">\(R^2\)</span> INC as predictor variables are added (even random numbers)</p></li>
+</ul></li>
+<li><p>Complex models often predict new data worse</p>
+<ul>
+<li><em>overfit</em>: sensitive to the exact sample used to fit it → large mistakes when future data is not exactly like past data</li>
+</ul></li>
+<li><p>Simple models (too few parameters) tend to <em>underfit</em>, systematically over-predicting or under-predicting the data, regardless of how well future data resemble the past data</p></li>
+</ul>
+<section id="example-problematic-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="example-problematic-parameters">Example: problematic parameters</h3>
+<section id="overfitting-more-parameters-almost-always-improve-fit" class="level4">
+<h4 class="anchored" data-anchor-id="overfitting-more-parameters-almost-always-improve-fit"><strong>Overfitting</strong> (more parameters almost always improve fit)</h4>
+<ul>
+<li>irrregular features of the data mislead, cannot generalize</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sppnames <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"afarensis"</span>,<span class="st">"africanus"</span>,<span class="st">"habilis"</span>,<span class="st">"boisei"</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">"rudolfensis"</span>,<span class="st">"ergaster"</span>,<span class="st">"sapiens"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>brainvolcc <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">438</span> , <span class="dv">452</span> , <span class="dv">612</span>, <span class="dv">521</span>, <span class="dv">752</span>, <span class="dv">871</span>, <span class="dv">1350</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>masskg <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">37.0</span> , <span class="fl">35.5</span> , <span class="fl">34.5</span> , <span class="fl">41.5</span> , <span class="fl">55.5</span> , <span class="fl">61.0</span> , <span class="fl">53.5</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">species=</span>sppnames, <span class="at">brain=</span>brainvolcc, <span class="at">mass=</span>masskg)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Usual for brain size to correlate with body size across species. Question: to what extent do particular species have brains that are larger than expected, after taking body size into account.</p>
+<p>Statistical control strategy:</p>
+<ul>
+<li><p>Fit linear regression that models brain size as a function of body size (or the log of these variables for exponential relationship)</p></li>
+<li><p>Then the remaining variation in brain size is modeled as a function of other variables, like ecology or diet</p></li>
+</ul>
+<p><u>Trying our multiple models that vary in complexity…</u></p>
+<p><strong>Model 1: Linear model</strong></p>
+<ul>
+<li><p>Rescale the variables to get the model to fit and to understand priors</p>
+<ul>
+<li><p>Standardize body mass (give it mean 0 and SD of 1) and rescale the outcome so that the largest observed value is 1</p></li>
+<li><p>Don’t standardize brain size - cannot have negative brain</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>mass_std <span class="ot">&lt;-</span> (d<span class="sc">$</span>mass <span class="sc">-</span> <span class="fu">mean</span>(d<span class="sc">$</span>mass))<span class="sc">/</span><span class="fu">sd</span>(d<span class="sc">$</span>mass)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>brain_std <span class="ot">&lt;-</span> d<span class="sc">$</span>brain <span class="sc">/</span> <span class="fu">max</span>(d<span class="sc">$</span>brain)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><span class="math display">\[b_i \sim {\sf Normal}(\mu_i, \sigma)\]</span></p>
+<p><span class="math display">\[\mu_i = \alpha + \beta m_i\]</span></p>
+<p><span class="math display">\[\alpha \sim {\sf Normal}(0.5, 1)\]</span></p>
+<p><span class="math display">\[\beta \sim {\sf Normal}(0,10)\]</span></p>
+<p><span class="math display">\[\sigma \sim {\sf Log-Normal}(0,1)\]</span></p>
+<p>Average brain volume <span class="math inline">\(b_i\)</span> of species <span class="math inline">\(i\)</span> is a linear function of its body mass <span class="math inline">\(m_i\)</span></p>
+<p>Priors implications</p>
+<ul>
+<li><p><span class="math inline">\(\alpha\)</span> prior: centered on the mean of the brain volume (rescaled) in the data. The average species with average body mass has brain volume with an 89% credible interval from about−1 to 2.</p>
+<ul>
+<li>Ridiculously wide and impossible values</li>
+</ul></li>
+<li><p><span class="math inline">\(\beta\)</span> prior: very flat centered on zero - allows absurdly large positive and negative slopes</p></li>
+</ul>
+<p>Part of the lesson, continue on with absurd priors</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>m7<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    brain_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, <span class="fu">exp</span>(log_sigma)),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b<span class="sc">*</span>mass_std,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>,<span class="dv">1</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    b <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">10</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    log_sigma <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">12</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>(m7<span class="fl">.1</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">apply</span>(s, <span class="dv">2</span>, mean) <span class="sc">-</span> d<span class="sc">$</span>brain_std</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>resid_var <span class="ot">&lt;-</span> <span class="fu">var2</span>(r)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>outcome_var <span class="ot">&lt;-</span> <span class="fu">var2</span>(d<span class="sc">$</span>brain_std)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> resid_var <span class="sc">/</span> outcome_var</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4774589</code></pre>
+</div>
+</div>
+<p>Function for getting <span class="math inline">\(R^2\)</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>R2_is_bad <span class="ot">&lt;-</span> <span class="cf">function</span>(quap_fit){</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">sim</span>(quap_fit, <span class="at">refresh=</span><span class="dv">0</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">apply</span>(s, <span class="dv">2</span>, mean) <span class="sc">-</span> d<span class="sc">$</span>brain_std</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">-</span> <span class="fu">var2</span>(r) <span class="sc">/</span> <span class="fu">var2</span>(d<span class="sc">$</span>brain_std)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Model 2: Second-degree polynomial parabolic</strong></p>
+<p><span class="math display">\[b_i \sim {\sf Normal}(\mu_i, \sigma)\]</span></p>
+<p><span class="math display">\[\mu_i = \alpha + \beta_1 m_i + \beta_2 m^2\]</span></p>
+<p><span class="math display">\[\alpha \sim {\sf Normal}(0.5, 1)\]</span></p>
+<p><span class="math display">\[\beta \sim {\sf Normal}(0,10) \quad {\sf for} \ j = 1..2\]</span></p>
+<p><span class="math display">\[\sigma \sim {\sf Log-Normal}(0,1)\]</span></p>
+<p>To do this model in <code>quap</code>, we can define β as a vector. The only trick required is to tell <code>quap</code> how long that vector is by using a start list</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>m7<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    brain_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, <span class="fu">exp</span>(log_sigma)),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b[<span class="dv">1</span>]<span class="sc">*</span>mass_std <span class="sc">+</span> b[<span class="dv">2</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="fl">0.5</span>, <span class="dv">1</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    b <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">10</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    log_sigma <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d, <span class="at">start=</span><span class="fu">list</span>(<span class="at">b=</span><span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">2</span>)) <span class="co">#here, start list</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Models 3-6: More polynomials</strong></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m7<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    brain_std <span class="sc">~</span> <span class="fu">dnorm</span>( mu , <span class="fu">exp</span>(log_sigma) ),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b[<span class="dv">1</span>]<span class="sc">*</span>mass_std <span class="sc">+</span> b[<span class="dv">2</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      b[<span class="dv">3</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">3</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="fl">0.5</span> , <span class="dv">1</span> ),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    b <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">10</span> ),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    log_sigma <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">1</span> )</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d , <span class="at">start=</span><span class="fu">list</span>(<span class="at">b=</span><span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">3</span>)) )</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>m7<span class="fl">.4</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    brain_std <span class="sc">~</span> <span class="fu">dnorm</span>( mu , <span class="fu">exp</span>(log_sigma) ),</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b[<span class="dv">1</span>]<span class="sc">*</span>mass_std <span class="sc">+</span> b[<span class="dv">2</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>      b[<span class="dv">3</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">3</span> <span class="sc">+</span> b[<span class="dv">4</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">4</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="fl">0.5</span> , <span class="dv">1</span> ),</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    b <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">10</span> ),</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    log_sigma <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">1</span> )</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d , <span class="at">start=</span><span class="fu">list</span>(<span class="at">b=</span><span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">4</span>)) )</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>m7<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    brain_std <span class="sc">~</span> <span class="fu">dnorm</span>( mu , <span class="fu">exp</span>(log_sigma) ),</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b[<span class="dv">1</span>]<span class="sc">*</span>mass_std <span class="sc">+</span> b[<span class="dv">2</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>      b[<span class="dv">3</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">3</span> <span class="sc">+</span> b[<span class="dv">4</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">4</span> <span class="sc">+</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>      b[<span class="dv">5</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">5</span>,</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="fl">0.5</span> , <span class="dv">1</span> ),</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    b <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">10</span> ),</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    log_sigma <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">1</span> )</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d , <span class="at">start=</span><span class="fu">list</span>(<span class="at">b=</span><span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">5</span>)) )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>That last model, m7.6, has one trick in it. The standard deviation is replaced with a constant value 0.001. The model will not work otherwise, for a very important reason that will become clear as we plot these monsters.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>m7<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    brain_std <span class="sc">~</span> <span class="fu">dnorm</span>( mu, <span class="fl">0.001</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b[<span class="dv">1</span>]<span class="sc">*</span>mass_std <span class="sc">+</span> b[<span class="dv">2</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      b[<span class="dv">3</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">3</span> <span class="sc">+</span> b[<span class="dv">4</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">4</span> <span class="sc">+</span> </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      b[<span class="dv">5</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">5</span> <span class="sc">+</span> b[<span class="dv">6</span>]<span class="sc">*</span>mass_std<span class="sc">^</span><span class="dv">6</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="fl">0.5</span> , <span class="dv">1</span> ),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    b <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">10</span> )</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d , <span class="at">start=</span><span class="fu">list</span>(<span class="at">b=</span><span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">6</span>)) )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now plot each model… (didn’t include them all, just <code>m7.1</code> and <code>m7.5</code>)</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m7<span class="fl">.1</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>mass_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span><span class="fu">min</span>(d<span class="sc">$</span>mass_std), <span class="at">to=</span><span class="fu">max</span>(d<span class="sc">$</span>mass_std), <span class="at">length.out=</span><span class="dv">100</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">link</span>(m7<span class="fl">.1</span>, <span class="at">data=</span><span class="fu">list</span>(<span class="at">mass_std=</span>mass_seq))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">apply</span>(l,<span class="dv">2</span>,mean)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>ci <span class="ot">&lt;-</span> <span class="fu">apply</span>(l,<span class="dv">2</span>,PI)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(brain_std <span class="sc">~</span> mass_std, <span class="at">data=</span>d)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(ci, mass_seq)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch7_notes_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m7<span class="fl">.5</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mass_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span><span class="fu">min</span>(d<span class="sc">$</span>mass_std), <span class="at">to=</span><span class="fu">max</span>(d<span class="sc">$</span>mass_std), <span class="at">length.out=</span><span class="dv">100</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">link</span>(m7<span class="fl">.5</span>, <span class="at">data=</span><span class="fu">list</span>(<span class="at">mass_std=</span>mass_seq))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">apply</span>(l,<span class="dv">2</span>,mean)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>ci <span class="ot">&lt;-</span> <span class="fu">apply</span>(l,<span class="dv">2</span>,PI)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(brain_std <span class="sc">~</span> mass_std, <span class="at">data=</span>d)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(ci, mass_seq)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch7_notes_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As the degree of polynomial defining the mean INC, better <span class="math inline">\(R^2\)</span> = retrodiction of data. The 5th degree polynomial has <span class="math inline">\(R^2 = 0.99\)</span>. The fit is perfect in degree 6 ( <span class="math inline">\(R^2 = 1\)</span> ) because there are enough parameters to assign to each point of data (7 parameters including alpha → 7 species to predict brain sizes).</p>
+</section>
+</section>
+<section id="underfitting" class="level3">
+<h3 class="anchored" data-anchor-id="underfitting">Underfitting</h3>
+<ul>
+<li><p>Overfitting makes nonsensical models outside the sample. Underfitting produces models that are inaccurate within and outside the sample (learn to little).</p></li>
+<li><p>Underfit models are insensitive to the sampled data (removing data point gets you the same regression line)</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Bias-variance trade-off: Bias related to underfitting; variance to overfitting.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="entropy-and-accuracy" class="level2">
+<h2 class="anchored" data-anchor-id="entropy-and-accuracy">Entropy and accuracy</h2>
+<p>To navigate between underfitting/overfitting, you need to <strong>pick a criterion of model performance (target)</strong>.</p>
+<ol type="1">
+<li>Establish measurement scale for distance from perfect accuracy
+<ul>
+<li>Info theory provides natural measurement scale for distance between two probability distributions</li>
+</ul></li>
+<li>Establish <em>deviance</em> as an approximation of relative distance from perfect accuracy</li>
+<li>Establish that only deviance out-of-sample is of interest</li>
+</ol>
+<p>Defining the target (no universally best target)</p>
+<p>Two major dimensions to worry about:</p>
+<ol type="1">
+<li>Cost-benefit analysis: how much does it cost when we’re wrong, how much do we win when we’re right?</li>
+<li>Accuracy in context: some prediction tasks are inherently easier than others. Even if ignoring cost/benefit, still need to judge “accuracy” that accounts for how much a model could possibly improve prediction</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Two weather forecasters:</p>
+<ul>
+<li><p>Original: One makes graded predictions (chance of rain on certain days: 1 1 1 0.6 0.6 0.6)</p></li>
+<li><p>Newcomer: One makes blanket predictions (chance of rain constant across all days: 0, 0, 0, 0,…,0)</p></li>
+</ul>
+<p>For the coarse of the 10 days (rains 3 days, sunny 7), the overall “hit rate” is higher for the newcomer.</p>
+<p>But there are additional costs to these predictions. Audience will want to know when to bring an umbrella or not: happiness will decrease significantly if they get drenched in rain (-5 pts happiness), and decrease only slightly for the mild inconvenience of carrying an umbrella on a sunny day (-1).</p>
+<p>So if we take the cost under consideration: the original forecaster nets <span class="math inline">\(3 \times (-1) + 7 \times (-0.6) = -7.2\)</span> happiness. But the newcomer nets <span class="math inline">\(3 \times (-5) =-15\)</span> happiness. So the original forecast is better.</p>
+<p>Accuracy is different from hit rate. How to define accuracy? If we define accuracy as predicting the exact sequence of days, this means computing the probability of a correct prediction <em>for each day,</em> then multiplying them together to get the <strong>joint probability</strong> of correctly predicting the observed sequence.</p>
+<ul>
+<li>This is the definition of accuracy that is maximized by the correct Bayesian model</li>
+</ul>
+<p>So the probability for the original forecaster is <span class="math inline">\(1^3 \times 0.4^7 \approx 0.005\)</span>, while the newcomer’s is <span class="math inline">\(0^3 \times 1^7 = 0\)</span> (has 0 probability of getting the sequence correct since they never expect rain).</p>
+<p>Newcomer has higher average probability of being correct, terrible <strong>joint</strong> prob of being correct.</p>
+<p>So true data-generating model will have highest <em>joint probability</em>. Also called the <strong>log scoring rule</strong> because typically the logarithm of the joint probability is reported.</p>
+<p>“True” probabilities = right probabilities given our state of ignorance (which is described by the model). Probability is IN THE MODEL, not in the world.</p>
+</div>
+</div>
+<p>Use <u>log probability of the data</u> to score the accuracy of competing models.</p>
+<section id="how-to-measure-distance-from-perfect-prediction" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-measure-distance-from-perfect-prediction"><strong>How to measure distance from perfect prediction</strong></h3>
+<ul>
+<li><p>Information Theory provides solution as to how to measure the distance of a model’s accuracy from a target</p></li>
+<li><p>Asks <em>how much is our uncertainty reduced by learning an outcome?</em></p>
+<ul>
+<li><p>EX: Forecasts issued in advance when weather is uncertain. When actual day arrives, weather is no longer uncertain. The reduction in uncertainty = measure of how much we have learned (how much information we derived from observing the outcome)</p></li>
+<li><p>Develop precise definigiont of uncertainty → provide baseline measure of how hard it is to predict + how much improvement is possible</p></li>
+</ul></li>
+</ul>
+<dl>
+<dt>Information</dt>
+<dd>
+<p>The measured decrease in uncertainty when we learn an outcome</p>
+</dd>
+</dl>
+<p>How to develop a principled way to quantify uncertainty (inherent in probability distribution)</p>
+<ul>
+<li><p>EX, 2 possible weather events on particular day - either sunny or rainy (occur with some prob adding up to 1)</p></li>
+<li><p>Function that uses the probabilities of outcomes and produces a measure of uncertainty</p></li>
+</ul>
+<p>Many ways to measure uncertainty. Most common way to start with naming some properties a measure of uncertainty should possess:</p>
+<ol type="1">
+<li>Should be continuous</li>
+<li>Should increase as the number of possible events increases</li>
+<li>Should be additive
+<ul>
+<li>i.e., if we first measure the uncertainty of rain or shine (2 possible events) and then the uncertainty of hot or cold (2 diff possible events), the uncertainty over the 4 combos - rain/hot, rain/cold, shine/hot, shine/cold - should be the sum of the separate uncertainties</li>
+</ul></li>
+</ol>
+<section id="information-entropy" class="level4">
+<h4 class="anchored" data-anchor-id="information-entropy"><strong>Information Entropy</strong></h4>
+<blockquote class="blockquote">
+<p>If there are <span class="math inline">\(n\)</span> different possible events and each event <span class="math inline">\(i\)</span> has a probability <span class="math inline">\(p_i\)</span>, and we call the list of probabilities <span class="math inline">\(p\)</span>, then the unique measure of uncertainty we seek is:</p>
+<p><span class="math display">\[H(p) = - E\;{\sf log}(p_i) = - \sum^n_{i-1}p_i\;{\sf log}(p_i) \]</span></p>
+<p>The uncertainty contained in a probability distribution is the average log-probability of an event.</p>
+</blockquote>
+<p>“Event” - particular type of weather, bird species, nucleotide in DNA sequence</p>
+<p><strong>Example with the weather forecast</strong> -</p>
+<p>(1) Probabilities of rain (p_1 = 0.3) and shine (p_2 = 0.7)</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.7</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">sum</span>(p<span class="sc">*</span><span class="fu">log</span>(p))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6108643</code></pre>
+</div>
+</div>
+<p>(2) Now consider Death Valley where p_1 = 0.01 and p_2 = 0.99.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.99</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">sum</span>(p<span class="sc">*</span><span class="fu">log</span>(p))  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.05600153</code></pre>
+</div>
+</div>
+<ul>
+<li>Much lower uncertainty because it hardly rains in Death Valley → much less uncertainty about any given day</li>
+</ul>
+<p>(3) Now, consider snow. Probabilities of sun, rain, and snow are p_1 = 0.7, p_2 = 0.15, and p_3 = 0.15, respectively</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.15</span>, <span class="at">p=</span><span class="fl">0.15</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">sum</span>(p<span class="sc">*</span><span class="fu">log</span>(p))  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8188085</code></pre>
+</div>
+</div>
+<ul>
+<li>Uncertainty/entropy tends to increase, due to the added dimensionality of the prediction problem</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Entropy equation details
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Multiplying the average log-probability by−1 just makes the entropy H increase from zero, rather than decrease from zero. It’s conventional, but not functional.</p>
+<p>The logarithms above are natural logs (base e), but changing the base rescales without any effect on inference. Binary logarithms, base 2, are just as common. <u>As long as all of the entropies you compare use the same base, you’ll be fine.</u></p>
+<p>The only trick in computing H is to deal with the inevitable question of what to do when p_i = 0. The log(0) = −∞, which won’t do. However, L’Hôpital’s rule tells us that <span class="math inline">\(lim_{p_i → 0} →p_i log(p_i) = 0\)</span>. So just assaume that 0 log(0) = 0, when you compute H. In other words, events that never happen drop out. <u>Just remember that when an event never happens, there’s no point in keeping it in the model.</u></p>
+</div>
+</div>
+<p><span class="math inline">\(H\)</span> provides a way to quantify uncertainty → a precise way to measure how hard it is to hit the target</p>
+</section>
+</section>
+<section id="how-to-use-entropy-to-measure-how-far-the-model-is-from-the-target" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-use-entropy-to-measure-how-far-the-model-is-from-the-target">How to use entropy to measure how far the model is from the target</h3>
+<dl>
+<dt>KL divergence</dt>
+<dd>
+<p>the additional uncertainty induced by using probabilities from one distribution to describe another distribution</p>
+<p>The average difference in log probability between the target (p) and model (q)</p>
+</dd>
+</dl>
+<p>Example: true distribution of events is p_1 = 0.3, p_2 = 0.7. If we believe instead that these events happen with probabilities q_1 = 0.25, q_2 = 0.75, how much additional uncertainty have we introduced, as a consequence of using q= {q_1, q_2}to ap- proximate p= {p_1, p_2}?</p>
+<p><span class="math display">\[D_{KL} = \sum_ip_i({\sf log}(p_i)-{\sf log}(q_i)) = \sum_i p_i{\sf log}(\frac{p_i}{ q_i}) \]</span></p>
+<p>Divergence → the difference between two entropies: the entropy of the target distribution <span class="math inline">\(p\)</span> and the <em>cross entropy</em> arising from using <span class="math inline">\(q\)</span> to predict <span class="math inline">\(p\)</span>. When <span class="math inline">\(p=q\)</span> we know the actual probabilities of the events:</p>
+<p><span class="math display">\[D_{KL}(p,q) = D_{KL}(p,p) = \sum_ip_i({\sf log}(p_i)-{\sf log}(p_i)) = 0 \]</span></p>
+<p>As q grows more different from p, the divergence <span class="math inline">\(D_{KL}\)</span> also grows.</p>
+<p>As an approximating function <span class="math inline">\(q\)</span> becomes more accurate, <span class="math inline">\(D_{KL}(p, q)\)</span> will shrink.</p>
+<ul>
+<li>Candidate distribution that minimizes the KL divergence = closest to target</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Cross entropy and directionality
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Events arise according to actual probability, p, but are expected according to the <span class="math inline">\(q\)</span> probabilities distributions, so the entropy is inflated, depending on how diff p and q are.</p>
+<ul>
+<li>Divergence defined as additional entropy induced by using q.</li>
+</ul>
+<p>Directionality matters: H(p,q) ≠ H(q,p)</p>
+<ul>
+<li><p>Example: using Earth’s water:land ratio {0.7,0.3} to predict Mar’s ratio {0.01, 0.99} gives us KL divergence of 1.14. But if we use Mars’ ratio to predict Earth’s, then the divergence is 2.62.</p>
+<ul>
+<li><p>Going from Mars → Earth: Mars has so little water, we’d be super surprised when we most likely land on water on Earth.</p></li>
+<li><p>Going from Earth → Mars: Earth has good amounts of both water and land, won’t be nearly as surprised when we inevitably land on dry land on Mars, since 30% of Earth is land.</p></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="how-to-estimate-divergence" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-estimate-divergence">How to estimate divergence</h3>
+<p>Having identified the right measure of distance, we now need a way to estimate it in real statistical modeling tasks.</p>
+<p>But <span class="math inline">\(p\)</span> is unknown! That’s okay, though, because we’re only interested in the different divergences of diff candidates, say <span class="math inline">\(q\)</span> and <span class="math inline">\(r\)</span>. Most cases, <span class="math inline">\(p\)</span> just subtracts out because <span class="math inline">\(E{\sf log}(p_i)\)</span> term is in both <span class="math inline">\(q\)</span> and <span class="math inline">\(r\)</span> divergences - no effect on the distance between q and r (and which is closer to the target <span class="math inline">\(p\)</span>).</p>
+<p>Compare average log-probability from each model to get estimate of the relative distance of each model from target.</p>
+<ul>
+<li>Absolute magnitude is not interpretable. Only the difference E log(q_i)−E log(r_i) informs us about the divergence of each model from the target p</li>
+</ul>
+<p>Convention to sum over all the observations <span class="math inline">\(i\)</span>, to yield a total score for model <span class="math inline">\(q\)</span></p>
+<p><span class="math display">\[S(q) = \sum_i{\sf log} (q_i)\]</span></p>
+<ul>
+<li><p>This log-probability score is gold standard to compare the predictive accuracy of different models</p>
+<ul>
+<li>Estimate of <span class="math inline">\(E \; log(q_i)\)</span> but without the final step of dividing by the number of observations</li>
+</ul></li>
+</ul>
+<p>Computing this core:</p>
+<ul>
+<li><p>Use entire probability distribution</p>
+<ul>
+<li>Since the parameters have distributions, the predictions also have a distribution</li>
+</ul></li>
+<li><p>How? Find the log of the average probability for each observation <span class="math inline">\(i\)</span>, where the average is taken over the posterior distribution</p>
+<ul>
+<li>Use function <code>lppd</code> or <strong>log-pointwise-predictive-density</strong> for the calculation on <code>quap</code> models</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lppd</span>(m7<span class="fl">.1</span>, <span class="at">n=</span><span class="fl">1e4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  0.6098668  0.6483438  0.5496093  0.6234934  0.4648144  0.4347605 -0.8444633</code></pre>
+</div>
+</div>
+<ul>
+<li><p>Each of the values: log-probability score for a specific observation (7 observations in those data)</p></li>
+<li><p>Summing the values → total log-probability score for the model and data</p>
+<ul>
+<li><strong>Larger values are better</strong> = larger average accuracy</li>
+</ul></li>
+<li><p><strong>Deviance</strong>: like lppd score, but multiplied by -2 (<strong>smaller values are better</strong>)</p></li>
+</ul>
+</section>
+<section id="scoring-the-right-data" class="level3">
+<h3 class="anchored" data-anchor-id="scoring-the-right-data">Scoring the right data</h3>
+<ul>
+<li><p>log-probability has same problem as <span class="math inline">\(R^2\)</span> - always improves as model gets more complex</p>
+<ul>
+<li>measure of retrodictive accuracy, not predictive accuracy</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(<span class="fu">list</span>(m7<span class="fl">.1</span>, m7<span class="fl">.2</span>, m7<span class="fl">.3</span>,m7<span class="fl">.4</span>,m7<span class="fl">.5</span>,m7<span class="fl">.6</span>), <span class="cf">function</span>(m) <span class="fu">sum</span>(<span class="fu">lppd</span>(m)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  2.490390  2.566165  3.695911  5.333750 14.109226 39.448020</code></pre>
+</div>
+</div>
+<p>Still using the training data though (used to fit the model, parameters estimated) - now need to use those estimates for new sample, the <strong>test sample</strong>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Suppose training set of size N</li>
+<li>Compute posterior distribution of a model for the training sample, and compute the score on the training sample. Call this score <span class="math inline">\(D_{train}\)</span></li>
+<li>Suppose another sample of size N from the same process, this is the test sample</li>
+<li>Compute the score on the test sample, using the posterior trained on the training sample. Call this new score <span class="math inline">\(D_{test}\)</span></li>
+</ol>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="st">"N &lt;- 20 </span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="st">kseq &lt;- 1:5 </span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="st">dev &lt;- sapply(kseq, function(k){</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="st">  print(k);</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="st">  r &lt;- mcreplicate( 1e4 , sim_train_test( N=N, k=k ) , mc.cores=4 )</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="st">  c(mean(r[1,]), mean(r[2,]), sd(r[1,]), sd(r[2,]))</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="st">})</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "N &lt;- 20 \nkseq &lt;- 1:5 \ndev &lt;- sapply(kseq, function(k){\n  print(k);\n  r &lt;- mcreplicate( 1e4 , sim_train_test( N=N, k=k ) , mc.cores=4 )\n  c(mean(r[1,]), mean(r[2,]), sd(r[1,]), sd(r[2,]))\n})\n"</code></pre>
+</div>
+</div>
+<ul>
+<li>Once simulations are complete, <code>dev</code> will be a 4-by-5 matrix of means and SDs. To r</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(1:5, dev[1,], ylim=c(min(dev[1:2,])-5, max(dev[1:2,])+10),</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     xlim=c(1,5.1), xlab="number of parameters" , ylab="deviance" ,</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     pch=16 , col=rangi2 )</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">#mtext( concat( "N = ",N ) )</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">#points( (1:5)+0.1 , dev[2,] )</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">#for ( i in kseq ) {</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co">#  pts_in &lt;- dev[1,i] + c(-1,+1)*dev[3,i]</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co">#  pts_out &lt;- dev[2,i] + c(-1,+1)*dev[4,i]</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">#  lines( c(i,i) , pts_in , col=rangi2 )</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co">#  lines( c(i,i)+0.1 , pts_out )</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co">#}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>While deviance on training data always improves with additional predictor variables, deviance on future data may or may not, depending upon both the true data-generating process and how much data is available to precisely estimate the parameters.</p>
+</section>
+</section>
+<section id="regularization-or-golem-training" class="level2">
+<h2 class="anchored" data-anchor-id="regularization-or-golem-training">Regularization, or Golem Training</h2>
+<ul>
+<li>Use skeptical prior to prevent model from getting over-excited about the training sample</li>
+</ul>
+<p><strong>skeptical prior:</strong> prior that slows the rate of learning from the same</p>
+<ul>
+<li><strong>Regularizing prior</strong>: most common type of skeptical prior that reduces overfitting while still allowing the model to learn the regular features of the sample</li>
+</ul>
+<p>Consider this Gaussian model</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 86%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>$ y_i {Normal}(_i, ) $</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mu_i = \alpha + \beta x_i\)</span></td>
+<td>Assume predictor <span class="math inline">\(x\)</span> is standardized so that its SD is 1 and mean 0.</td>
+</tr>
+<tr class="odd">
+<td>$ {Normal}(0,100)$</td>
+<td>Then prior <span class="math inline">\(\alpha\)</span> is nearly flat prior that has no practical effect on inference</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\beta \sim {\sf Normal}(0,1)\)</span></td>
+<td><p>Prior on <span class="math inline">\(\beta\)</span> is narrower, meant to regularize. This prior means that, before seeing the data, the machine should be skeptical of values above 2 and below -2 (a Gaussian prior with SD of 1 assigns only 5% plausibility to values above and below 2 SDs.</p>
+<p>Interpretation: a change of 1 SD in <span class="math inline">\(x\)</span> is very unlikely to produce 2 units of change in the outcome</p></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\sigma \sim {\sf Uniform}(0,10)\)</span></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Centering the prior on zero is conservative. But the narrower the prior, the more skeptical of parameter values far from zero.</p>
+<ul>
+<li><p>Narrow: <span class="math inline">\({\sf Normal}(0,1)\)</span></p></li>
+<li><p>Narrower: <span class="math inline">\({\sf Normal}(0,0.5)\)</span></p></li>
+<li><p>Narrowest: <span class="math inline">\({\sf Normal}(0,0.2)\)</span> → Most skeptical prior here</p></li>
+</ul>
+<p>The strength of the skepticism depends on the data and model</p>
+<p><strong>Tuning</strong>: If too skeptical - prevent model from learning from data. Need a way to tune them.</p>
+<ul>
+<li><p><strong>Cross-validation</strong>: common technique to reduce overfitting by splitting data into “train” and “test” samples, then trying different priors and select the one that provides the smallest deviance from test samples</p>
+<ul>
+<li>Need a lot of data</li>
+</ul></li>
+<li><p>Also want a way to predict a model’s out-of-sample deviance, to forecast its predictive accuracy, using only the sample we have.</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Multilevel models as adaptive regularization</p>
+<ul>
+<li>central device = learn the strength of the prior from the data itself</li>
+</ul>
+<p>Ridge regression: linear models with slope parameters that use Gaussian priors centered at 0</p>
+<ul>
+<li><p>takes as input a precision <span class="math inline">\(\lambda\)</span> that describes the narrowness of the prior.</p>
+<ul>
+<li><p><span class="math inline">\(\lambda &gt;0\)</span> reduces overfitting</p></li>
+<li><p>If <span class="math inline">\(\lambda\)</span> is too big, then risk underfitting</p></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<section id="predicting-predictive-accuracy" class="level3">
+<h3 class="anchored" data-anchor-id="predicting-predictive-accuracy">Predicting predictive accuracy</h3>
+<p>Evaluate models without out-of-sample with cross-validation and info criteria. These try to guess how well models will perform, on average, in predicting new data. Both produce extremely similar approximations.</p>
+<section id="cross-validation" class="level4">
+<h4 class="anchored" data-anchor-id="cross-validation">Cross-validation</h4>
+<ul>
+<li><p>Dvide sample in a number of “folds” (chunks). Model is asked to predict each fold, after training on all the others. Then, average over the score for each fold to get estimate of out-of-sample accuracy.</p>
+<ul>
+<li><p>Minimum number of folds: 2</p></li>
+<li><p>Other extreme: could make each point observation a folk and fit as many models as you have individual observations</p></li>
+</ul></li>
+<li><p><code>cv_quap</code> to perform cross-validation on <code>quap</code> models</p></li>
+</ul>
+<p>How many folds is best?</p>
+<ul>
+<li><p>Common advice is that both too few and too many folds produce less reliable approximations of out-of-sample performance</p>
+<ul>
+<li>However, not always the case</li>
+</ul></li>
+<li><p><strong>Leave-one-out cross-validation (LOOCV)</strong>: use the maximum number of folds, resulting in leaving out one unique observation in each fold</p>
+<ul>
+<li>default in <code>cv_quap</code></li>
+</ul></li>
+<li><p>Approximate cross-validation score without actually running the model over and over again</p>
+<ul>
+<li><p>Use the “importance” (<strong>weight</strong>) of each observation to the posterior distribution</p>
+<ul>
+<li><p><strong>weight</strong>: some observations have larger impact on the posterior distribution (if we remove an important observation, the posterior changes more)</p></li>
+<li><p><strong>key intuition:</strong> <u>An observation that is relatively unlikely is more important than one that is relatively expected.</u></p></li>
+</ul></li>
+</ul></li>
+</ul>
+<p><strong>Pareto-smoothed importance sampling cross-validation (PSIS)</strong>: uses importance sampling (uses the importance weights approach to approximate cross-validation score)</p>
+<ul>
+<li><p>Pareto-smoothing technique makes importance weights more reliable</p></li>
+<li><p>Uses the Pareto distribution to derive a more reliable cross-validation score without actually doing any cross-validation</p></li>
+<li><p>Also provides feedback about its own reliability by noting particular observations with very high weights that could make the PSIS score inaccurate</p></li>
+</ul>
+</section>
+<section id="information-criteria" class="level4">
+<h4 class="anchored" data-anchor-id="information-criteria">Information Criteria</h4>
+<ul>
+<li><p>Constructs a theoretical estimate of the relative out-of-sample K-L Divergence</p></li>
+<li><p>The distance between train and test pairs (with flat priors) is approx twice the number of parameters in each model</p>
+<ul>
+<li><p>For ordinary linear regressions with flat priors, the expected overfitting penalty is about twice the number of parameters</p></li>
+<li><p>Phenomenon behind information criteria</p></li>
+</ul></li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 25%">
+<col style="width: 59%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Col1</th>
+<th>Col2</th>
+<th>Col3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Akaike Information Criteria (AIC)</td>
+<td><p>Simple estimate of average out-of-sample deviance</p>
+<p><span class="math display">\[AIC = D_{train}+ 2p = -2{\sf lppd}+2p\]</span></p>
+<p><span class="math inline">\(p\)</span> = number of free parameters in posterior distribution</p></td>
+<td><p>The dimensionality of the posterior distribution is a natural measure of the model’s overfitting tendency. More complex models tend to overfit more, directly in proportion to number of parameters</p>
+<p>Only reliable when:</p>
+<ol type="1">
+<li>Priors are flat or overwhelmed by the likelihood</li>
+<li>The posterior distribution is approx multivariate Gaussian</li>
+<li>Sample size <span class="math inline">\(N\)</span> is much greater than the number of parameters</li>
+</ol></td>
+</tr>
+<tr class="even">
+<td>Deviance Information Criterion (DIC)</td>
+<td></td>
+<td><p>More general than AIC</p>
+<p>Okay with informative priors, but still assumes that the posterior is multivariate and that <span class="math inline">\(N &gt;&gt;k\)</span></p></td>
+</tr>
+<tr class="odd">
+<td>Widely Applicable Information Criterion (WAIC)</td>
+<td><span class="math display">\[WAIC(y,\Theta) = -2({\sf lppd} - \sum_ivar_\theta {\sf log} p (y_i|\theta)) \]</span><br>
+where <span class="math inline">\(y\)</span> is the observations and <span class="math inline">\(Θ\)</span> is the posterior distribution</td>
+<td><p>More general than AIC or DIC</p>
+<p>Makes no assumption about the shape of the posterior. Provides an approximation of the out-of-sample deviance that converges to the cross-validation approximation in a LARGE sample.</p>
+<p>Can disagree in a finite sample because of its different target (K-L Divergence)</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Widely Applicable Information Criterion (WAIC)</strong>: the log-posterior-predictive density (lppd) plus a penalty proportional to the variance in the posterior predictions</p>
+<p><span class="math display">\[WAIC(y,\Theta) = -2({\sf lppd} - \sum_ivar_\theta {\sf log} p (y_i|\theta)) \]</span></p>
+<ul>
+<li><p>Penalty term is the sum: means “compute the variance in log-probabilities for each observation <span class="math inline">\(i\)</span>, and then sum up these variances to get the total penalty.”</p>
+<ul>
+<li><p>Each observation has own penalty score. Since these scores measure overfitting risk, you can assess overfitting risk at the level of each observation</p></li>
+<li><p>also called Effective number of parameters <span class="math inline">\(p_{WAIC}\)</span> BUT is a misleading label (less to do with number than with relations among parameters)</p></li>
+<li><p>Call it “<strong>the overfitting penalty</strong>”</p></li>
+<li><p><code>WAIC</code> in <code>rethinking</code> package - computes WAIC for a model fit with <code>quap</code> or <code>ulam</code> or <code>rstan</code></p></li>
+</ul></li>
+<li><p>Like PSIS, WAIC is <em>pointwise</em>. Prediction is considered case by case, or point-by-point, in the data</p>
+<ul>
+<li><p>Useful since some observations are much harder to predict than others and may also have different uncertainty</p></li>
+<li><p>Pro: provides a (very) approximate estimate of the standard error of our estimate of out-of-sample deviance</p>
+<ul>
+<li><p>for this SE, calculate WAIC for each observation and then exploit the central limit theorem to provide a measure of the standard error:</p></li>
+<li><p><span class="math display">\[s_{\sf WAIC} = \sqrt{(N{\sf var} - 2 (lppd_i - p_i)}\]</span></p>
+<ul>
+<li>Where <span class="math inline">\(N\)</span> is the number of observations, <span class="math inline">\(p_i\)</span> is the penalty term for only observation <span class="math inline">\(i\)</span></li>
+</ul></li>
+<li></li>
+</ul></li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Caution</p>
+<p>The validity of All these strategies to guess out-of-sample accuracy depends on the predictive task we have in mind. Not all predictions can reasonably take the form that we’ve been assuming for the train-test simulations.</p>
+<p>For example, time series models - each prediction depends on the previous observation (which is a predictor variable for the next observation) Not easy to thnk of each observation as independent of/exchangeable with the others</p>
+</div>
+</div>
+<p>-</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>WAIC Calculations
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider simple regression fit with <code>quap</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(cars)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    dist <span class="sc">~</span> <span class="fu">dnorm</span>(mu,sigma),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b<span class="sc">*</span>speed,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">100</span>),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    b <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">10</span>),</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  ) , <span class="at">data=</span>cars )</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">94</span>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m,<span class="at">n=</span><span class="dv">1000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Log-likelihood of each observation i at each sample s from the posterior</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>n_samples <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>logprob <span class="ot">&lt;-</span> <span class="fu">sapply</span>( <span class="dv">1</span><span class="sc">:</span>n_samples ,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                   <span class="cf">function</span>(s) {</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                     mu <span class="ot">&lt;-</span> post<span class="sc">$</span>a[s] <span class="sc">+</span> post<span class="sc">$</span>b[s]<span class="sc">*</span>cars<span class="sc">$</span>speed</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">dnorm</span>( cars<span class="sc">$</span>dist , mu , post<span class="sc">$</span>sigma[s] , <span class="at">log=</span><span class="cn">TRUE</span> )</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>                   } )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Now we have a 50x1000 matrix of log-likelihoods, with observations in rows and samples in columns.</li>
+</ul>
+<p>Compute <code>lppd</code>, the Bayesian deviance,by averaging the samples in each row, take the log and add all the logs together</p>
+<ul>
+<li>Need to do all of the averaging on the log scale with the <code>log_sum_exp</code> function, which computes the log of a sum of exponentiated terms. Just subtract the log of the number of samples.</li>
+</ul>
+<p>This computes the average log</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>n_cases <span class="ot">&lt;-</span> <span class="fu">nrow</span>(cars)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>lppd <span class="ot">&lt;-</span> <span class="fu">sapply</span>( <span class="dv">1</span><span class="sc">:</span>n_cases , <span class="cf">function</span>(i) <span class="fu">log_sum_exp</span>(logprob[i,]) <span class="sc">-</span> <span class="fu">log</span>(n_samples) )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li>Typing <code>sum(lppd)</code> will give the lppd.</li>
+</ul>
+<p>Now, compute the penalty term, <span class="math inline">\(p_{WAIC}\)</span> → variance across samples for each observation, added together</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>pWAIC <span class="ot">&lt;-</span> <span class="fu">sapply</span>( <span class="dv">1</span><span class="sc">:</span>n_cases , <span class="cf">function</span>(i) <span class="fu">var</span>(logprob[i,]) )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>And <code>sum(pWAIC)</code> returns the penalty term.</p>
+<p>Compute WAIC:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="dv">2</span><span class="sc">*</span>( <span class="fu">sum</span>(lppd) <span class="sc">-</span> <span class="fu">sum</span>(pWAIC) )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 423.3309</code></pre>
+</div>
+</div>
+<p>Compare the output of the WAIC function. There will be simulation variance, because of how the samples are drawn from the <code>quap</code> fit. But that variance remains much smaller than the standard error of WAIC itself. Compute the standard error by computing the square root of number of cases multiplied by the variance over the individual observation terms in WAIC:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>waic_vec <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">2</span><span class="sc">*</span>(lppd <span class="sc">-</span> pWAIC)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(n_cases <span class="sc">*</span> <span class="fu">var</span>(waic_vec))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17.83012</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="comparing-cv-psis-and-waic" class="level3">
+<h3 class="anchored" data-anchor-id="comparing-cv-psis-and-waic">Comparing CV, PSIS, and WAIC</h3>
+<ul>
+<li><p><strong>WAIC</strong> is unsurprisingly a little better at predicting out-of-sample deviance, because that is what it aims to predict.</p></li>
+<li><p><strong>Cross-validation (CV)</strong> is a trick that estimates out-of-sample deviance as the sample size increases, but it doesn’t aim for the right target at small sample sizes. And since <strong>PSIS</strong> approximates CV, it has the same issue.</p></li>
+<li><p>All three do a very good job on average, and all three have the same error.</p></li>
+<li><p>PSIS and WAIC perform very similarly in context of ordinary linear models</p>
+<ul>
+<li>differences are with other model types, where the posterior distributions are not approx Gaussian or in the presence of observations that strongly influence the posterior</li>
+</ul></li>
+<li><p>CV and PSIS have higher variance as estimators of the K-L Divergence, so we should expect WAIC be better in many cases</p></li>
+<li><p>PSIS has distinct advantage in warning the user when it’s unreliable (depite slight disadvantage in accuracy)</p>
+<ul>
+<li>The k values that PSIS computes for each observation indicate when the PSIS score may be unreliable, as well as identify which observations are at fault</li>
+</ul></li>
+<li><p>The distance between models is what’s useful, not the absolute value of the deviance</p></li>
+</ul>
+</section>
+</section>
+<section id="model-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="model-comparison">Model Comparison</h2>
+<p>Need to evaluate models out-of-sample (not just by looking at fit to the sample - which favors more and more complex models)</p>
+<p>Common to perform <strong>model selection</strong>: choosing the model with the lowest criterion value and then discarding the others</p>
+<ul>
+<li>DO NOT DO MODEL SELECTION (discards the information about relative model accuracy contained in the differences among the CV/PSIS/WAIC value)</li>
+</ul>
+<p>Criteria purpose: measure expected predictive value of the variable on the right scale, accounting for overfitting; provide a way to measure the overfitting tendency of a model, helping us to design models and understand how statistical inference works.</p>
+<p><strong>Model comparison:</strong> more general approach that uses multiple models to understand both how different variables influence predictions, and in combo with a causal model, implied conditional independencies among variables help us infer causal relationships.</p>
+<p>Two examples</p>
+<ol type="1">
+<li>About the distinction between comparing models for predictive performance vs for inferring causation</li>
+<li>About the pointwise nature of model comparison and what inspecting individual points can reveal about model performance and mis-specification; introducing more robust alternative to Gaussian regression</li>
+</ol>
+<section id="ex-1-model-mis-selection" class="level3">
+<h3 class="anchored" data-anchor-id="ex-1-model-mis-selection">Ex 1: Model Mis-selection</h3>
+<p>Inferring cause and making predictions are different tasks. CV and WAIC aim to find models that make good predictions - don’t solve any causal inference problem.</p>
+<ul>
+<li><p>Highly confounded models can still make good predictions (at least in short-term). Backdoor paths give us valid info about statistical associations in the data. Can improve prediction, as long as we don’t intervene on system, and the future is like the past.</p>
+<ul>
+<li>But since our working def of knowing a cause is that we can predict the consequences of an intervention - a good PSIS or WAIC score does not generally indicate a good causal model</li>
+</ul></li>
+</ul>
+<p>Back to the plant growth and fungus example from Ch 6.</p>
+<ul>
+<li><p><code>m6.6</code> model with just intercept</p></li>
+<li><p><code>m6.7</code> model with both treatment and fungus (post-treatment variable)</p></li>
+<li><p><code>m6.8</code> model that includes treatment but not fungus → the one that allowed us to correctly infer the causal influence of treatment</p></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">71</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># simulate initial heights </span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>h0 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N,<span class="dv">10</span>,<span class="dv">2</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># assign treatments and simulate fungus &amp; growth</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>treatment <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">each=</span>N<span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>fungus <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(N,<span class="at">size=</span><span class="dv">1</span>, <span class="at">prob=</span><span class="fl">0.5</span> <span class="sc">-</span> treatment<span class="sc">*</span><span class="fl">0.4</span>)</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>h1 <span class="ot">&lt;-</span> h0 <span class="sc">+</span> <span class="fu">rnorm</span>(N,<span class="dv">5</span> <span class="sc">-</span> <span class="dv">3</span><span class="sc">*</span>fungus)</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co"># compose a clean data frame </span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">h0=</span>h0, <span class="at">h1=</span>h1, <span class="at">treatment=</span>treatment, <span class="at">fungus=</span>fungus)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>m6<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    h1 <span class="sc">~</span> <span class="fu">dnorm</span>( mu , sigma ),</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> h0<span class="sc">*</span>p,</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>    p <span class="sc">~</span> <span class="fu">dlnorm</span>( <span class="dv">0</span> , <span class="fl">0.25</span> ),</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>( <span class="dv">1</span> )</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d )</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>m6<span class="fl">.7</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>    h1 <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> h0<span class="sc">*</span>p,</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> a <span class="sc">+</span> bt<span class="sc">*</span>treatment <span class="sc">+</span> bf<span class="sc">*</span>fungus,</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>,<span class="fl">0.2</span>),</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>    bt <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>),</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>    bf <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>),</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>m6<span class="fl">.8</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>    h1 <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> h0<span class="sc">*</span>p,</span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>    p <span class="ot">&lt;-</span> a <span class="sc">+</span> bt<span class="sc">*</span>treatment,</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dlnorm</span>(<span class="dv">0</span>,<span class="fl">0.2</span>),</span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>    bt <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>),</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d</span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">WAIC</span>(m6<span class="fl">.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      WAIC      lppd penalty  std_err
+1 361.4511 -177.1724  3.5532 14.17035</code></pre>
+</div>
+</div>
+<ul>
+<li><p>First value guess for out-of-sample deviance</p></li>
+<li><p>lppd</p></li>
+<li><p>effective number of parameters pWAIC</p></li>
+<li><p>Standard error of WAIC value</p></li>
+</ul>
+<p>To easily compare multiple models, use convenience function <code>compare</code> from <code>rethinking</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">77</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">compare</span>(m6<span class="fl">.6</span>, m6<span class="fl">.7</span>, m6<span class="fl">.8</span>, <span class="at">func=</span>PSIS)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         PSIS       SE    dPSIS      dSE    pPSIS       weight
+m6.7 361.9879 14.35614  0.00000       NA 3.888398 1.000000e+00
+m6.8 402.8100 11.34305 40.82209 10.49435 2.662957 1.366454e-09
+m6.6 405.9378 11.72436 43.94992 12.24690 1.593079 2.860200e-10</code></pre>
+</div>
+</div>
+<ul>
+<li><p>Column 1: WAIC values</p>
+<ul>
+<li><p>Smaller values are better</p></li>
+<li><p>Models ordered by best WAIC to worst</p>
+<ul>
+<li>Model including the fungus variable has smallest WAIC, as promised</li>
+</ul></li>
+</ul></li>
+<li><p>Column 2: pWAIC, penalty term of WAIC</p>
+<ul>
+<li>These values are close to, but slightly below the number of dimensions in the posterior of each model, which is expected in lineaer regressions with regularizing priors</li>
+</ul></li>
+<li><p>Column 3: dWAIC, difference between each model’s WAIC and best WAIC in set</p>
+<ul>
+<li><p>0 for best model</p></li>
+<li><p>m6.7 is about 40 units of deviance smaller than both other models</p></li>
+<li><p>intercept model m6.6 is 3 units worse than m6.8</p></li>
+<li><p>Are these big differences or small differences? → Are the models easily distinguished by their expected out-of-sample accuracy?</p>
+<ul>
+<li>need to consider error in WAIC estimates</li>
+</ul></li>
+</ul></li>
+<li><p>Columns 4: SE, standard error of each WAIC</p>
+<ul>
+<li>expect out-of-sample accuracy to be normally distributed with mean equal to the reported WAIC value and SD equal to the standard error</li>
+</ul></li>
+<li><p>Column 5: dSE, standard error of the models’ difference</p>
+<ul>
+<li><p>each difference in WAIC values has a standard error</p></li>
+<li><p>To compute the standard error of the difference between models m6.7 and m6.8, we just need the pointwise breakdown of the WAIC values:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">91</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>waic_m6<span class="fl">.7</span> <span class="ot">&lt;-</span> <span class="fu">WAIC</span>( m6<span class="fl">.7</span> , <span class="at">pointwise=</span><span class="cn">TRUE</span> )<span class="sc">$</span>WAIC</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>waic_m6<span class="fl">.8</span> <span class="ot">&lt;-</span> <span class="fu">WAIC</span>( m6<span class="fl">.8</span> , <span class="at">pointwise=</span><span class="cn">TRUE</span> )<span class="sc">$</span>WAIC</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(waic_m6<span class="fl">.7</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>diff_m6<span class="fl">.7</span>_m6<span class="fl">.8</span> <span class="ot">&lt;-</span> waic_m6<span class="fl">.7</span> <span class="sc">-</span> waic_m6<span class="fl">.8</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>( n<span class="sc">*</span><span class="fu">var</span>( diff_m6<span class="fl">.7</span>_m6<span class="fl">.8</span> ) )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10.35785</code></pre>
+</div>
+</div></li>
+</ul></li>
+</ul>
+<p>The difference between the models is 40.9 and the standard error about 10.4. If we imagine the 99% (corresponding to a z-score of about 2.6) interval of the difference, it’ll be about:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fl">40.0</span> <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>)<span class="sc">*</span><span class="fl">10.4</span><span class="sc">*</span><span class="fl">2.6</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12.96 67.04</code></pre>
+</div>
+</div>
+<p>So yes, these models are very easy to distinguish by expected out-of-sample accuracy. Model m6.7 is a lot better. You might be able to see all of this better, if we plot the compare table:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">compare</span>(m6<span class="fl">.6</span>, m6<span class="fl">.7</span>, m6<span class="fl">.8</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch7_notes_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>filled points: in-sample deviance values</p></li>
+<li><p>open points: WAIC values</p>
+<ul>
+<li>Naturally, each model does better in-sample than it is expected to do out-of-sample</li>
+</ul></li>
+<li><p>line segments: standard error of each WAIC</p></li>
+<li><p>light gray line segment with triangle: standard error of the difference in WAIC between two models</p></li>
+</ul>
+<p>WAIC cannot be used to infer causation. Says that <code>m6.7</code> is the best, even though this one contained the post-treatment variable (pipe confound between treatment and outcome)</p>
+<ul>
+<li><p>since fungus is more highly correlated with the outcome, a model using it is likely to predict better. WAIC did its job. It’s job is not to infer causation. It’s job is to guess predictive accuracy.</p></li>
+<li><p>Does not mean WAIC/CV/PSIS are useless - provides useful measure of the expected improvement in prediction that comes from conditioning on the fungus</p></li>
+</ul>
+<p>Comparing m6.6 (intercept only) to m6.8 (with treatment only)</p>
+<ul>
+<li>WAIC treats the two models as quite similar. Difference of only 3 units of deviance</li>
+</ul>
+<p>Calculate the SE of the difference:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">92</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>waic_m6<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">WAIC</span>( m6<span class="fl">.6</span> , <span class="at">pointwise=</span><span class="cn">TRUE</span> )<span class="sc">$</span>WAIC</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>diff_m6<span class="fl">.6</span>_m6<span class="fl">.8</span> <span class="ot">&lt;-</span> waic_m6<span class="fl">.6</span> <span class="sc">-</span> waic_m6<span class="fl">.8</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(n<span class="sc">*</span><span class="fu">var</span>(diff_m6<span class="fl">.6</span>_m6<span class="fl">.8</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.858923</code></pre>
+</div>
+</div>
+<p>The <code>compare</code> table doesn’t show, but did calculate. Need the dSE slot of the return</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">93</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">compare</span>(m6<span class="fl">.6</span>, m6<span class="fl">.7</span>,m6<span class="fl">.8</span>)<span class="sc">@</span>dSE</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          m6.6     m6.7      m6.8
+m6.6        NA 12.20638  4.934361
+m6.7 12.206385       NA 10.426574
+m6.8  4.934361 10.42657        NA</code></pre>
+</div>
+</div>
+<ul>
+<li><p>This matrix contains all of the pairwise difference standard errors for the models you compared.</p></li>
+<li><p>Notice that the standard error of the difference for m6.6 and m6.8 is bigger than the difference itself. We really cannot easily distinguish these models on the basis of WAIC.</p></li>
+<li><p>Does this mean that the treatment doesn’t work? Of course not. We know that it works. We simulated the data. And the posterior distribution of the treatment effect, bt in m6.8, is reliably positive. But it isn’t especially large. So it doesn’t do much alone to improve prediction of plant height. There are just too many other sources of variation.</p>
+<ul>
+<li>This result just echoes the <strong>core fact about WAIC (and CV and PSIS): It</strong> <strong>guesses predictive accuracy, not causal truth.</strong> A variable can be causally related to an outcome, but have little relative impact on it, and WAIC will tell you that.</li>
+</ul></li>
+</ul>
+<p><code>weight</code> element of compare table</p>
+<ul>
+<li><p>these values are traditional way to summarize relative support for each model - always sum to 1 within set of compared models</p></li>
+<li><p>used in <strong>model averaging</strong> (family of methods for combining the predictions of multiple models</p></li>
+</ul>
+</section>
+<section id="ex-2-outliers-and-other-illusions" class="level3">
+<h3 class="anchored" data-anchor-id="ex-2-outliers-and-other-illusions">Ex 2: Outliers and other illusions</h3>
+<p>Divorce example from Ch 5, posterior predictions for a few States were hard to model (Idaho was an outlier).</p>
+<ul>
+<li>Individual points like Idaho tend to be very influential in ordinary regression models</li>
+</ul>
+<p>Refit the three divorce models from Ch 5:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"WaffleDivorce"</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> WaffleDivorce</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>A <span class="ot">&lt;-</span> <span class="fu">standardize</span>(d<span class="sc">$</span>MedianAgeMarriage)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>D <span class="ot">&lt;-</span> <span class="fu">standardize</span>( d<span class="sc">$</span>Divorce )</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>M <span class="ot">&lt;-</span> <span class="fu">standardize</span>( d<span class="sc">$</span>Marriage )</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>m5<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bA <span class="sc">*</span> A, </span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.2</span>),</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>    bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>),</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>  ),<span class="at">data=</span>d</span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>m5<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu,sigma), </span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bM <span class="sc">*</span> M, </span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.2</span>),</span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>    bM <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>), </span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data =</span> d </span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>m5<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>( </span>
+<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma), </span>
+<span id="cb48-31"><a href="#cb48-31" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bM<span class="sc">*</span>M <span class="sc">+</span> bA<span class="sc">*</span>A,</span>
+<span id="cb48-32"><a href="#cb48-32" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.2</span>),</span>
+<span id="cb48-33"><a href="#cb48-33" aria-hidden="true" tabindex="-1"></a>    bM <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>), </span>
+<span id="cb48-34"><a href="#cb48-34" aria-hidden="true" tabindex="-1"></a>    bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>),</span>
+<span id="cb48-35"><a href="#cb48-35" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb48-36"><a href="#cb48-36" aria-hidden="true" tabindex="-1"></a>    ), <span class="at">data=</span>d </span>
+<span id="cb48-37"><a href="#cb48-37" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m5<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               mean         sd       5.5%      94.5%
+a      5.030230e-08 0.09737869 -0.1556299  0.1556300
+bA    -5.684034e-01 0.10999969 -0.7442042 -0.3926027
+sigma  7.883248e-01 0.07801112  0.6636480  0.9130017</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m5<span class="fl">.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              mean         sd       5.5%     94.5%
+a     1.692684e-05 0.10824643 -0.1729818 0.1730156
+bM    3.500727e-01 0.12592733  0.1488165 0.5513289
+sigma 9.102655e-01 0.08986241  0.7666480 1.0538829</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m5<span class="fl">.3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               mean         sd       5.5%      94.5%
+a     -1.807829e-07 0.09707612 -0.1551466  0.1551462
+bM    -6.540088e-02 0.15077301 -0.3063653  0.1755635
+bA    -6.135232e-01 0.15098363 -0.8548242 -0.3722222
+sigma  7.851189e-01 0.07784362  0.6607098  0.9095280</code></pre>
+</div>
+</div>
+<ul>
+<li>remember: marriage rate M has little association with divorce rate D, once age at marriage A is included in m5.3</li>
+</ul>
+<p>Now compare these models using PSIS</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">24071847</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">compare</span>(m5<span class="fl">.1</span>,m5<span class="fl">.2</span>, m5<span class="fl">.3</span>, <span class="at">func=</span>PSIS)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Some Pareto k values are high (&gt;0.5). Set pointwise=TRUE to inspect individual points.
+Some Pareto k values are high (&gt;0.5). Set pointwise=TRUE to inspect individual points.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Some Pareto k values are very high (&gt;1). Set pointwise=TRUE to inspect individual points.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         PSIS       SE     dPSIS       dSE    pPSIS       weight
+m5.1 127.5665 14.69485  0.000000        NA 4.671425 0.8340176323
+m5.3 130.8062 16.15696  3.239685  1.808671 6.578663 0.1650769827
+m5.2 141.2178 11.56557 13.651299 10.923820 4.057204 0.0009053851</code></pre>
+</div>
+</div>
+<ul>
+<li><p>Note that m5.1 (the one that omits M) is at the top</p>
+<ul>
+<li><p>Since marriage rate has very little association with the outcome, model the omits it has slightly better out-of-sample performance (despite fitting worse than m5.3, the model with both predictors).</p></li>
+<li><p>Difference between the top two models is only 1.8, with a standard error of 0.9, so the models make similar predictions</p>
+<ul>
+<li>typical pattern when some predictor has a very small association with the outcome</li>
+</ul></li>
+</ul></li>
+<li><p>Note that you receive message <code>Some Pareto k values are high (&gt;0.5)</code></p>
+<ul>
+<li><p>means the smoothing approximation the PSIS uses is unreliable for some points</p>
+<ul>
+<li><p>recall when a point’s Pareto <span class="math inline">\(k &gt; 0.5\)</span>, the importance weight can be unreliable</p></li>
+<li><p>These points tend to be outliers with unlikely values → highly influential, harder to estimate out-of-sample accuracy (new sample unlikely to contain same outliers, could make out-of-sample predictions worse than expected)</p></li>
+<li><p>WAIC also vulnerable to outliers, but doesn’t have same automatic warning (measure risk instead thru the estimate of <strong>overfitting penalty</strong>)</p></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Use <code>pointwise=TRUE</code> to <code>PSIS()</code> to look at individual states and see which ones are causing the problem.</p>
+<ul>
+<li>Get a matrix with each observation on a row and the PSIS info, including Pareto <span class="math inline">\(k\)</span> values, in columns</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">24071847</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>PSIS_m5<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">PSIS</span>(m5<span class="fl">.3</span>, <span class="at">pointwise =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Some Pareto k values are very high (&gt;1). Set pointwise=TRUE to inspect individual points.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># also plot the individual penalty values from WAIC to show relationship between Pareto k and info theoretic prediction penalty </span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">24071847</span>)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>WAIC_m5<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">WAIC</span>(m5<span class="fl">.3</span>, <span class="at">pointwise =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(PSIS_m5<span class="fl">.3</span><span class="sc">$</span>k, WAIC_m5<span class="fl">.3</span><span class="sc">$</span>penalty, <span class="at">xlab=</span><span class="st">"PSIS Pareto k"</span>, <span class="at">ylab=</span><span class="st">"WAIC penalty"</span>, <span class="at">col=</span>rangi2, <span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="fl">0.5</span>, <span class="at">lty =</span> <span class="st">"dashed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch7_notes_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>Individual points are states, with Pareto k on x-axis and WAIC’s overfitting penalty on the y-axis</p></li>
+<li><p>Idaho had high Pareto k value (above 1) and large penalty term (over 2)</p>
+<ul>
+<li><p>Recall, ID has very low divorce rate for its age at marriage → highly influential, exerts more influence on posterior distribution than other states</p>
+<ul>
+<li><p>its Pareto k value is double the theoretical point at which variance becomes infinite (x=0.5)</p></li>
+<li><p>WAIC penalty &gt;2; the sum of all penalty terms usually equals total free parameters in model → here, 4 parameters and total penalty is 6</p></li>
+<li><p>Outlier causing additional overfitting risk</p></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>What to do about outliers causing additional overfitting risk?</p>
+<ul>
+<li><p>DON’T: drop outliers based only on SDs from the mean outcome value</p>
+<ul>
+<li><p>a point can only be unexpected and highly influential in light of a model;</p></li>
+<li><p>After you fit a model, the picture changes. If there are only a few outliers, and you are sure to report results both with and without them, dropping outliers might be okay.</p></li>
+<li><p>But if there are several outliers and we really need to model them, what then?</p></li>
+</ul></li>
+</ul>
+<p>Basic problem: Gaussian error model is easily surprised (have very thin tails → little probability mass give to observations far from the mean)</p>
+<ul>
+<li><p>Many real phenomena have thicker tails with rare, extreme outcomes</p>
+<ul>
+<li>not measurement errors, but real events containing info about natural processes</li>
+</ul></li>
+</ul>
+<p><strong>Robust Regression</strong>: indicates a linear model in which the influence of extreme observations is reduced</p>
+<ul>
+<li><p>one way to use extreme observations and reduce their influence</p></li>
+<li><p>Common approach: replace Gaussian model with Student’s t distribution</p></li>
+</ul>
+<section id="students-t-distribution" class="level4">
+<h4 class="anchored" data-anchor-id="students-t-distribution"><strong>Student’s T distribution</strong></h4>
+<p>Thicker-tailed distribution arising from a <u>mixture of Gaussian distributions with different variances</u> (which can thicken the tails)</p>
+<ul>
+<li><p>generalized Student-t distribution has same mean µ and scale <span class="math inline">\(\sigma\)</span> parameters as Gaussian, but also an extra shape parameter <span class="math inline">\(\nu\)</span> that controls how thick the tails are</p>
+<ul>
+<li><code>dstudent</code> in <code>rethinking</code> package</li>
+</ul></li>
+<li><p>Large <span class="math inline">\(\nu\)</span> → Thin tails (converging in the limit <span class="math inline">\(\nu = \infty\)</span> to a Gaussian distribution)</p></li>
+<li><p>As <span class="math inline">\(\nu\)</span> approached 1, tails get <em>thicker</em> and rare extreme observations occur often</p></li>
+</ul>
+<p>When using robust regression, we don’t normally try to estimate <span class="math inline">\(\nu\)</span> because there aren’t enough extreme observations to do so</p>
+<ul>
+<li>Instead assume <span class="math inline">\(\nu\)</span> is small (thick tails) in order to reduce the influence of outliers</li>
+</ul>
+<p>Re-estimate the divorce model with Student-t distribution with <span class="math inline">\(\nu = 2\)</span> (just replace <code>dnorm</code> with <code>dstudent</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>m5<span class="fl">.3</span>t <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>( </span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dstudent</span>(<span class="dv">2</span>, mu, sigma), </span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bM<span class="sc">*</span>M <span class="sc">+</span> bA<span class="sc">*</span>A,</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.2</span>),</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>    bM <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>), </span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>),</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d </span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a><span class="fu">PSIS</span>(m5<span class="fl">.3</span>t)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     PSIS      lppd  penalty  std_err
+1 133.832 -66.91598 6.988088 11.96837</code></pre>
+</div>
+</div>
+<ul>
+<li>relative influence of Idaho has reduced</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m5<span class="fl">.3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               mean         sd       5.5%      94.5%
+a     -1.807829e-07 0.09707612 -0.1551466  0.1551462
+bM    -6.540088e-02 0.15077301 -0.3063653  0.1755635
+bA    -6.135232e-01 0.15098363 -0.8548242 -0.3722222
+sigma  7.851189e-01 0.07784362  0.6607098  0.9095280</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m5<span class="fl">.3</span>t)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              mean         sd       5.5%      94.5%
+a      0.015063628 0.09943797 -0.1438575  0.1739847
+bM     0.003694418 0.21183429 -0.3348577  0.3422465
+bA    -0.701173675 0.13046112 -0.9096757 -0.4926716
+sigma  0.552717626 0.08006000  0.4247663  0.6806690</code></pre>
+</div>
+</div>
+<ul>
+<li><p>Comparing m5.3t and m5.3, coefficient <code>bA</code> has gotten farther from 0 with student-t distribution</p>
+<ul>
+<li><p>Idaho has low divorce rate and low median age at marriage:</p>
+<ul>
+<li><p>when it was influential (<code>m5.3</code>), it reduced the association between age at marriage and divorce</p></li>
+<li><p>when it is less influential (<code>m5.3t</code>), the association is estimated to be slightly larger</p></li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

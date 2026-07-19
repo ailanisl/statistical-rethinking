@@ -22,7 +22,7 @@ Why normal?
 
 -   describe association between adult weight and height
 
-## Step 2: Scientific model 
+## Step 2: Scientific model
 
 How does height causally influence weight?
 
@@ -51,7 +51,9 @@ $$
  W = \beta H + U
 $$
 
-Generative code:
+-   beta is some proportion
+
+### **Generative code**
 
 ```{r}
 # function to simulate weights of individuals from height 
@@ -66,19 +68,71 @@ sim_weight <- function(H,b, sd) {
 
 -   Goal - estimate $\beta$ but right now, simulating what data look like for any given value of beta
 
+"This is the generative model: can it produce data that looks anything like the original data?" →
+
 ```{r}
-H <- runif(200, min=130, max=170)
+H <- runif(200, min=130, max=170) # why uniform? just cuz he wanted the full x-axis represented
+#H <- rnorm(200, 170,20)
+#plot(H)
+
 W <- sim_weight(H, b=0.5, sd=5)
 plot(W~H, col=2, lwd=3)
 ```
 
+-   Yes, it can (doesn't mean it's the right generative model)
 -   Simulated individuals → biologically realistic relationships between weight and height
 
-## Step 3: Statistical model(s) 
+## Step 3: Statistical model(s)
 
-**quadratic approximation**: approximate the posterior distribution as a multivariate Gaussian distribution
+::: callout-note
+## Conventional statistical model notation
+
+\(1\) List the variables
+
+\(2\) Define each variable as a deterministic or distributional function of other variables
+:::
+
+|  |  |
+|----|----|
+| $W_{i} = \beta H_{i} + U_{i}$ | Equation for expected weight |
+| $U_{i} \sim {\sf Normal}(0, \sigma)$ | Gaussian error with standard deviation sigma |
+| $H_{i} \sim {\sf Uniform}(130,170)$ | Height uniformly distributed from 130-170cm |
+
+### Estimator
+
+We want to estimate how the avg weight changes with height
+
+$$
+E(W_{i}|H_{i}) = \alpha + \beta H_{i}
+$$
+
+-   $E(W_{i}|H_{i})$ = average weight conditional on height
+
+How this relates to posterior distributions:
+
+$$
+Pr(\alpha,\beta,\sigma|H_{i},W_{i})=\frac{Pr(W_{i}|H_{i},\alpha,\beta,\sigma)Pr(\alpha,\beta,\sigma)}{Z}
+$$
+
+-   $Pr(\alpha,\beta,\sigma|H_{i},W_{i})$ → posterior probability of specific line
+
+-   $Pr(W_{i}|H_{i},\alpha,\beta,\sigma)$ → Garden of forking data
+
+-   $Pr(\alpha,\beta,\sigma)$ → prior
+
+-   $Z$ → normalizing
+
+### **Quadratic approximation**
+
+-   Approximate the posterior distribution as a multivariate Gaussian distribution
+
+<!-- -->
 
 -   Posterior distributions are very often multivariate Gaussian distributions if the sample is reasonably large
+
+    ::: callout-caution
+    Quadratic approximation does almost what **Maximum Likelihood Estimation (non-Bayesian)** does in almost all cases.
+    :::
 
 -   `quap` tool so that students enter a list of deterministic and distributional assumptions that define a statistical model - runs it and finds the quadratic approximation of the posterior distribution
 
@@ -90,7 +144,7 @@ In statistical model, UNLIKE generative model, you need priors (when there's no 
 
     -   Constrain implied observations of the model to scientifically realistic ranges
 
-### Prior predictive distribution → same as posterior predictive distributions (same animal, same golem) 
+### Prior predictive distribution → same as posterior predictive distributions (same animal, same golem)
 
 -   Priors should express scientific knowledge, but **softly**
 
@@ -100,17 +154,19 @@ In statistical model, UNLIKE generative model, you need priors (when there's no 
 
     -   Scientific knowledge in this case: human biology...
 
--   When H = 0, W = 0 (someone with 0 height, should also weight 0 kg)
-
-    -   **Strong constraint on alpha (intercept)**: should be close to 0, so give wide (soft) variance: $Normal(0,10)$
-
--   Weight INC (on avg) with height (POSITIVE); Weight (kg) is less than height (cm) (BETWEEN ZERO AND ONE)
-
-    -   **Constraint on slope**: beta should be positive, between 0 and 1: $Uniform(0,1)$
-
--   Standard deviations are positive so
-
-    -   Sigma must be positive → greater than 0, SD of 10 is variance of 100 kg and there's not a variance of 100 kg around avg weight so must be in this range: $Uniform(0,1)$
++-------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------+
+| Scientific knowledge (prior)                                                                                | Constraint explanation                                                                                                                                                  | Prior distributions               |
++=============================================================================================================+=========================================================================================================================================================================+===================================+
+| When H = 0, W = 0 (someone with 0 height, should also weight 0 kg)                                          | Strong constraint on alpha (intercept): should be close to 0, so give wide (soft) variance: $Normal(0,10)$                                                              | $\alpha \sim {\sf Normal}(0,10)$  |
+|                                                                                                             |                                                                                                                                                                         |                                   |
+|                                                                                                             | alpha is the expected value of weight when height=0                                                                                                                     |                                   |
++-------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------+
+| Weight INC (on average) with height (POSITIVE); Weight (kg) is less than height (cm) (BETWEEN ZERO AND ONE) | Constraint on slope: beta should be positive, between 0 and 1: $Uniform(0,1)$                                                                                           | $\beta \sim {\sf Uniform}(0,1)$   |
+|                                                                                                             |                                                                                                                                                                         |                                   |
+|                                                                                                             | Not the best choice, but for pedagogical reasons. Typically use Gaussian priors on slopes.                                                                              |                                   |
++-------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------+
+| Standard deviations are positive                                                                            | Sigma must be positive → greater than 0, SD of 10 is variance of 100 kg and there's not a variance of 100 kg around avg weight so must be in this range: $Uniform(0,1)$ | $\sigma \sim {\sf Uniform}(0,10)$ |
++-------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------------------------+
 
 ::: callout-important
 ## Normal VS Uniform Distribution
@@ -128,7 +184,7 @@ In statistical model, UNLIKE generative model, you need priors (when there's no 
 -   Model consistent, equal probability scenarios
 :::
 
-Perform prior predictive **simulation**
+### Perform prior predictive **simulation**
 
 -   Draw the observable implications of these priors in the observable outcome space. I.e., make some lines
 
@@ -159,7 +215,7 @@ To see this prior predictive distribution (and the implications of your assumpti
 
     <!-- -->
 
-    -   Priors are just posterior distributions. It's the posterior distribution, and how it's computed, that's diff from frequentist stats
+    -   **Priors are just posterior distributions. It's the posterior distribution, and how it's computed, that's diff from frequentist stats**
 
     -   There are no correct priors, only scientifically justifiable priors (same with posteriors)
 
@@ -172,9 +228,13 @@ To see this prior predictive distribution (and the implications of your assumpti
         -   Very important/useful in complex models
 
             -   Need to practice not: simulate, understand
+
+    -   Easy to do better than "flat" priors. If you don't **regularize**, then you are exaggerating effect sizes.
+
+    -   Anti-Bayesian boomers worry priors are used to cheat, but priors nearly always used to *shrink effects to zero!* Bayes is **conservative**.
     :::
 
-## Step 4: Validate model 
+## Step 4: Validate model
 
 ### Simulation-based validation
 
@@ -186,7 +246,7 @@ To see this prior predictive distribution (and the implications of your assumpti
 
     -   Generative process - write it as code to generate synthetic data to show that your estimator, whatever structure it has, can work even in principle
 
--   Strong test: **Simulation-based calibration**
+-   Stronger test: **Simulation-based calibration**
 
     -   More stringent tests, how calibrated Bayesian estimators are over full shape
 
@@ -223,7 +283,7 @@ precis(m3.1)
 
     -   But having trouble with the intercept $\alpha$
 
-## Step 5: Analyze data 
+## Step 5: Analyze data
 
 After tiresome rounds of model validation (takes very long with more complex models), you can take real data sample and the model will run.
 
@@ -267,7 +327,7 @@ pairs(m3.2)
 
     -   Can't interpret intercept and slope separately
 
-#### First Law of statistical interpretation: 
+#### First Law of statistical interpretation:
 
 -   the parameters are not independent of one another and cannot be independently interpreted
 
@@ -275,7 +335,7 @@ pairs(m3.2)
 
     -   `extract.samples` creates synthetic data table of samples from the posterior distributions that adhere to the covariance structure
 
-### Posterior predictive distribution 
+### Posterior predictive distribution
 
 **The posterior is full of lines**
 

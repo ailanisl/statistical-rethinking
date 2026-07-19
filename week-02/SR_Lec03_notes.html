@@ -167,7 +167,12 @@ W = f(H, U)
 <p><span class="math display">\[
 W = \beta H + U
 \]</span></p>
-<p>Generative code:</p>
+<ul>
+<li>beta is some proportion</li>
+</ul>
+</section>
+<section id="generative-code" class="level3">
+<h3 class="anchored" data-anchor-id="generative-code"><strong>Generative code</strong></h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to simulate weights of individuals from height </span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sim_weight <span class="ot">&lt;-</span> <span class="cf">function</span>(H,b, sd) { </span>
@@ -181,10 +186,14 @@ W = \beta H + U
 <ul>
 <li>Goal - estimate <span class="math inline">\(\beta\)</span> but right now, simulating what data look like for any given value of beta</li>
 </ul>
+<p>“This is the generative model: can it produce data that looks anything like the original data?” →</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">200</span>, <span class="at">min=</span><span class="dv">130</span>, <span class="at">max=</span><span class="dv">170</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">sim_weight</span>(H, <span class="at">b=</span><span class="fl">0.5</span>, <span class="at">sd=</span><span class="dv">5</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(W<span class="sc">~</span>H, <span class="at">col=</span><span class="dv">2</span>, <span class="at">lwd=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">200</span>, <span class="at">min=</span><span class="dv">130</span>, <span class="at">max=</span><span class="dv">170</span>) <span class="co"># why uniform? just cuz he wanted the full x-axis represented</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#H &lt;- rnorm(200, 170,20)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(H)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">sim_weight</span>(H, <span class="at">b=</span><span class="fl">0.5</span>, <span class="at">sd=</span><span class="dv">5</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(W<span class="sc">~</span>H, <span class="at">col=</span><span class="dv">2</span>, <span class="at">lwd=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -194,15 +203,88 @@ W = \beta H + U
 </div>
 </div>
 <ul>
+<li>Yes, it can (doesn’t mean it’s the right generative model)</li>
 <li>Simulated individuals → biologically realistic relationships between weight and height</li>
 </ul>
 </section>
 </section>
 <section id="step-3-statistical-models" class="level2">
 <h2 class="anchored" data-anchor-id="step-3-statistical-models">Step 3: Statistical model(s)</h2>
-<p>quadratic approximation: approximate the posterior distribution as a multivariate Gaussian distribution</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Conventional statistical model notation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>(1) List the variables</p>
+<p>(2) Define each variable as a deterministic or distributional function of other variables</p>
+</div>
+</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(W_{i} = \beta H_{i} + U_{i}\)</span></td>
+<td>Equation for expected weight</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(U_{i} \sim {\sf Normal}(0, \sigma)\)</span></td>
+<td>Gaussian error with standard deviation sigma</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(H_{i} \sim {\sf Uniform}(130,170)\)</span></td>
+<td>Height uniformly distributed from 130-170cm</td>
+</tr>
+</tbody>
+</table>
+<section id="estimator" class="level3">
+<h3 class="anchored" data-anchor-id="estimator">Estimator</h3>
+<p>We want to estimate how the avg weight changes with height</p>
+<p><span class="math display">\[
+E(W_{i}|H_{i}) = \alpha + \beta H_{i}
+\]</span></p>
 <ul>
-<li><p>Posterior distributions are very often multivariate Gaussian distributions if the sample is reasonably large</p></li>
+<li><span class="math inline">\(E(W_{i}|H_{i})\)</span> = average weight conditional on height</li>
+</ul>
+<p>How this relates to posterior distributions:</p>
+<p><span class="math display">\[
+Pr(\alpha,\beta,\sigma|H_{i},W_{i})=\frac{Pr(W_{i}|H_{i},\alpha,\beta,\sigma)Pr(\alpha,\beta,\sigma)}{Z}
+\]</span></p>
+<ul>
+<li><p><span class="math inline">\(Pr(\alpha,\beta,\sigma|H_{i},W_{i})\)</span> → posterior probability of specific line</p></li>
+<li><p><span class="math inline">\(Pr(W_{i}|H_{i},\alpha,\beta,\sigma)\)</span> → Garden of forking data</p></li>
+<li><p><span class="math inline">\(Pr(\alpha,\beta,\sigma)\)</span> → prior</p></li>
+<li><p><span class="math inline">\(Z\)</span> → normalizing</p></li>
+</ul>
+</section>
+<section id="quadratic-approximation" class="level3">
+<h3 class="anchored" data-anchor-id="quadratic-approximation"><strong>Quadratic approximation</strong></h3>
+<ul>
+<li>Approximate the posterior distribution as a multivariate Gaussian distribution</li>
+</ul>
+<!-- -->
+<ul>
+<li><p>Posterior distributions are very often multivariate Gaussian distributions if the sample is reasonably large</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Quadratic approximation does almost what <strong>Maximum Likelihood Estimation (non-Bayesian)</strong> does in almost all cases.</p>
+</div>
+</div></li>
 <li><p><code>quap</code> tool so that students enter a list of deterministic and distributional assumptions that define a statistical model - runs it and finds the quadratic approximation of the posterior distribution</p></li>
 </ul>
 <p>In statistical model, UNLIKE generative model, you need priors (when there’s no observations, what does the model believe?)</p>
@@ -213,6 +295,7 @@ W = \beta H + U
 <li>Constrain implied observations of the model to scientifically realistic ranges</li>
 </ul></li>
 </ul>
+</section>
 <section id="prior-predictive-distribution-same-as-posterior-predictive-distributions-same-animal-same-golem" class="level3">
 <h3 class="anchored" data-anchor-id="prior-predictive-distribution-same-as-posterior-predictive-distributions-same-animal-same-golem">Prior predictive distribution → same as posterior predictive distributions (same animal, same golem)</h3>
 <ul>
@@ -222,19 +305,40 @@ W = \beta H + U
 <li><p>Often generative process in nature is different than we imagine → want stat model to see and learn about those violations</p></li>
 <li><p>Scientific knowledge in this case: human biology…</p></li>
 </ul></li>
-<li><p>When H = 0, W = 0 (someone with 0 height, should also weight 0 kg)</p>
-<ul>
-<li><strong>Strong constraint on alpha (intercept)</strong>: should be close to 0, so give wide (soft) variance: <span class="math inline">\(Normal(0,10)\)</span></li>
-</ul></li>
-<li><p>Weight INC (on avg) with height (POSITIVE); Weight (kg) is less than height (cm) (BETWEEN ZERO AND ONE)</p>
-<ul>
-<li><strong>Constraint on slope</strong>: beta should be positive, between 0 and 1: <span class="math inline">\(Uniform(0,1)\)</span></li>
-</ul></li>
-<li><p>Standard deviations are positive so</p>
-<ul>
-<li>Sigma must be positive → greater than 0, SD of 10 is variance of 100 kg and there’s not a variance of 100 kg around avg weight so must be in this range: <span class="math inline">\(Uniform(0,1)\)</span></li>
-</ul></li>
 </ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 34%">
+<col style="width: 53%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Scientific knowledge (prior)</th>
+<th>Constraint explanation</th>
+<th>Prior distributions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>When H = 0, W = 0 (someone with 0 height, should also weight 0 kg)</td>
+<td><p>Strong constraint on alpha (intercept): should be close to 0, so give wide (soft) variance: <span class="math inline">\(Normal(0,10)\)</span></p>
+<p>alpha is the expected value of weight when height=0</p></td>
+<td><span class="math inline">\(\alpha \sim {\sf Normal}(0,10)\)</span></td>
+</tr>
+<tr class="even">
+<td>Weight INC (on average) with height (POSITIVE); Weight (kg) is less than height (cm) (BETWEEN ZERO AND ONE)</td>
+<td><p>Constraint on slope: beta should be positive, between 0 and 1: <span class="math inline">\(Uniform(0,1)\)</span></p>
+<p>Not the best choice, but for pedagogical reasons. Typically use Gaussian priors on slopes.</p></td>
+<td><span class="math inline">\(\beta \sim {\sf Uniform}(0,1)\)</span></td>
+</tr>
+<tr class="odd">
+<td>Standard deviations are positive</td>
+<td>Sigma must be positive → greater than 0, SD of 10 is variance of 100 kg and there’s not a variance of 100 kg around avg weight so must be in this range: <span class="math inline">\(Uniform(0,1)\)</span></td>
+<td><span class="math inline">\(\sigma \sim {\sf Uniform}(0,10)\)</span></td>
+</tr>
+</tbody>
+</table>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -257,7 +361,9 @@ W = \beta H + U
 </ul>
 </div>
 </div>
-<p>Perform prior predictive <strong>simulation</strong></p>
+</section>
+<section id="perform-prior-predictive-simulation" class="level3">
+<h3 class="anchored" data-anchor-id="perform-prior-predictive-simulation">Perform prior predictive <strong>simulation</strong></h3>
 <ul>
 <li>Draw the observable implications of these priors in the observable outcome space. I.e., make some lines</li>
 </ul>
@@ -300,7 +406,7 @@ W = \beta H + U
 </ul>
 <!-- -->
 <ul>
-<li><p>Priors are just posterior distributions. It’s the posterior distribution, and how it’s computed, that’s diff from frequentist stats</p></li>
+<li><p><strong>Priors are just posterior distributions. It’s the posterior distribution, and how it’s computed, that’s diff from frequentist stats</strong></p></li>
 <li><p>There are no correct priors, only scientifically justifiable priors (same with posteriors)</p>
 <ul>
 <li><p>Scientific assumptions justify the generative model, which justify the estimator</p></li>
@@ -311,6 +417,8 @@ W = \beta H + U
 <li>Need to practice not: simulate, understand</li>
 </ul></li>
 </ul></li>
+<li><p>Easy to do better than “flat” priors. If you don’t <strong>regularize</strong>, then you are exaggerating effect sizes.</p></li>
+<li><p>Anti-Bayesian boomers worry priors are used to cheat, but priors nearly always used to <em>shrink effects to zero!</em> Bayes is <strong>conservative</strong>.</p></li>
 </ul>
 </div>
 </div></li>
@@ -328,7 +436,7 @@ W = \beta H + U
 <ul>
 <li>Generative process - write it as code to generate synthetic data to show that your estimator, whatever structure it has, can work even in principle</li>
 </ul></li>
-<li><p>Strong test: <strong>Simulation-based calibration</strong></p>
+<li><p>Stronger test: <strong>Simulation-based calibration</strong></p>
 <ul>
 <li>More stringent tests, how calibrated Bayesian estimators are over full shape</li>
 </ul></li>

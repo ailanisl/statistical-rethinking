@@ -34,17 +34,15 @@ Again, though, not inherently Bayesian - just uses the theorem. Since all the pr
 
 If we test all 100,000 people, what proportion of those who test positive for vampirism truly vampires? Now, just count up the positive testers: 95 + 999 = 1094. Of the 1094, 95 are real vamps, so
 
-$$
-Pr(vampire|positive) = 95/1094 \approx 0.087
-$$
+$$Pr(vampire|positive) = 95/1094 \approx 0.087$$
 
 Exploiting frequency bias for predicting things with posterior distributions!
 
--   Instead of integral calculus, we'll just sample parameter values from the probability distributions. This turns it into a problem of data summary (a frequency format).
+- Instead of integral calculus, we'll just sample parameter values from the probability distributions. This turns it into a problem of data summary (a frequency format).
 
-    -   Inside a computer, parameters are just as empirical as outcome of coin flip or die toss.
+  - Inside a computer, parameters are just as empirical as outcome of coin flip or die toss.
 
-    -   Empirically attack the posterior
+  - Empirically attack the posterior
 
 ::: callout-note
 Scientific inference often framed:
@@ -55,9 +53,7 @@ Scientific inference often framed:
 
 **Toy example to see how little statistical procedures can do for us:** Suppose the probability of a positive finding, when a hypothesis is true, is Pr(sig\|true) = 0.95. This is the *power* of the test. Suppose the probability of a positive finding, when a hypothesis is false, is Pr(sig\|false) = 0.05. That's the false-positive (Type II Error) rate, like the 5% of conventional significance testing. Finally, we have to state the *base rate* at which hypotheses are true. Suppose for example that 1 in every 100 hypotheses turn out to be true. Then Pr(true) = 0.01. No one knows this value, but the history of science suggests it's small (very few long-standing true hypotheses). Now use Bayes' to compute the posterior:
 
-$$
-Pr(true|pos) = \frac{Pr(pos|true)Pr(true)}{Pr(pos)} = \frac{Pr(pos|true)Pr(true)}{Pr(pos|true)Pr(true) + Pr(pos|false)Pr(false)}
-$$
+$$Pr(true|pos) = \frac{Pr(pos|true)Pr(true)}{Pr(pos)} = \frac{Pr(pos|true)Pr(true)}{Pr(pos|true)Pr(true) + Pr(pos|false)Pr(false)}$$
 
 Answer is approx 0.16. A positive finding corresponds to true hypothesis only 16% of the time. Same low base-rate phenomenon that applies in medical testing. Can shrink the false-positive rate to 1% and get the posterior prob up to 0.5, only as good as coin flip.
 
@@ -99,15 +95,15 @@ Estimated density is similar to ideal posterior in 3.2.
 
 Now, use samples to describe and understand the posterior. How it's summarized depends on research goals. Common questions:
 
--   How much posterior probability lies below some parameter value?
+- How much posterior probability lies below some parameter value?
 
--   How much posterior probability lies between two parameter values?
+- How much posterior probability lies between two parameter values?
 
--   Which parameter value marks the lower 5% of the posterior probability?
+- Which parameter value marks the lower 5% of the posterior probability?
 
--   Which range of parameter values contains 90% of the posterior prob?
+- Which range of parameter values contains 90% of the posterior prob?
 
--   Which parameter value has the highest posterior probability?
+- Which parameter value has the highest posterior probability?
 
 Three types of questions: (1) intervals of defined boundaries, (2) Intervals of defined probability mass, and (3) Point estimates.
 
@@ -227,11 +223,11 @@ median(samples)
 
 **Loss function**: rule that displays the cost associated with using any particular point estimate
 
--   Different loss functions imply different point estimates
+- Different loss functions imply different point estimates
 
 *Heuristic vignette:* Tell me which value of p, the proportion of water on the Earth, you think is correct. I will pay you \$100, if you get it exactly right. But I will subtract money from your gain, proportional to the distance of your decision from the correct value. Precisely, your loss is proportional to the absolute value of d−p, where d is your decision and p is the correct answer.
 
--   We could change the precise dollar values involved, without changing the important aspects of this problem. What matters is that the loss is proportional to the distance of your decision from the true value.
+- We could change the precise dollar values involved, without changing the important aspects of this problem. What matters is that the loss is proportional to the distance of your decision from the true value.
 
 Calculating expected loss for any given decision - use posterior to average over our uncertainty in the true value. Don't know the true value, so use entire posterior distribution.
 
@@ -329,10 +325,10 @@ simplehist(w)
 
 `samples` is the same list of random samples from the posterior distributions used before. For each sampled value, a random binomial observation is generated.
 
--   Combine simulated observation distributions for all parameter values, each weighted by its posterior prob → posterior predictive distribution
+- Combine simulated observation distributions for all parameter values, each weighted by its posterior prob → posterior predictive distribution
 
-    -   Propagates uncertainty about parameter to uncertainty about prediction
+  - Propagates uncertainty about parameter to uncertainty about prediction
 
--   Can manipulate these simulated observations just like you can manipulate samples from the posterior (compute intervals, point estimates)
+- Can manipulate these simulated observations just like you can manipulate samples from the posterior (compute intervals, point estimates)
 
 The simulated model predictions are quite consistent with the observed data in this case - the actual count of 6 lies right in the middle of the simulated distribution. Quite a bit of spread to predictions, but this spread arises from the binomial process itself, not uncertainty about p. Still premature to conclude the model is perfect. Questionable assumption in the independence of globe tosses.

@@ -186,13 +186,13 @@ Unobserved causes are ignorable unless shared among generative causes (H, W, S)<
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  S        H         W
-1 1 149.5076  68.01250
-2 2 170.0866 102.47694
-3 1 145.0443  82.45731
-4 2 156.4467  91.25415
-5 1 157.7359  74.53949
-6 2 152.9767  99.49279</code></pre>
+<pre><code>  S        H        W
+1 2 160.7544 97.83984
+2 1 152.8996 57.29755
+3 1 147.4776 68.36039
+4 2 152.7976 91.61299
+5 1 151.5114 82.78210
+6 2 156.7731 99.80783</code></pre>
 </div>
 </div>
 </section>
@@ -200,10 +200,7 @@ Unobserved causes are ignorable unless shared among generative causes (H, W, S)<
 <section id="scientific-questions" class="level3">
 <h3 class="anchored" data-anchor-id="scientific-questions">Scientific Questions</h3>
 <ul>
-<li><p>Q: Causal effect on H on W?</p>
-<ul>
-<li>Already did this in last lecture</li>
-</ul></li>
+<li><p>Q: Causal effect on H on W? ← Already did this in last lecture</p></li>
 <li><p><strong>Q: Causal effect of S on W?</strong></p>
 <ul>
 <li>involves two sub-causes, direct and indirect</li>
@@ -217,13 +214,13 @@ Unobserved causes are ignorable unless shared among generative causes (H, W, S)<
 </section>
 <section id="statistical-models" class="level3">
 <h3 class="anchored" data-anchor-id="statistical-models">3) Statistical model(s)</h3>
-<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Coding categorical variables
+<span class="screen-reader-only">Note</span>Coding categorical variables
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -267,7 +264,7 @@ W_{i} \sim {\sf Normal}(µ_{i}, \sigma)
 \]</span></p>
 <section id="testing" class="level4">
 <h4 class="anchored" data-anchor-id="testing">Testing</h4>
-<p>What is the total causal effect of sex? Causal effect of sex = difference made intervening</p>
+<p>What is the <u>total causal effect of sex</u>? Causal effect of sex = difference made intervening (i.e., mean male weight - mean female weight)</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Female sample </span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">100</span>)</span>
@@ -280,7 +277,7 @@ W_{i} \sim {\sf Normal}(µ_{i}, \sigma)
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Effect of sex (male - female)</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(simM<span class="sc">$</span>W <span class="sc">-</span> simF<span class="sc">$</span>W)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 21.16436</code></pre>
+<pre><code>[1] 19.32944</code></pre>
 </div>
 </div>
 <ul>
@@ -288,8 +285,8 @@ W_{i} \sim {\sf Normal}(µ_{i}, \sigma)
 </ul>
 <p>Now run the estimator and synthetic sample</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Observe samples </span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">rbern</span>(<span class="dv">100</span>)<span class="sc">+</span><span class="dv">1</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Observe samples - list of 1s or 2s, for females or males </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">rbern</span>(<span class="dv">100</span>) <span class="sc">+</span> <span class="dv">1</span> <span class="co"># BTW, the +1 is because R is 1-indexed, rbern creates list of 0s,1s </span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_HW</span>(S,<span class="at">b=</span><span class="fu">c</span>(<span class="fl">0.5</span>,<span class="fl">0.6</span>), <span class="at">a=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate posterior </span></span>
@@ -304,18 +301,301 @@ W_{i} \sim {\sf Normal}(µ_{i}, \sigma)
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m_SW, <span class="at">depth=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           mean        sd      5.5%     94.5%
-a[1]  75.141042 0.9836457 73.568986 76.713098
-a[2]  94.844172 0.8911855 93.419886 96.268459
-sigma  6.629164 0.4693103  5.879116  7.379213</code></pre>
+a[1]  74.959176 0.7018558 73.837475 76.080877
+a[2]  94.073663 0.8591789 92.700530 95.446797
+sigma  5.449387 0.3857016  4.832961  6.065813</code></pre>
 </div>
 </div>
 <ul>
-<li>97-75 = 22</li>
+<li><p>Difference between a[1] and a[2] is the estimate we’re looking for: the total causal effect (indirect and direct)</p></li>
+<li><p>E.g., 97-75 = 22</p></li>
 </ul>
 </section>
 <section id="analyze-real-sample" class="level4">
 <h4 class="anchored" data-anchor-id="analyze-real-sample">Analyze real sample</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Howell1</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[d<span class="sc">$</span>age<span class="sc">&gt;=</span><span class="dv">18</span>,]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">W =</span> d<span class="sc">$</span>weight,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">S =</span> d<span class="sc">$</span>male <span class="sc">+</span> <span class="dv">1</span> ) <span class="co">#S = 1 female; S =2 male</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>m_SW <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a[S],</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    a[S] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">60</span>,<span class="dv">10</span>),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>,<span class="dv">10</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>dat</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
+<section id="post-processing" class="level4">
+<h4 class="anchored" data-anchor-id="post-processing">Post processing</h4>
+<ul>
+<li><p>The unknowns themselves, a[1] and a[2], are not what we want; we have to do comparisons between these posterior distributions</p></li>
+<li><p>The diff of mean weight is not in the posterior, the mean weight of each category is. But we’d like to look at the contrast between category 1 and 2</p></li>
+<li><p>Need to use whole posterior distribution</p></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># posterior mean W</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m_SW)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>(post<span class="sc">$</span>a[,<span class="dv">1</span>], <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">39</span>,<span class="dv">50</span>), <span class="at">lwd=</span><span class="dv">3</span>, <span class="at">col=</span><span class="dv">2</span>, <span class="at">xlab=</span><span class="st">"posterior mean weight (kg"</span>) </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>(post<span class="sc">$</span>a[,<span class="dv">2</span>], <span class="at">lwd=</span><span class="dv">3</span>, <span class="at">col=</span><span class="dv">4</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># posterior W distributions, need to include SDs</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>W1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1000</span>,post<span class="sc">$</span>a[,<span class="dv">1</span>], post<span class="sc">$</span>sigma)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>W2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1000</span>, post<span class="sc">$</span>a[,<span class="dv">2</span>], post<span class="sc">$</span>sigma)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>(W1, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">20</span>,<span class="dv">70</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.085</span>), <span class="at">lwd=</span><span class="dv">3</span>, <span class="at">col=</span><span class="dv">2</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>(W2, <span class="at">lwd=</span><span class="dv">3</span>, <span class="at">col=</span><span class="dv">4</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Lec04_notes_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>The densities of the means don’t overlap at all - indication that they’re reliably different</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Always be contrasting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Contrast is often what we want, the difference between categories</p></li>
+<li><p>It’s never legitimate to compare <strong>overlap</strong> in distributions - in parameters or lines</p>
+<ul>
+<li><p>Overlap doesn’t reliably tell you much; the difference is reliably the same??</p></li>
+<li><p>This means no comparing confidence intervals or p-values either</p></li>
+</ul></li>
+<li><p>Must compute contrast distribution</p></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="causal-contrast-of-means" class="level4">
+<h4 class="anchored" data-anchor-id="causal-contrast-of-means">Causal contrast of means</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(post)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 2
+ $ sigma: num [1:10000] 5.56 5.61 5.77 5.45 5.56 ...
+ $ a    : num [1:10000, 1:2] 41.6 41 41.9 41.5 41.8 ...
+ - attr(*, "source")= chr "quap posterior: 10000 samples from m_SW"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#causal contrast (in means)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>mu_contrast <span class="ot">&lt;-</span> post<span class="sc">$</span>a[,<span class="dv">2</span>] <span class="sc">-</span> post<span class="sc">$</span>a[,<span class="dv">1</span>] <span class="co"># subtract a[1] from a[2]</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>(mu_contrast, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">10</span>), <span class="at">lwd=</span><span class="dv">3</span>, <span class="at">col=</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="st">"posterior mean weight contrast (kg)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Lec04_notes_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Posterior distribution of difference: knowledge about the average weight difference in women and men in this sample - between 5 and 9, centered around a little less than 7kg</li>
+</ul>
+</section>
+<section id="causal-contrast-of-weight" class="level4">
+<h4 class="anchored" data-anchor-id="causal-contrast-of-weight">Causal contrast of weight</h4>
+<ul>
+<li>What bout individual people’s body weights? What’s the contrast between these distributions?</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># causal contrast of weight </span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>W_contrast <span class="ot">&lt;-</span> W2 <span class="sc">-</span> W1</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>(W_contrast, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">25</span>,<span class="dv">35</span>), <span class="at">lwd=</span><span class="dv">3</span>, <span class="at">col=</span><span class="dv">1</span>, <span class="at">xlab=</span><span class="st">"posterior weight contrast (kg"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#proportion above zero, men heavier than women</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast<span class="sc">&gt;</span><span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.821</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#proportion below zero, women heavier than men</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(W_contrast<span class="sc">&lt;</span><span class="dv">0</span>)<span class="sc">/</span><span class="dv">1000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.179</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Lec04_notes_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Most of the time, men are heavier than women in this population, though some overlap</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="whats-the-direct-causal-effect-of-s-on-w-no-indirect-effect-via-h" class="level2">
+<h2 class="anchored" data-anchor-id="whats-the-direct-causal-effect-of-s-on-w-no-indirect-effect-via-h">What’s the direct causal effect of S on W (no indirect effect via H)?</h2>
+<ul>
+<li><p>Now we need to block association thru H</p></li>
+<li><p>Need to <strong>stratify by H</strong></p></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">rbern</span>(<span class="dv">100</span>)<span class="sc">+</span><span class="dv">1</span> <span class="co"># simulate sample of sexes</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">sim_HW</span>(S, <span class="at">b=</span><span class="fu">c</span>(<span class="fl">0.5</span>,<span class="fl">0.5</span>), <span class="at">a=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>)) <span class="co">#different alpha, assume +10kg for men - direct effect</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dat<span class="sc">$</span>H, dat<span class="sc">$</span>W, <span class="at">col=</span><span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"blue"</span>)[S], <span class="at">xlab=</span><span class="st">"height(cm)"</span>, <span class="at">ylab=</span><span class="st">"weight (kg)"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="fu">mean</span>(dat<span class="sc">$</span>H), <span class="at">h=</span><span class="fu">mean</span>(dat<span class="sc">$</span>W), <span class="at">lty=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Lec04_notes_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>indirect: H influences W differently (slopes)</p></li>
+<li><p>Direct: W differs net any slope differences</p></li>
+</ul>
+<section id="index-variables-and-lines" class="level4">
+<h4 class="anchored" data-anchor-id="index-variables-and-lines">Index Variables and Lines</h4>
+<ul>
+<li>Ignore sex for a moment, regression on weight from height</li>
+</ul>
+<p><span class="math display">\[
+W_{i} \sim {\sf Normal}(µ_{i}, \sigma)
+\]</span></p>
+<p><span class="math display">\[
+µ_{i} = \alpha + \beta(H_{i} - \overline{H})
+\]</span></p>
+<ul>
+<li><p><strong>Centering H</strong> makes it so that <u>alpha is the average weight of a person with average height</u>.</p></li>
+<li><p>Centering makes it easier to define scientific priors for alpha</p>
+<ul>
+<li><p>alpha = expected weight at the expected height</p>
+<ul>
+<li>so when <span class="math inline">\(H_{i} = \overline{H}\)</span> → <span class="math inline">\(\beta\)</span> * 0 → beta/slope has no effect</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Now let’s add sex</p>
+<p><span class="math display">\[
+µ_{i} = \alpha_{S[i]} + \beta_{s[i]}(H_{i} - \overline{H})
+\]</span></p>
+<ul>
+<li><span class="math inline">\(S[i]\)</span> sex of i-th person (1=female, 2=male)</li>
+</ul>
+<p><span class="math display">\[
+\alpha = [\alpha_{1}, \alpha_{2}],  \beta = [\beta_{1},\beta_{2}]
+\]</span></p>
+<ul>
+<li>Two intercepts and two slopes, one for each value in S</li>
+</ul>
+</section>
+<section id="analyze-the-sample" class="level4">
+<h4 class="anchored" data-anchor-id="analyze-the-sample">Analyze the Sample</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Howell1"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Howell1</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> d[d<span class="sc">$</span>age <span class="sc">&gt;=</span> <span class="dv">18</span>,]</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">W =</span> d<span class="sc">$</span>weight,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">H =</span> d<span class="sc">$</span>height,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Hbar =</span> <span class="fu">mean</span>(d<span class="sc">$</span>height),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">S =</span> d<span class="sc">$</span>male <span class="sc">+</span> <span class="dv">1</span>) </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>m_SHW <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    W <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a[S] <span class="sc">+</span> b[S]<span class="sc">*</span>(H<span class="sc">-</span>Hbar),</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    a[S] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">60</span>,<span class="dv">10</span>),</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    b[S] <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dunif</span>(<span class="dv">0</span>,<span class="dv">10</span>)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>dat, </span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> <span class="fu">list</span>(</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">a =</span> <span class="fu">c</span>(<span class="dv">60</span>, <span class="dv">60</span>),</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">b =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="fl">0.4</span>),</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma =</span> <span class="dv">6</span>)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Contrasts at each height</p>
+<ol type="1">
+<li>Compute posterior predictive for women</li>
+<li>Compute posterior predictive for men</li>
+<li>Subject (2) from (1)</li>
+<li>Plot distribution at each height</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>xseq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">130</span>,<span class="dv">190</span>, <span class="at">len=</span><span class="dv">50</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim=</span><span class="fu">range</span>(xseq), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">6</span>,<span class="dv">8</span>), <span class="at">xlab=</span><span class="st">"height (cm)"</span>, <span class="at">ylab=</span><span class="st">"weight contrast (F - M)"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>muF <span class="ot">&lt;-</span> </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">link</span>(m_SHW, <span class="at">data=</span><span class="fu">list</span>(<span class="at">S=</span><span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">50</span>), <span class="at">H=</span>xseq,<span class="at">Hbar=</span><span class="fu">mean</span>(d<span class="sc">$</span>height)))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(xseq, <span class="fu">apply</span>(muF,<span class="dv">2</span>,mean), <span class="at">lwd=</span><span class="dv">3</span>, <span class="at">col=</span><span class="dv">2</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>muM <span class="ot">&lt;-</span> </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">link</span>(m_SHW, <span class="at">data=</span><span class="fu">list</span>(<span class="at">S=</span><span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">50</span>), <span class="at">H=</span>xseq,<span class="at">Hbar=</span><span class="fu">mean</span>(d<span class="sc">$</span>height)))</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(xseq, <span class="fu">apply</span>(muM,<span class="dv">2</span>,mean), <span class="at">lwd=</span><span class="dv">3</span>, <span class="at">col=</span><span class="dv">4</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>mu_contrast <span class="ot">&lt;-</span> muF <span class="sc">-</span> muM</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p <span class="cf">in</span> <span class="fu">c</span>(<span class="fl">0.5</span>,<span class="fl">0.6</span>,<span class="fl">0.7</span>,<span class="fl">0.8</span>,<span class="fl">0.9</span>,<span class="fl">0.99</span>))</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade</span>(<span class="fu">apply</span>(mu_contrast,<span class="dv">2</span>,PI,<span class="at">prob=</span>p), xseq)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Lec04_notes_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>Posterior distribution of differences of in expected weight at each height between men and women according to the model</p></li>
+<li><p>Gravity’s around 0, not much difference at any height between men and women’s heights</p>
+<ul>
+<li><p>Taller women tend to weigh more than men of the same height</p></li>
+<li><p>Shorter men tend to weigh more than women of same height</p></li>
+</ul></li>
+<li><p>Nearly all of the causal effect of sex on weight acts thru height</p>
+<ul>
+<li><p>The weight contrast distribution straddles zero line</p></li>
+<li><p>Mean differences in weight by sex, but that’s because men are taller</p></li>
+</ul></li>
+</ul>
+<p>So, almost no DIRECT effect of sex on weight in this population</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Summary: Category variables
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Easy to use with index coding</p></li>
+<li><p>Use samples to compute relevant contrasts</p></li>
+<li><p>Always summarize (mean, intervals) as the last step</p>
+<ul>
+<li>Do not summarize first and then take a difference</li>
+</ul></li>
+<li><p>Want <strong>mean difference</strong> and NOT difference of means</p></li>
+</ul>
+</div>
+</div>
 </section>
 </section>
 </section>

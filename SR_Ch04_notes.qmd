@@ -34,7 +34,7 @@ INC number of steps INC stabilization on the Gaussian distribution. Any process 
 
 -   Regardless of underlying distribution
 
-#### Normal by multiplication 
+#### Normal by multiplication
 
 Another way to get normal distribution.
 
@@ -71,9 +71,9 @@ dens(log.big, norm.comp=TRUE)
 
 Adding logs is equivalent to multiplying the original numbers. Measurement scales are arbitrary, and it's natural to measure sound, earthquakes, information on a log scale.
 
-### Using Gaussian distributions 
+### Using Gaussian distributions
 
-**Ontological reason:** World full of Gaussian distributions: measurement errors, variations in growth, velocities of molecules. \
+**Ontological reason:** World full of Gaussian distributions: measurement errors, variations in growth, velocities of molecules.\
 Processes that add together fluctuations.
 
 -   Member of **exponential family** of natural distributions
@@ -98,7 +98,7 @@ Gaussian is *continuous* - value $y$ can be any continuous value. In contrast to
 
         -   Area under the density function will never exceed 1 = probability mass
 
-## A language for describing models 
+## A language for describing models
 
 ::: {.callout-tip appearance="minimal"}
 ## Recipe for statistical models
@@ -111,7 +111,7 @@ Gaussian is *continuous* - value $y$ can be any continuous value. In contrast to
 ::: callout-note
 ## Summarizing the model
 
-$y_{i}$ ~ $Normal(µ_{i}, σ)$
+$y_{i}$ \~ $Normal(µ_{i}, σ)$
 
 $µ{i} = 𝛽x{i}$
 
@@ -196,7 +196,7 @@ $$
 
 All the golem knows about each height measurement is defined by the name normal distribution with mean µ and standard dev σ. The model assumes that the values $h_{i}$ are **independent and identically distributed (IDD)**. In other words, each value of h has the same probability function, independent of the other h values and using the same parameters. But hardly true - heights within families are correlated.
 
-#### Priors 
+#### Priors
 
 The parameters to be estimated are µ and σ → so need prior $Pr(µ, σ)$ or the joint prior probability for all parameters. Assume that they're independent of each other or $Pr(µ, σ) = Pr(µ)Pr(σ)$
 
@@ -260,7 +260,7 @@ abline(v=0, lty = "dashed") #plot line at x=0 to show where negative values occu
 
 -   4% of expected heights are negative. Also expects some giants: 18% of expected heights over 272cm (tallest record)
 
-#### Grid approximation of posterior distribution 
+#### Grid approximation of posterior distribution
 
 For the first time modeling Gaussian distribution, demonstrate calculations with brute force (usually impractical)
 
@@ -280,7 +280,7 @@ image_xyz(post$mu, post$sigma, post$prob)
 
 -   inspect the posterior distribution (in `post$prob` ) with functions like `contour_xyz()` or `image_xyz()` in the `rethinking` package
 
-#### Sampling from the posterior 
+#### Sampling from the posterior
 
 To summarize and understand the posterior distribution, like in Ch3. New thing: since 2 parameters and need to sample combos of them, we first randomly samples row numbers in `post` in proportion to values in `post$prob`. Then pull out parameter values on those randomly sampled rows.
 
@@ -474,7 +474,7 @@ precis(m4.1)
 plot(post)
 ```
 
-## Linear Prediction 
+## Linear Prediction
 
 **Predictor variable**: independent variable we posit predicts the outcome if it has statistical association with the outcome variable.
 
@@ -501,7 +501,7 @@ The golem answers with a posterior distribution.
 Case study: one predictor variable (weight). How to get weight into Gaussian model of height? Define µ as a function of values in x (`d2$weight`), with $\overline{x}$ as the average of weights.
 
 | $h_{i} \sim {Normal}(µ_{i},σ)$ | likelihood | `height ~ dnorm(mu,sigma)` |
-|---------------------------|-----------------|----------------------------|
+|----|----|----|
 | $µ_{i} = \alpha + \beta(x_{i} - \overline x)$ | **linear model** | `mu ← a + b*weight` |
 | $\alpha \sim{Normal}(178, 20)$ | $\alpha$ **prior** | `a ~ dnorm(178, 20)` |
 | $\beta \sim{Normal}(0,10)$ | $\beta$ **prior** | `b ~ dlnorm(0,1)` |
@@ -522,7 +522,7 @@ Asks two questions:
 
 Find the line that relates $x$ to $h$ - a line that passes through $\alpha$ when $x_{i} = \overline{x}$ and has slope $\beta$
 
-#### Remaining priors 
+#### Remaining priors
 
 These last priors define distributions for the unobserved variables.
 
@@ -628,7 +628,7 @@ m4.3 <- quap(
   data=d2)
 ```
 
-#### Interpreting the posterior distribution 
+#### Interpreting the posterior distribution
 
 **Tables of marginal distributions**: inspect the marginal posterior distributions of the parameters
 

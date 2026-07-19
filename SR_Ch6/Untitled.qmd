@@ -1,0 +1,146 @@
+---
+title: "SR_Lec06_notes"
+format: html
+editor: visual
+---
+
+## Lec 6: Good and Bad Controls 
+
+```{r}
+library(rethinking)
+library(dagitty)
+```
+
+**Backdoor Criterion**: Rule to find a set of variables to stratify by to yield $P(Y|do(X))$
+
+1.  Identify all **paths** connecting the treatment X to the outcome Y
+    1.  The causes follow arrows but associations go both ways
+2.  Paths with arrows **entering** X are backdoor paths (non-causal paths; confounding path)
+    1.  if you intervene on X, the change will not flow into backdoor path
+    2.  only arrows leaving X will be affected when changing X
+3.  Find **adjustment set** that closes/blocks all backdoor paths
+
+#### Example Flow
+
+```{r}
+#| echo: false
+dag_e1 <- dagitty( "dag {
+  U [unobserved]
+  X -> Y
+  X <- Z 
+  Z <- U 
+  U -> Y 
+}")
+coordinates( dag_e1 ) <- list( x=c(X=0, Z=0.25, U=0.5,Y=1) ,
+                              y=c(X=1, Z= 0.5, U=0, Y=1) )
+drawdag( dag_e1 )
+```
+
+1\) Identify all paths
+
+- $X→ Y$
+
+- $X ← Z ← U → Y$
+
+2\) Identify backdoor paths
+
+- $X ← Z ← U → Y$ is a backdoor path
+
+3\) Minimal adjustment set
+
+> Block the pipe by stratifying by Z: X \_ \|\| \_ U \| Z
+
+$$P(Y|do(X)) = \sum_z P(Y|X,Z) P(Z=z)$$
+
+$$Y_i \sim {\sf Normal}(\mu_i,\sigma)$$
+
+$$\mu_i = \alpha + \beta_XX_i + \beta_ZZ_i$$
+
+```{r}
+# simulate confounded Y 
+N <- 200 
+b_XY <- 0 
+b_UY <- -1
+b_UZ <- -1
+b_ZX <- 1 
+
+set.seed(10)
+U <- rbern(N)
+Z <- rnorm(N, b_UZ*U)
+X <- rnorm(N, b_ZX*Z)
+Y <- rnorm(N, b_XY*X + b_UY*U)
+d <- list(Y=Y, X=X, Z=Z)
+
+# ignore U and Z (to compare first path vs second) 
+m_YX <- quap(
+  alist(
+    Y ~ dnorm(mu, sigma),
+    mu <- a + b_XY*X,
+    a ~ dnorm(0,1),
+    b_XY ~ dnorm(0,1),
+    sigma ~ dexp(1)
+  ), data=d
+)
+
+# Stratify by Z 
+m_YXZ <- quap(
+  alist(
+    Y ~ dnorm(mu, sigma),
+    mu <- a + b_XY*X +b_Z*Z,
+    a ~ dnorm(0,1),
+    b_XY ~ dnorm(0,1),
+    b_Z ~ dnorm(0,1),
+    sigma ~ dexp(1)
+  ), data=d
+)
+
+post <- extract.samples(m_YX)
+post2 <- extract.samples(m_YXZ)
+dens(post$b_XY, lwd=3, col=1, xlab="posterior b_XY", xlim=c(-0.3,0.3))
+dens(post2$b_XY, lwd=3, col=2, add=TRUE)
+
+```
+
+> For any variable you add to the model as part of the adjustment set (in order to make it possible to get an estimate of some other variable's coefficient) - usually its coefficients are not interpretable (Table 2 Fallacy)
+
+1.  $X ←  A → Z ← B → Y$: non-causal, closed (opened by Z)
+    1.  A or B to close
+2.  $X ← A → Z → Y$: non-causal, open
+3.  $X ← Z ← B → Y$: non-causal, open
+4.  $X ← Z → Y$: non-causal, open
+    1.  add $Z$ to adjustment set
+5.  $X → Y$: causal path, open
+6.  $X ← C → Y$: non-causal, closed
+    1.  add $C$ to adjustment set
+
+Try to find mathematical way to delete the arrows that are entering X
+
+Minimum adjustment set: C, Z, and either A or B. (B is better choice)
+
+#### 
+
+No backdoor path, no need to control for Z
+
+#### Colliders
+
+Do not touch the collider! Colliders are BAD CONTROLS
+
+### Non-backdoor examples
+
+#### Case-control bias (selection on the outcome) 
+
+- X (education) → Y (occupation) → Z (Income)
+
+- If you stratify based on income, it narrows the range of occupations that experiences a narrower range of education levels (false inferences)
+
+#### Precision parasite
+
+- Stratifying on the parent of X
+
+  - Z → X → Y
+
+- inflates the uncertainty (wider distribution)
+
+#### Bias amplification 
+
+- X and Y confounded by u

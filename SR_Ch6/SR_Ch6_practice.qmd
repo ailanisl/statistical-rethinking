@@ -1,0 +1,171 @@
+---
+title: "SR_Ch6_Practice"
+format: html
+editor: visual
+---
+
+```{r}
+#| output: false
+#| error: false
+#| warning: false
+#| message: false
+
+library(rethinking)
+library(dagitty)
+data("WaffleDivorce")
+d <- WaffleDivorce
+```
+
+## Medium.
+
+**6M1.** Modify `dag_6.1` to include the variable $V$, an unobserved cause of C and Y: C ← V → Y. Reanalyze the DAG, How many paths connect X to Y? Which must be closed? Which variables should you condition on now?
+
+```{r}
+dag_6.1a <- dagitty( "dag {
+  U [unobserved]
+  V [unobserved]
+  X -> Y
+  X <- U <- A -> C -> Y
+  C <- V -> Y
+  U -> B <- C
+}")
+coordinates( dag_6.1a ) <- list( x=c(A=2, U=1, C=3, B=2, X=1, Y=3, V=3.5) ,
+                                y=c(A=1.5, U=2, C=2, B=2.5, X=3, Y=3, V=2.5) )
+drawdag( dag_6.1a )
+```
+
+1.  $Y ← V → C ← A → U → X$
+2.  $Y ← V → C → B ← U → X$
+3.  $Y ← C ← A → U → X$
+4.  $Y ← C → B ← U → X$
+
+Path 1, Path 2, and Path 4 must be closed, since each has a collider variable: $C$ for Path 1 and $B$ for Paths 2 and 4.
+
+```{r}
+adjustmentSets( dag_6.1a , exposure="X" , outcome="Y" )
+```
+
+Condition on $A$, since $A$ is a fork.
+
+## Hard.
+
+```{r}
+#| echo: false
+
+dag_6.2 <- dagitty("dag{
+                   S -> A
+                   S -> M 
+                   S -> W 
+                   A -> D
+                   A -> M 
+                   M -> D
+                   W -> D }")
+coordinates( dag_6.2 ) <- list( x=c(S=1, A=1, M=1.5, W=2, D=2) ,
+                                y=c(S=1, A=2, M=1.5, W=1, D=2) )
+drawdag( dag_6.2 )
+
+```
+
+**6H1**. Use the Waffle House data, `data(WaffleDivorce)`, to find the [**total** causal influence]{.underline} of number of Waffle Houses on divorce rate. Justify your model or models with a causal graph.
+
+$W → D$
+
+$W ← S → M → D$
+
+$W ← S → M ← A → D$
+
+$W ← S → A → M → D$
+
+$W ← S → A → D$
+
+```{r}
+adjustmentSets(dag_6.2, exposure = "W", outcome="D")
+```
+
+```{r}
+# standardize variables
+d$W <- scale(d$WaffleHouses)
+d$D <- scale(d$Divorce)
+d$M <- scale(d$Marriage)
+d$S <- scale(d$South)
+d$A <- scale(d$MedianAgeMarriage)
+```
+
+```{r}
+m6H1 <- quap(
+  alist(
+    D ~ dnorm(mu, sigma),
+    mu <- a + b_W * W + b_S * S,
+    a ~ dnorm(0,1),
+    b_W ~ dnorm(0,1),
+    b_S ~ dnorm(0,1),
+    sigma ~ dexp(1)
+    
+  ), data=d
+)
+
+precis(m6H1)
+```
+
+```{r}
+plot(precis(m6H1))
+```
+
+The model shows that once we know whether the state is in the South, then we don't learn anything new about Divorce Rate there by regressing on Waffle Houses in the area.
+
+**6H2**. Build a series of models to test the implied conditional independencies of the causal graph you used in the previous problem. If any of the tests fail, how do you think the graph needs to be amended? Does the graph need more or fewer arrows? Feel free to nominate variables that aren’t in the data.
+
+```{r}
+impliedConditionalIndependencies(dag_6.2)
+```
+
+1\) “Median age of marriage should be independent of Waffle Houses, conditioning on a State being in the south.”
+
+```{r}
+m6C1 <- quap(
+  alist(
+    A ~ dnorm(mu, sigma),
+    mu <- a + b_W*W + b_S*S,
+    a ~ dnorm(0,1),
+    c(b_W, b_S) ~ dnorm(0,1),
+    sigma ~ dexp(1)
+  ), data=d
+)
+precis(m6C1)
+```
+
+- Yup, looks like once we know about $\beta_{South}$, we don't learn anything more with $\beta_{WaffleHouse}$
+
+- So A is independent of W when conditioned by S
+
+2\) “Divorce and being in the south should be independent when we simultaneously condition on all of median age of marriage, marriage rate, and Waffle Houses.”
+
+```{r}
+m6C2 <- quap(
+  alist(
+    D ~ dnorm(mu, sigma),
+    mu <- a + bS*S + bA*A + bM*M + bW*W,
+    a ~ dnorm(0,1),
+    c(bW, bS, bA, bM) ~ dnorm(0,1),
+    sigma ~ dexp(1)
+  ), data=d
+)
+precis(m6C2)
+```
+
+```{r}
+plot(precis(m6C2))
+```
+
+```{r}
+m6C3 <- quap(
+  alist(
+    M ~ dnorm(mu, sigma),
+    mu <- a + bS*S + bW*W,
+    a ~ dnorm(0,1),
+    c(bW, bS) ~ dnorm(0,1),
+    sigma ~ dexp(1)
+  ), data=d
+)
+precis(m6C3)
+```

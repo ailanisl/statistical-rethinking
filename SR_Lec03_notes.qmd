@@ -22,7 +22,7 @@ Why normal?
 
 -   describe association between adult weight and height
 
-## Step 2: Scientific model 
+## Step 2: Scientific model
 
 How does height causally influence weight?
 
@@ -74,7 +74,7 @@ plot(W~H, col=2, lwd=3)
 
 -   Simulated individuals → biologically realistic relationships between weight and height
 
-## Step 3: Statistical model(s) 
+## Step 3: Statistical model(s)
 
 quadratic approximation: approximate the posterior distribution as a multivariate Gaussian distribution
 
@@ -90,7 +90,7 @@ In statistical model, UNLIKE generative model, you need priors (when there's no 
 
     -   Constrain implied observations of the model to scientifically realistic ranges
 
-### Prior predictive distribution → same as posterior predictive distributions (same animal, same golem) 
+### Prior predictive distribution → same as posterior predictive distributions (same animal, same golem)
 
 -   Priors should express scientific knowledge, but **softly**
 
@@ -174,7 +174,7 @@ To see this prior predictive distribution (and the implications of your assumpti
             -   Need to practice not: simulate, understand
     :::
 
-## Step 4: Validate model 
+## Step 4: Validate model
 
 ### Simulation-based validation
 
@@ -223,7 +223,7 @@ precis(m3.1)
 
     -   But having trouble with the intercept $\alpha$
 
-## Step 5: Analyze data 
+## Step 5: Analyze data
 
 After tiresome rounds of model validation (takes very long with more complex models), you can take real data sample and the model will run.
 
@@ -267,7 +267,7 @@ pairs(m3.2)
 
     -   Can't interpret intercept and slope separately
 
-#### First Law of statistical interpretation: 
+#### First Law of statistical interpretation:
 
 -   the parameters are not independent of one another and cannot be independently interpreted
 
@@ -275,7 +275,7 @@ pairs(m3.2)
 
     -   `extract.samples` creates synthetic data table of samples from the posterior distributions that adhere to the covariance structure
 
-### Posterior predictive distribution 
+### Posterior predictive distribution
 
 **The posterior is full of lines**
 

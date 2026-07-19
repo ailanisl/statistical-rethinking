@@ -161,7 +161,7 @@ window.Quarto = {
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prod</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">12</span>,<span class="dv">0</span>,<span class="fl">0.1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.019752</code></pre>
+<pre><code>[1] 1.911975</code></pre>
 </div>
 </div>
 <ul>
@@ -465,7 +465,6 @@ h_{i} \sim {Normal}(µ,σ)
 <ul>
 <li>4% of expected heights are negative. Also expects some giants: 18% of expected heights over 272cm (tallest record)</li>
 </ul>
-<hr>
 </section>
 <section id="grid-approximation-of-posterior-distribution" class="level4">
 <h4 class="anchored" data-anchor-id="grid-approximation-of-posterior-distribution">Grid approximation of posterior distribution</h4>
@@ -606,7 +605,6 @@ h_{i} \sim {Normal}(µ,σ)
 <ul>
 <li>the posterior for σ is not Gaussian, but rather has a long tail of uncertainty towards higher values</li>
 </ul>
-<hr>
 </section>
 <section id="finding-posterior-distribution-with-quap" class="level4">
 <h4 class="anchored" data-anchor-id="finding-posterior-distribution-with-quap">Finding posterior distribution with <code>quap</code></h4>
@@ -661,8 +659,8 @@ h_{i} \sim {Normal}(µ,σ)
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m4<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            mean        sd       5.5%      94.5%
-mu    154.607023 0.4119948 153.948576 155.265470
-sigma   7.731335 0.2913862   7.265644   8.197027</code></pre>
+mu    154.606904 0.4119797 153.948481 155.265327
+sigma   7.731053 0.2913596   7.265404   8.196702</code></pre>
 </div>
 </div>
 <p>These numbers provide Gaussian approximations for each parameter’s <em>marginal</em> distribution. This means the plausibility of each value of µ, after averaging over the plausibilities of each value of σ, is given by a Gaussian distribution with mean 154.6 and standard deviation 0.4.</p>
@@ -692,7 +690,7 @@ sigma   7.731335 0.2913862   7.265644   8.197027</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>           mean        sd      5.5%     94.5%
 mu    177.86375 0.1002354 177.70356 178.02395
-sigma  24.51755 0.9289215  23.03296  26.00215</code></pre>
+sigma  24.51748 0.9289147  23.03289  26.00206</code></pre>
 </div>
 </div>
 <p>Sampling from quap.</p>
@@ -708,8 +706,8 @@ sigma  24.51755 0.9289215  23.03296  26.00215</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(m4<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                mu        sigma
-mu    0.1697396960 0.0002180279
-sigma 0.0002180279 0.0849059379</code></pre>
+mu    0.1697272548 0.0002153807
+sigma 0.0002153807 0.0848904188</code></pre>
 </div>
 </div>
 <p>A variance-covariance matrix can be factored into two elements: (1) a vector of variances for the parameters and (2) a correlation matrix that tells us how changes in any parameter lead to correlated changes in the others.</p>
@@ -717,13 +715,13 @@ sigma 0.0002180279 0.0849059379</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(<span class="fu">vcov</span>(m4<span class="fl">.1</span>)) <span class="co"># list of variances, if squared = the SDs in precis output </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        mu      sigma 
-0.16973970 0.08490594 </code></pre>
+0.16972725 0.08489042 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov2cor</span>(<span class="fu">vcov</span>(m4<span class="fl">.1</span>)) <span class="co"># correlation matrix </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               mu       sigma
-mu    1.000000000 0.001816148
-sigma 0.001816148 1.000000000</code></pre>
+mu    1.000000000 0.001794327
+sigma 0.001794327 1.000000000</code></pre>
 </div>
 </div>
 <ul>
@@ -739,21 +737,21 @@ sigma 0.001816148 1.000000000</code></pre>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(post)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        mu    sigma
-1 154.5805 7.574055
-2 154.3462 7.859292
-3 154.7505 7.771934
-4 154.1000 7.803980
-5 153.9576 8.029104
-6 153.9655 7.540346</code></pre>
+1 154.2103 7.810932
+2 155.3143 7.951295
+3 154.1203 7.873259
+4 155.0188 7.464765
+5 154.1990 7.941410
+6 155.1654 7.777367</code></pre>
 </div>
 </div>
 <p>You end up with a data frame, post, with 10,000 (1e4) rows and two columns, one column for µ and one for σ. Each value is a sample from the posterior</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(post)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>            mean        sd       5.5%      94.5%    histogram
-mu    154.608956 0.4110643 153.949560 155.256694      ▁▁▅▇▂▁▁
-sigma   7.738276 0.2948098   7.267196   8.209424 ▁▁▁▂▅▇▇▃▁▁▁▁</code></pre>
+<pre><code>           mean        sd       5.5%      94.5%     histogram
+mu    154.60539 0.4108879 153.951322 155.255443       ▁▁▅▇▂▁▁
+sigma   7.73195 0.2914401   7.256374   8.190096 ▁▁▁▁▂▅▇▇▃▁▁▁▁</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Vs m4.1 posterior"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -762,8 +760,8 @@ sigma   7.738276 0.2948098   7.267196   8.209424 ▁▁▁▂▅▇▇▃▁▁�
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m4<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            mean        sd       5.5%      94.5%
-mu    154.607023 0.4119948 153.948576 155.265470
-sigma   7.731335 0.2913862   7.265644   8.197027</code></pre>
+mu    154.606904 0.4119797 153.948481 155.265327
+sigma   7.731053 0.2913596   7.265404   8.196702</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Compare o the grid approx</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(post)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1147,7 +1145,7 @@ Warning in par(usr): argument 1 does not name a graphical parameter</code></pre>
 </ul></li>
 <li><p>This is a distribution of µ for each individual in the original data</p></li>
 </ul>
-<p>Now, let’s get a distribution of µ for each unique weight value on the horizontal axis:</p>
+<p>Now, let’s get a distribution of µ for each unique weight value on the horizationtal axis:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define sequence of wights to compute predictions for </span></span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="co"># these values will be on the horiz axis</span></span>
@@ -1285,183 +1283,6 @@ Warning in par(usr): argument 1 does not name a graphical parameter</code></pre>
 </ul></li>
 <li><p>Uncertainty in both the parameter values AND in the sampling process</p></li>
 </ul>
-</section>
-</section>
-<section id="curves-from-lines" class="level2">
-<h2 class="anchored" data-anchor-id="curves-from-lines">Curves from Lines</h2>
-<section id="splines" class="level3">
-<h3 class="anchored" data-anchor-id="splines">Splines</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
-<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"cherry_blossoms"</span>)</span>
-<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> cherry_blossoms</span>
-<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(d)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                  mean          sd      5.5%      94.5%       histogram
-year       1408.000000 350.8845964 867.77000 1948.23000   ▇▇▇▇▇▇▇▇▇▇▇▇▁
-doy         104.540508   6.4070362  94.43000  115.00000        ▁▂▅▇▇▃▁▁
-temp          6.141886   0.6636479   5.15000    7.29470        ▁▃▅▇▃▂▁▁
-temp_upper    7.185151   0.9929206   5.89765    8.90235 ▁▂▅▇▇▅▂▂▁▁▁▁▁▁▁
-temp_lower    5.098941   0.8503496   3.78765    6.37000 ▁▁▁▁▁▁▁▃▅▇▃▂▁▁▁</code></pre>
-</div>
-</div>
-<p>Briefly, B-splines divide the full range of some predictor variable (e.g., <code>year</code>) into parts. Then they assign a parameter to each part. These parameters are gradually turned on and off in a way that makes their sum into a fancy, wiggly curve.</p>
-<ul>
-<li><p>Generate new predictor variables and use those in the linear model, <span class="math inline">\(µ_{i}\)</span></p></li>
-<li><p>Invent series of new, synthetic predictor variables (<strong>basis functions</strong>), each of which serves to gradually turn a specific parameter on and off within a specific range of the predictor variables</p></li>
-<li><p>Now the linear model:</p></li>
-</ul>
-<p><span class="math display">\[
-µ_{i} = \alpha + w_{1}B_{i,1} + w_{2}B_{i,2} + w_{3}B_{i,3} + ...
-\]</span></p>
-<ul>
-<li>where <span class="math inline">\(B_{i,n}\)</span> is the n-th basis function’s value on row <span class="math inline">\(i\)</span> and the <span class="math inline">\(w\)</span> parameters are corresponding weights for each. parameters act as slopes, adjusting the influence of each <span class="math inline">\(B\)</span> on the mean <span class="math inline">\(µ_{i}\)</span></li>
-</ul>
-<section id="how-do-b-splines-work" class="level4">
-<h4 class="anchored" data-anchor-id="how-do-b-splines-work">How do B-splines work?</h4>
-<p><strong>Simple case:</strong> Approximate temp data with 4 different linear approximations</p>
-<ul>
-<li><p>Divide the full range of x-axis into N parts, using pivot points called <em>knots</em>.</p></li>
-<li><p>At each knot, one basis function has value 1, the rest are set to 0.</p></li>
-<li><p>At any point on the x-axis, only 2 basis functions have non-zero values, so the parameters for those two basis functions are the only parameters influencing the prediction at a given x-point (year).</p>
-<ul>
-<li>Compared to polynomial regression, in which parameters influence the entire shape of the curve</li>
-</ul></li>
-<li><p>Each basis function is multiplied by its corresponding (positive or negative) weight parameter, which are derived from fitting the model to the data</p></li>
-<li><p>To improve the simple case:</p>
-<ul>
-<li><p>Use more knots</p></li>
-<li><p>Use higher degree polynomials instead of linear approx</p></li>
-</ul></li>
-</ul>
-</section>
-<section id="b-spline-code" class="level4">
-<h4 class="anchored" data-anchor-id="b-spline-code">B-spline Code</h4>
-<p><strong>First, choose the knots (</strong>values of <code>year</code> to serve as pivots). In principle, you can put them wherever you like (assumptions of the model). But it’s often useful to place knots at evenly spaced quantiles of the predictor variable.</p>
-<ul>
-<li>Temperature data, <code>year</code> variable is evenly distributed. Place 15 knots (ran again with 20)</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> d[<span class="fu">complete.cases</span>(d<span class="sc">$</span>temp),] <span class="co">#complete cases on temp </span></span>
-<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>num_knots <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="co">#15</span></span>
-<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>knot_list <span class="ot">&lt;-</span> <span class="fu">quantile</span>(d2<span class="sc">$</span>year, <span class="at">probs=</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="at">length.out=</span>num_knots))</span>
-<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>knot_list</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>       0% 5.263158% 10.52632% 15.78947% 21.05263% 26.31579% 31.57895% 36.84211% 
- 839.0000  916.1053  975.2105 1034.3158 1093.4211 1152.5263 1211.6316 1270.7368 
-42.10526% 47.36842% 52.63158% 57.89474% 63.15789% 68.42105% 73.68421% 78.94737% 
-1329.8421 1388.9474 1448.0526 1507.1579 1566.2632 1625.3684 1684.4737 1743.5789 
-84.21053% 89.47368% 94.73684%      100% 
-1802.6842 1861.7895 1920.8947 1980.0000 </code></pre>
-</div>
-</div>
-<p><strong>Second, choose your polynomial degree</strong>. This determines how basis functions combine, which determines how the parameters interact to produce the spline.</p>
-<ul>
-<li><p>Deg 1 → 2 basis functions combine</p></li>
-<li><p>Deg 2 → 3 basis functions combine</p></li>
-<li><p>Deg 3 → 4 basis functions combine</p></li>
-</ul>
-<p>R has built in <code>splines</code> library with function <code>bs()</code> to construct basis functions for any list of knots, degree.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># call splines library</span></span>
-<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines)</span>
-<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build basis functions for cubic (deg3) spline </span></span>
-<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">bs</span>(d2<span class="sc">$</span>year, </span>
-<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">knots=</span>knot_list[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,num_knots)],</span>
-<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">degree=</span><span class="dv">3</span>, <span class="at">intercept=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<ul>
-<li><code>B</code> is a matrix with 1124 rows (year corresponding to rows in <code>d2</code> data frame) and 17 columns (basis functions).</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the basis functions by plotting each column against year </span></span>
-<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim=</span><span class="fu">range</span>(d2<span class="sc">$</span>year), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">xlab=</span><span class="st">"year"</span>, <span class="at">ylab=</span><span class="st">"basis value"</span>)</span>
-<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for each column in matrix B, plot line(year ~ column i)</span></span>
-<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(B)) <span class="fu">lines</span>(d2<span class="sc">$</span>year, B[,i]) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="SR_Ch04_notes_files/figure-html/4.75-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>Third, define the model and make it run</strong> to get the parameter weights for each basis function. Each column of matrix B as variable. Get intercept to capture the average temp - priors on base weights will be deviation from the intercept.</p>
-<p><span class="math display">\[
-T_{i} \sim Normal(µ_{i}, σ)
-\]</span></p>
-<p><span class="math display">\[
-µ_{i} = \alpha + \sum_{k=1}^{K}{w_{k}B_{k,i}}
-\]</span></p>
-<p><u>As for the priors</u>:</p>
-<p><span class="math display">\[
-\alpha \sim {\sf Normal}(6,10)
-\]</span></p>
-<ul>
-<li><strong>Intercept</strong>: The mean of 6 deg Celsius is the historical average March temp in Kyoto. The SD of 10 is weakly informative - allows the intercept to span roughly -14C to 26C</li>
-</ul>
-<p><span class="math display">\[
-w_{j} \sim {\sf Normal}(0,1)
-\]</span></p>
-<ul>
-<li><strong>Spline weights</strong>: Mean = 0: no knot region is expected to deviate from the intercept (baseline temp) by default. SD of 1 is regularizing, no crazy wiggles - spline can shift µi by roughly +/-1 C at any knot region</li>
-</ul>
-<p><span class="math display">\[
-sigma \sim {\sf Exponential}(1)
-\]</span></p>
-<ul>
-<li><strong>SD</strong>: The residual year-to-year temperature variability around the spline trend. Exponential suports only positive reals = <span class="math inline">\(\sigma\)</span> &gt; 0. Encodes weakly informative belief that sigma is probably not enormous, with a soft tail. Rate =1 means the prior mean is 1 - gentle regularizer that nudges sigma away from 0 and from large values</li>
-</ul>
-<p><strong><code>quap</code> and matrix multiplication</strong>. Make sure to use a start list for the weights to tell <code>quap</code> how many there are.</p>
-<ul>
-<li><code>B %*% w</code> is shorthand for (1) multiplying each element of the vector w by each value in the corresponding column of B and then (2) summing up each row of the result.</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>m4<span class="fl">.7</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
-<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>    T <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> B <span class="sc">%*%</span> w,</span>
-<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">6</span>,<span class="dv">10</span>),</span>
-<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>    w <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data=</span><span class="fu">list</span>(<span class="at">T=</span>d2<span class="sc">$</span>temp, <span class="at">B=</span>B),</span>
-<span id="cb92-10"><a href="#cb92-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">start=</span><span class="fu">list</span>(<span class="at">w=</span><span class="fu">rep</span>(<span class="dv">0</span>,<span class="fu">ncol</span>(B)))</span>
-<span id="cb92-11"><a href="#cb92-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Plot the posterior predictions for 17 w functions.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># See the weighted basis functions </span></span>
-<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">extract.samples</span>(m4<span class="fl">.7</span>)</span>
-<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">apply</span>(post<span class="sc">$</span>w, <span class="dv">2</span>, mean)</span>
-<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim=</span><span class="fu">range</span>(d2<span class="sc">$</span>year), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>), </span>
-<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"year"</span>, <span class="at">ylab=</span><span class="st">"basis * weight"</span>)</span>
-<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(B)) <span class="fu">lines</span>(d2<span class="sc">$</span>year, w[i]<span class="sc">*</span>B[,i])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="SR_Ch04_notes_files/figure-html/4.77-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>The 97% posterior interval for µ, at each year</strong>:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">link</span>(m4<span class="fl">.7</span>)</span>
-<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>mu_PI <span class="ot">&lt;-</span> <span class="fu">apply</span>(mu, <span class="dv">2</span>, PI, <span class="fl">0.97</span>)</span>
-<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d2<span class="sc">$</span>year, d2<span class="sc">$</span>temp, <span class="at">col=</span><span class="fu">col.alpha</span>(rangi2,<span class="fl">0.3</span>),<span class="at">pch=</span><span class="dv">16</span>)</span>
-<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(mu_PI, d2<span class="sc">$</span>year, <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="st">"black"</span>,<span class="fl">0.5</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="SR_Ch04_notes_files/figure-html/4.78-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
 </section>
 </section>
 </section>
