@@ -1,0 +1,457 @@
+---
+title: "Lec4: Categories and Curves"
+format: html
+editor: visual
+execute:
+  eval: false
+---
+
+```{r setup, include=FALSE}
+library(rethinking)
+data(Howell1)
+d <- Howell1
+```
+
+# Categories
+
+- Discrete, unordered types
+
+- Want to stratify by category: fit a separate regression line for each category
+
+### 1) Question/Goal/Estimand
+
+How are height, weight, and sex **causally** related?\
+How are height, weight, and sex **statistically** weighted?
+
+### 2) Scientific model
+
+The causes aren't in the data
+
+- H → W: the arrow does from height to weight because there are fewer interventions on height than on weight (you can change your diet, exercise, etc. to change your weight, but not height). Height necessarily influences weight.
+
+- S → H: human biology, height does not influence sex; but sex does
+
+- S → H: same as above
+
+![](images/clipboard-2458933047.png){fig-align="center" width="300"}
+
+- Weight is influenced by both height (directly) and sex (both directly *and* indirectly via H)
+
+#### Translate DAGs into generative models by turning them into functions
+
+$$H = f_{H}(S)$$
+
+$$W = f_{W}(H,S)$$
+
+Indirect causes do not show up in generative functions\
+Unobserved causes are ignorable unless shared among generative causes (H, W, S)
+
+#### Synthetic people
+
+```{r}
+# S=1 female; S=2 male 
+sim_HW <- function(S,b,a){
+  N <- length(S)
+  H <- ifelse(S==1, 150, 160) + rnorm(N, 0, 5) # add Gaussian noise with variance of 25cm
+  W <- a[S] + b[S]*H + rnorm(N,0,5) 
+  data.frame(S,H,W)
+}
+
+S <- rbern(100) + 1 # 100 individuals with male and female drawn at random 
+dat <- sim_HW(S, b=c(0.5, 0.6), a=c(0,0)) 
+# both alphas are zero - no sex effect on intercept
+# slightly diff slopes: 0.5 for women, 0.6 for men 
+
+head(dat)
+```
+
+### Scientific Questions
+
+- Q: Causal effect on H on W? ← Already did this in last lecture
+
+- **Q: Causal effect of S on W?**
+
+  - involves two sub-causes, direct and indirect
+
+- **Q: Direct causal effect of S on W?**
+
+  - only direct cause = different stat model
+
+Need to stratify by S: different estimate for each value S can take. How?
+
+### 3) Statistical model(s)
+
+::: {.callout-note appearance="simple"}
+## Coding categorical variables
+
+1.  **Indicator** (0/1) variables
+2.  **Index** variables: 1,2,3,4
+    1.  One of the sexes becomes the default, while the other becomes the adjustment
+
+- We will use index variables
+
+  - Extend to many categories with no change in code
+
+  - Better for specifying priors
+
+  - Extend effortlessly to multilevel models
+
+Vector of parameters, with index
+
+$$\alpha_{S[i]}$$
+
+$$\alpha = [\alpha_{1}, \alpha_{2}]$$
+:::
+
+Statistical Model
+
+$$W_{i} \sim {\sf Normal}(µ_{i}, \sigma)$$
+
+$$µ_{i} = \alpha_{s[i]}$$
+
+Our priors:
+
+$$\alpha_{i} \sim {\sf Normal}(60,10)$$
+
+$$\sigma \sim {\sf Uniform}(0,10)$$
+
+#### Testing
+
+What is the [total causal effect of sex]{.underline}? Causal effect of sex = difference made intervening (i.e., mean male weight - mean female weight)
+
+```{r}
+# Female sample 
+S <- rep(1,100)
+simF <- sim_HW(S, b=c(0.5,0.6), a=c(0,0))
+
+# Male sample 
+S <- rep(2,100)
+simM <- sim_HW(S, b=c(0.5,0.6), a=c(0,0))
+
+# Effect of sex (male - female)
+mean(simM$W - simF$W)
+```
+
+- When we test the estimator, these are the sample values we want to find
+
+Now run the estimator and synthetic sample
+
+```{r}
+# Observe samples - list of 1s or 2s, for females or males 
+S <- rbern(100) + 1 # BTW, the +1 is because R is 1-indexed, rbern creates list of 0s,1s 
+dat <- sim_HW(S,b=c(0.5,0.6), a=c(0,0))
+
+# Estimate posterior 
+m_SW <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- a[S],
+    a[S] ~ dnorm(60,10),
+    sigma ~ dunif(0,10)
+  ), data=dat
+)
+precis(m_SW, depth=2)
+
+```
+
+- Difference between a\[1\] and a\[2\] is the estimate we're looking for: the total causal effect (indirect and direct)
+
+- E.g., 97-75 = 22
+
+#### Analyze real sample
+
+```{r}
+d <- Howell1
+d <- d[d$age>=18,]
+dat <- list(
+  W = d$weight,
+  S = d$male + 1 ) #S = 1 female; S =2 male
+
+m_SW <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- a[S],
+    a[S] ~ dnorm(60,10),
+    sigma ~ dunif(0,10)
+  ), data=dat
+)
+```
+
+#### Post processing
+
+- The unknowns themselves, a\[1\] and a\[2\], are not what we want; we have to do comparisons between these posterior distributions
+
+- The diff of mean weight is not in the posterior, the mean weight of each category is. But we'd like to look at the contrast between category 1 and 2
+
+- Need to use whole posterior distribution
+
+```{r}
+par(mfrow=c(1,2))
+
+# posterior mean W
+post <- extract.samples(m_SW)
+dens(post$a[,1], xlim=c(39,50), lwd=3, col=2, xlab="posterior mean weight (kg") 
+dens(post$a[,2], lwd=3, col=4, add=TRUE)
+
+# posterior W distributions, need to include SDs
+W1 <- rnorm(1000,post$a[,1], post$sigma)
+W2 <- rnorm(1000, post$a[,2], post$sigma)
+dens(W1, xlim=c(20,70), ylim=c(0,0.085), lwd=3, col=2)
+dens(W2, lwd=3, col=4, add=TRUE)
+```
+
+- The densities of the means don't overlap at all - indication that they're reliably different
+
+::: callout-note
+## Always be contrasting
+
+- Contrast is often what we want, the difference between categories
+
+- It's never legitimate to compare **overlap** in distributions - in parameters or lines
+
+  - Overlap doesn't reliably tell you much; the difference is reliably the same??
+
+  - This means no comparing confidence intervals or p-values either
+
+- Must compute contrast distribution
+:::
+
+#### Causal contrast of means
+
+```{r}
+str(post)
+
+#causal contrast (in means)
+mu_contrast <- post$a[,2] - post$a[,1] # subtract a[1] from a[2]
+dens(mu_contrast, xlim=c(3,10), lwd=3, col=1, xlab="posterior mean weight contrast (kg)")
+```
+
+- Posterior distribution of difference: knowledge about the average weight difference in women and men in this sample - between 5 and 9, centered around a little less than 7kg
+
+#### Causal contrast of weight
+
+- What bout individual people's body weights? What's the contrast between these distributions?
+
+```{r}
+# causal contrast of weight 
+W_contrast <- W2 - W1
+dens(W_contrast, xlim=c(-25,35), lwd=3, col=1, xlab="posterior weight contrast (kg")
+
+#proportion above zero, men heavier than women
+sum(W_contrast>0)/1000
+
+#proportion below zero, women heavier than men
+sum(W_contrast<0)/1000
+abline(v=0)
+```
+
+- Most of the time, men are heavier than women in this population, though some overlap
+
+## What's the direct causal effect of S on W (no indirect effect via H)?
+
+- Now we need to block association thru H
+
+- Need to **stratify by H**
+
+```{r}
+S <- rbern(100)+1 # simulate sample of sexes
+dat <- sim_HW(S, b=c(0.5,0.5), a=c(0,10)) #different alpha, assume +10kg for men - direct effect
+
+plot(dat$H, dat$W, col=c("red","blue")[S], xlab="height(cm)", ylab="weight (kg)")
+
+abline(v=mean(dat$H), h=mean(dat$W), lty=3)
+```
+
+- indirect: H influences W differently (slopes)
+
+- Direct: W differs net any slope differences
+
+#### Index Variables and Lines
+
+- Ignore sex for a moment, regression on weight from height
+
+$$W_{i} \sim {\sf Normal}(µ_{i}, \sigma)$$
+
+$$µ_{i} = \alpha + \beta(H_{i} - \overline{H})$$
+
+- **Centering H** makes it so that [alpha is the average weight of a person with average height]{.underline}.
+
+- Centering makes it easier to define scientific priors for alpha
+
+  - alpha = expected weight at the expected height
+
+    - so when $H_{i} = \overline{H}$ → $\beta$ \* 0 → beta/slope has no effect
+
+Now let's add sex
+
+$$µ_{i} = \alpha_{S[i]} + \beta_{s[i]}(H_{i} - \overline{H})$$
+
+- $S[i]$ sex of i-th person (1=female, 2=male)
+
+$$\alpha = [\alpha_{1}, \alpha_{2}],  \beta = [\beta_{1},\beta_{2}]$$
+
+- Two intercepts and two slopes, one for each value in S
+
+#### Analyze the Sample
+
+```{r}
+data("Howell1")
+d <- Howell1
+d <- d[d$age >= 18,]
+dat <- list(
+  W = d$weight,
+  H = d$height,
+  Hbar = mean(d$height),
+  S = d$male + 1) 
+
+m_SHW <- quap(
+  alist(
+    W ~ dnorm(mu, sigma),
+    mu <- a[S] + b[S]*(H-Hbar),
+    a[S] ~ dnorm(60,10),
+    b[S] ~ dunif(0,1),
+    sigma ~ dunif(0,10)
+  ), data=dat, 
+  start = list(
+    a = c(60, 60),
+    b = c(0.4, 0.4),
+    sigma = 6)
+)
+
+```
+
+Contrasts at each height
+
+1.  Compute posterior predictive for women
+2.  Compute posterior predictive for men
+3.  Subject (2) from (1)
+4.  Plot distribution at each height
+
+```{r}
+xseq <- seq(130,190, len=50)
+plot(NULL, xlim=range(xseq), ylim=c(-6,8), xlab="height (cm)", ylab="weight contrast (F - M)")
+
+
+muF <- 
+  link(m_SHW, data=list(S=rep(1,50), H=xseq,Hbar=mean(d$height)))
+  lines(xseq, apply(muF,2,mean), lwd=3, col=2)
+
+muM <- 
+  link(m_SHW, data=list(S=rep(2,50), H=xseq,Hbar=mean(d$height)))
+  lines(xseq, apply(muM,2,mean), lwd=3, col=4)
+
+mu_contrast <- muF - muM
+for (p in c(0.5,0.6,0.7,0.8,0.9,0.99))
+  shade(apply(mu_contrast,2,PI,prob=p), xseq)
+abline(h=0, lty=2)
+```
+
+- Posterior distribution of differences of in expected weight at each height between men and women according to the model
+
+- Gravity's around 0, not much difference at any height between men and women's heights
+
+  - Taller women tend to weigh more than men of the same height
+
+  - Shorter men tend to weigh more than women of same height
+
+- Nearly all of the causal effect of sex on weight acts thru height
+
+  - The weight contrast distribution straddles zero line
+
+  - Mean differences in weight by sex, but that's because men are taller
+
+So, almost no DIRECT effect of sex on weight in this population
+
+::: callout-note
+## Summary: Category variables
+
+- Easy to use with index coding
+
+- Use samples to compute relevant contrasts
+
+- Always summarize (mean, intervals) as the last step
+
+  - Do not summarize first and then take a difference
+
+- Want **mean difference** and NOT difference of means
+:::
+
+# Curves from Lines
+
+- H → W obviously nonlinear (for all ages in the `Howell1` dataset
+
+- Linear models can easily fit curves, but this is **not** mechanistic (fine as long as used wisely)
+
+- Two popular strategies
+
+  - **polynomials** - awful, you should never do it (Lol)
+
+  - **Splines and generalized additive models** - less awful
+
+## Polynomial linear models
+
+- Strategy: polynomial functions $µ_{i} = \alpha + \beta_{1}x_{i} + \beta_{2}x^{2}_{i}$
+
+- Still linear because it's an additive function of the parameters (parameters are not exponentiating anything)
+
+- Problems: strange symmetries (not a scientifically reasonable assumption), explosive uncertainty at edges
+
+  - Stem from polynomials inability to smooth locally, but globally (at whole x-axis at once - any data point in any region of the x-axis can change the shape of the curve)
+
+- DO NOT USE
+
+Thinking vs Fitting
+
+- Linear models can fit anything (Geocentrism)
+
+- Better to think: (will come back in Chapter 19)
+
+  $$logW_{i} \sim {\sf Normal}(µ_{i},\sigma)$$
+
+  $$µ_{i} = \alpha + \beta(H_{i} - \overline{H}) $$
+
+## Splines
+
+- Good if you don't have great scientific background info, and just want good **locally-inferred** function that lets you **stratify by some continuously varying predication variable**
+
+- Basis-spline: wiggly function built form many local functions
+
+- Basis function: a local function
+
+  - trained on local regions of the data, then the local functions are smoothed to make a continuous function
+
+- Local functions make splines better than polynomials, but equally geocentric
+
+- Can take an infinite number of shapes
+
+  - no scientific priors/info that goes into the splines
+
+### B-splines
+
+linear models with some weird synthetic variables
+
+$$ µ_{i} = \alpha + w_{1}B_{i,1} + w_{2}B_{i,2} + w_{3}B_{i,3} + ...$$
+
+- Weights *w* are like slopes
+
+- Basis functions *B* are synthetic variables
+
+- *B* values turn on weights in different regions
+
+- Spline is the sum of the basis functions are any vertical slice (region of the x-axis)
+
+::: callout-note
+## Curves and Splines
+
+- Can build very nonlinear functions from linear pieces
+
+- Splines are powerful geocentric devices
+
+- Adding scientific info helps
+
+  - E.g., avg weight only INC with height
+
+  - E.g., Height INC with age, then levels off (or declines)
+
+- Ideally statistical model has some form as scientific model
+:::

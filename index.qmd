@@ -1,0 +1,9 @@
+---
+title: "Statistical Rethinking Notes"
+format: html
+editor: visual
+---
+
+Notes and practice work as I go through McElreath's *Statistical Rethinking* course (using 2nd edition textbook and 2023 lecture recordings.
+
+Still work in progress.

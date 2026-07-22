@@ -1,0 +1,170 @@
+---
+title: "SR_Lec07_notes"
+format: html
+editor: visual
+---
+
+## Lecture 7: Fitting Over & Under
+
+::: {.callout-note appearance="simple"}
+## Key Points
+
+Causal tools and Predictive tools are distinct!
+
+- Do not use predictive tools (e.g., WAIC, PSIS, CV) to choose a causal estimate/models (BAD - yet still published in top journals).
+
+- Predictive tools provide measure of predictive accuracy of a model in the ABSENCE OF INTERVENTION
+
+- possible to make very good predictions without knowing causes
+
+- optimizing prediction does not reliably reveal causes
+
+- 
+:::
+
+How to use causal assumptions to design estimators? Contrast alternative models
+
+How to make estimators work?
+
+Problems of Prediction
+
+1.  What function describes these points? (**fitting, compression**)
+
+2.  What functions explains these points? (**causal inference**)
+
+3.  What would happen if we changed a point's mass? (**Intervention**)
+
+    - Intervention requires causal inference
+
+4.  **What is the next observation from the same process? (prediction)**
+
+    - When we want a good expectation of what will happen next, not necessarily a causal model.
+
+### Leave-one-out Cross-validation
+
+Used extensively in machine-learning
+
+1.  Drop one point
+2.  Fit line to remaining points
+3.  Predict dropped point (distance from the plotted line)
+4.  Repeat (1) with next point
+5.  Score error on dropped
+6.  Sum up the errors
+
+[Two scores:]{.underline} (bigger scores are bad)
+
+- **In: within sample** (fit always better on in-score)
+
+- **Out: out-of-sample** (more flexible/complex models usually do worse on out-of-sample score)
+
+#### Bayesian Cross-Validation
+
+- We use the entire posterior, not just a point prediction
+
+- Use lppd (log pointwise predictive density)
+
+  - Predictive density: predicted distribution of particular model
+
+  - Point-wise: considering each point independently for accuracy
+
+  - Log: for numerically stable
+
+### Regularization
+
+- Overfitting depends upon the priors
+
+- Important to not be too excitable about the sample, because not every feature of the sample is regular (long-run expected value of generative process)
+
+- Bayesian methods: use skeptical priors (tighter variance and reduce flexibility)
+
+- Cross-validation measures predictive accuracy, but doesn't do anything about it (can compare and choose models). But for any given model, you can make it better by using better priors - downgrade extremely unlikely observations
+
+- **Regularization**: function finds regular features of process
+
+For example,
+
+- $\beta \sim {\sf Normal}(0,10)$ is a very flat prior, normal distribution with variance of 100
+
+  - no prior info for the slopes within reasonable range
+
+- $\beta \sim {\sf Normal}(0,1)$ more skeptical prior (=less flexible)
+
+  - Does a little worse than the flat prior for within-sample, but noticeably better for out-of-sample accuracy
+
+- Same goes for (0,0.5)
+
+  - out-of-sample gets better
+
+- Skeptical priors allows the model to learn regular features, and ignore irregular
+
+#### How to choose regularizing prior width?
+
+- For causal inference, use science
+
+- For pure prediction, can tune the prior using cross-validation (often done in ML)
+
+- Practical use: Many tasks are a mix of inference and prediction
+
+## Prediction in the Absence of Intervention
+
+> WAIC, PSIS, CV measure overfitting = predictive metrics (NO INTERVENTION)
+>
+> Regularization manages overfitting
+>
+> None directly address causal inference
+>
+> Never choose a structural model and causal estimate by comparing WAIC, PSIS, CV
+>
+> Good for understanding how models work = statistical inference
+
+Model Misselection
+
+- DO NOT USE predictive criteria (WAIC, PSIS, CV) to choose a causal estimate
+
+- These are predictions in the ABSENCE of intervention
+
+- Predictive criteria actually prefer confounds and colliders (they improve prediction in absence of intervention)
+
+  - example plant growth experiment
+
+  - Still need help finding good [functional descriptions]{.underline} while avoiding overfitting
+
+### Importance sampling (PSIS)
+
+### Information criteria (WAIC)
+
+### Outliers and Robust Regressions
+
+- Some points are more influential than others
+
+- outliers: observations in the tails of predictive distribution
+
+  - indicate predications are possibly overconfident, unreliable
+
+  - Don't want to drop outliers, still information (only ignoring the data)
+
+- The model is wrong, rather than the data
+
+  - First, quantify influence of each point using cross-validation (how much prediction shifts when dropping an observation)
+
+    - PSIS *k* statistic
+
+    - WAIC penalty term
+
+  - Second, use a mixture model (robust regression)
+
+Mixing Gaussian Distributions
+
+- Error distributions are not constant across sample
+
+- Assume sample is mixture of normal distributions all piled together
+
+  - Same mean, diff variances → thicker tail
+
+  - **Student-t** **distribution** - not so surprised/influenced by outliers
+
+    - Degrees of freedom chosen based on some sort of risk assessment (test more and report them)
+
+    - Not enough extreme values to estimate degrees of freedom
+
+  - 

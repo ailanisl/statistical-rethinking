@@ -1,0 +1,45 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+    - "!**/*practice*.qmd"
+
+website:
+  title: "Statistical Rethinking Notes"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+  sidebar:
+    style: "docked"
+    contents:
+      - section: "Bayesian Sampling"
+        contents:
+          - ch02-03-sampling/SR_02_notes.qmd
+          - ch02-03-sampling/SR_Ch03_note.qmd
+      - section: "Linear Models"
+        contents:
+          - ch04-linear-models/SR_Ch04_notes.qmd
+          - ch04-linear-models/SR_Lec03_notes.qmd
+          - ch04-linear-models/SR_Lec04_notes.qmd
+      - section: "Multivariate Regression"
+        contents:
+          - ch05-multivariate-regression/SR_Ch05_notes.qmd
+      - section: "Overfitting & DAGs"
+        contents:
+          - ch06-dags/SR_Ch6_notes.qmd
+          - ch06-dags/SR2023_Lec05_notes.qmd
+          - ch06-dags/SR_Lec06_notes.qmd
+      - section: "Entropy & Model Comparison"
+        contents:
+          - ch07-entropy-model-comparison/SR_Ch7_notes.qmd
+          - ch07-entropy-model-comparison/SR_Lec07_notes.qmd
+      - section: "Extras"
+        contents:
+          - extras/distributions_for_priors.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true

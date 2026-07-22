@@ -1,0 +1,367 @@
+---
+title: "SR_04_practice"
+format: html
+editor: visual
+---
+
+# Geocentric Models Practice
+
+## 4.7 Practice
+
+```{r setup, include=FALSE}
+library(rethinking)
+data(Howell1)
+d <- Howell1
+d2 <- d[d$age >= 18,]
+
+# define the average weight, x-bar 
+xbar <- mean(d2$weight)
+
+#fit model 
+m4.3 <- quap(
+  alist(
+    height ~ dnorm(mu, sigma),
+    mu <- a + b*(weight - xbar),
+    a ~ dnorm(178,20),
+    b ~ dlnorm(0,1),
+    sigma ~ dunif(0,50)
+  ),
+  data=d2)
+```
+
+### Easy
+
+**4E1**. In the model definition below, which line is the likelihood?
+
+1.  $y_{i} ∼ {\sf Normal}(µ, σ)$
+    1.  THIS ONE - this is the data we have at hand and want to understand thru the parameters.
+2.  $µ∼Normal(0, 10)$
+3.  $σ ∼Exponential(1)$
+
+**4E2**. In the model definition just above, how many parameters are in the posterior distribution?
+
+- Two parameters, µ and sigma
+
+**4E3**. Using the model definition above, write down the appropriate form of Bayes’ theorem that includes the proper likelihood and priors.
+
+$$Pr(µ,\sigma|y)= \frac{Pr(y|µ,\sigma)(Pr(µ)Pr(\sigma)}{Pr(y)}$$
+
+**4E4**. In the model definition below, which line is the linear model?
+
+- $µ_{i} = \alpha + \beta x_{i}$
+
+**4E5**. In the model definition just above, how many parameters are in the posterior distribution?
+
+- 3 parameters: $\alpha$ , $\beta$, $\sigma$
+
+### Medium
+
+**4M1**. For the model definition below, simulate observed y values from the prior (not the posterior)
+
+$$y_{i} \sim {\sf Normal}(µ, \sigma)$$
+
+$$µ \sim {\sf Normal}(0,10)$$
+
+$$\sigma \sim {\sf Exponential}(1)$$
+
+```{r}
+sim_y <- function(N) {
+  sigma <- rexp(N,1)
+  mu <- rnorm(N, 0,10)
+  y <- rnorm(N, mu, sigma)
+  return(y)
+}
+
+prior_y <- sim_y(1e4)
+dens(prior_y)
+```
+
+4M2. Translate the model just above into a quap formula.
+
+```{r}
+flist <- alist(
+    y ~ dnorm(mu, sigma),
+    mu ~ dnorm(0,10),
+    sigma ~ dexp(1))
+
+```
+
+**4M3.** Translate the quap model formula below into a mathematical model definition.
+
+$$y_{i} ~ {\sf Normal}(µ, \sigma)$$
+
+$$µ_{i} = \alpha + \beta x_{i} $$
+
+$$\alpha \sim {\sf Normal}(0,10)$$
+
+$$\beta \sim {\sf Uniform}(0,1)$$
+
+$$\sigma \sim {\sf Exponential}(1)$$
+
+**4M4**. A sample of students is measured for height each year for 3 years. After the third year, you want to fit a [linear regression predicting height]{.underline} using [year as a predictor]{.underline}. Write down the mathematical model definition for this regression, using any variable names and priors you choose. Be prepared to defend your choice of priors.
+
+- Outcome: height of student
+
+- Predictor: year (1, 2, or 3)
+
+- Assumed relationship: height INC linearly over time
+
++----------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                        |                                                                                                                                                                                                                                                                                                                                                                                    |
++========================================+====================================================================================================================================================================================================================================================================================================================================================================================+
+| $h_{i} \sim {\sf Normal}(\mu, \sigma)$ | the likelihood of the height will be normally distributed around the line                                                                                                                                                                                                                                                                                                          |
++----------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $\mu = \alpha +\beta x_{i}$            | Mean will be linear regression function of year ($x_{i}$ is year 1, 2, or 3 for observation $i$).                                                                                                                                                                                                                                                                                  |
++----------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $\alpha \sim {\sf Normal}(158, 20)$    | > What is the expected height when year = 1?                                                                                                                                                                                                                                                                                                                                       |
+|                                        |                                                                                                                                                                                                                                                                                                                                                                                    |
+|                                        | The intercept will be normally distributed around a mean of around 158 cm. This is just my guess, given the limited information provided: namely, the sample consists of students who can be children as young as 5 years to perhaps 25 years old. The standard deviation should cast a wide range of heights (a bulk of heights around 138-178cm) without being unreasonably lax. |
++----------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $\beta \sim {\sf Normal}(5, 2)$        | > How many cm do students grow per year?                                                                                                                                                                                                                                                                                                                                           |
+|                                        |                                                                                                                                                                                                                                                                                                                                                                                    |
+|                                        | The slope should reflect that children, adolescents grow at a faster rate than adults, but also keep in mind that the sample may include young adults. I said around 5cm growth, +/-2 cm per year.                                                                                                                                                                                 |
+|                                        |                                                                                                                                                                                                                                                                                                                                                                                    |
+|                                        | The slope should be positive. I *could* use a Log-Normal to strictly enforce positivity, but Normal(5,2) puts very little mass below zero so it's reasonable.                                                                                                                                                                                                                      |
++----------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| $\sigma \sim {\sf Exponential}(1)$     | > How much do individual heights vary around the average line?                                                                                                                                                                                                                                                                                                                     |
+|                                        |                                                                                                                                                                                                                                                                                                                                                                                    |
+|                                        | Sigma has to be positive, and shouldn't vary wildly. Exponential(1) has a mean of 1 and a long tail, giving most mass to small values while allowing larger spread if the data demand it. Strictly enforces positive vals.                                                                                                                                                         |
++----------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+```{r}
+#| code-fold: true
+par(mfrow=c(2,2))
+dens(rnorm(1e4, 158, 20),main = "alpha prior")
+dens(rnorm(1e4, 5,2), main = "beta prior")
+dens(rlnorm(1e4, 2,0.5), main = "updated beta prior: log-normal")
+dens(rexp(1e4,1), main = "sigma prior")
+```
+
+**4M5**. Now suppose I remind you that every student got taller each year. Does this information lead you to change your choice of priors? How?
+
+> Yes, my beta would be Log-Normal(2,0.5)
+
+> A Log-Normal(2, 0.5) has a median of $e^2≈ 7.4$ cm/year, which is realistic, and puts zero mass on negative growth by definition.
+
+**4M6**. Now suppose I tell you that the variance among heights for students of the same age is never more than 64cm. How does this lead you to revise your priors?
+
+> I would change my sigma prior to be uniform: ${\sf Uniform}(0,8)$
+
+- ::: callout-warning
+  #### Does not change alpha prior
+
+  The SD in $\alpha \sim \text{Normal}(158, 20)$ is not about how much students vary from each other. It's about my own uncertainty in where the mean height is.
+  :::
+
+### Hard
+
+**4H1**. The weights listed below were recorded in the !Kung census, but heights were not recorded for these individuals. Provide predicted heights and 89% intervals for each of these individuals. That is, fill in the table below, using model-based predictions.
+
+```{r}
+Q4H1_weights <- c(46.95, 43.72, 64.78,32.59,54.63)
+
+# Use link to extract samples from model, calculate the mu values for each weight in list
+Q4H1_mu <- link(m4.3, data=data.frame(weight=Q4H1_weights))
+
+# Apply mean to Q4H1_mu (remember: 2 means 'dimension 2' of the matrix Q4H1_mu)
+Q4H1_mean <- apply(Q4H1_mu, 2, mean)
+Q4H1_mean
+
+# Apply PI 89% to Q4H1_mu
+Q4H1_PI <- apply(Q4H1_mu, 2, PI, prob=.89)
+Q4H1_PI
+```
+
+**4H2**. Select out all the rows in the `Howell1` data with ages below 18 years of age. If you do it right, you should end up with a new data frame with 192 rows in it.
+
+::: callout-important
+## Can I use the data summary of the predictor variable to inform my priors?
+
+> Priors should encode what you knew **before seeing the outcome variable** (height), but it's okay to look at the predictor variable (weight) to understand scale
+
+So glancing at the range of weights to understand your `xbar` centering is perfectly reasonable. What you want to avoid is looking at the *height* data and setting a very tight prior directly from it.
+:::
+
+```{r}
+d3 <- Howell1[d$age < 18,]
+precis(d3)
+```
+
+\(a\) Fit a [linear regression]{.underline} to these data, using quap. Present and interpret the estimates. For every 10 units of increase in weight, how much taller does the model predict a child gets?
+
+```{r}
+# Simulate prior predictive distribution to fuss over the priors!! 
+set.seed(2971)
+N <- 100
+a <- rnorm(N, 100, 10)
+b <- rlnorm(N, 0, 0.5)
+
+# Plot the prior predictive simulation
+plot(NULL, xlim=range(d3$weight), ylim=c(-100,400),xlab="weight",ylab="height")
+
+abline(h=0, lty=2) # no one is negative height
+abline(h=200, lty=2, lwd=0.5) # A pretty tall adult
+
+xbar <- mean(d3$weight)
+for (i in 1:N) curve(a[i] + b[i]*(x-xbar), from = min(d3$weight), to=max(d3$weight), add=TRUE, col=col.alpha("black", 0.2))
+```
+
+```{r}
+# Let's find the posterior distribution now 
+
+# xbar is the avg weight of d3
+xbar <- mean(d3$weight)
+
+# Fit the linear model
+m4.4 <- quap(
+  alist(
+    height ~ dnorm(mu, sigma),
+    mu <- a + b*(weight - xbar),
+    a ~ dnorm(100,10),
+    b ~ dlnorm(0,0.5),
+    sigma ~ dunif(0,10)
+  ), data=d3
+)
+
+# Interpret your posterior distribution 
+precis(m4.4)
+
+# For every 10 kg weight
+cat("\n")
+cat("For every 10 kg increase in weight, height increases by:", 10 * coef(m4.4)["b"], "cm \n")
+
+```
+
+> For every 10kg increase in weight, height increases `r 27.11505` cm
+
+```{r}
+max(d3$weight)
+```
+
+\(b\) Plot the raw data, with height on the vertical axis and weight on the horizontal axis. Super-impose the MAP (maximum *a posteriori* estimate) regression line and 89% interval for the mean. Also superimpose the 89% interval for predicted heights.
+
+```{r}
+# Plot raw data 
+plot(d3$height ~ d3$weight, col=rangi2, xlab="weight (kg)", ylab="height (cm)")
+
+# extract samples for the linear model's posterior distribution
+post <- extract.samples(m4.4)
+
+# get MAP estimate for posterior alpha and beta 
+a_map <- mean(post$a)
+b_map <- mean(post$b)
+
+# plot MAP regression line 
+curve(a_map+ b_map * (x - xbar), add=TRUE)
+
+# superimpose 89% PI for heights
+weight.seq <- seq(3,45, by=1)
+
+mu <- link(m4.4, data = data.frame(weight=weight.seq))
+
+#simulate heights with linear model, for each possible weight (1kg seq has 1000 simulated heights)
+sim.height <- sim(m4.4, data=list(weight=weight.seq))
+
+height.PI <- apply(sim.height, 2, PI, prob=0.89)
+shade(height.PI, weight.seq)
+
+```
+
+\(c\) What aspects of the model fit concern you? Describe the kinds of assumptions you would change, if any, to improve the model. You don’t have to write any new code. Just explain what the model appears to be doing a bad job of, and what you hypothesize would be a better model.
+
+> Obviously not linear relationship between weight and height. Doesn't reflect the sharp growth that happens at lighter weights (0-10kg) not the drop off in growth after 35kg. Perhaps a polynomial regression would work better.
+
+**4H3**. Suppose a colleague of yours, who works on allometry, glances at the practice problems just above. Your colleague exclaims, “That’s silly. Everyone knows that it’s only the logarithm of body weight that scales with height!” Let’s take your colleague’s advice and see what happens.
+
+\(2\) Model the relationship between height (cm) and the natural logarithm of weight (log-kg). Use the entire `Howell1` data frame, all 544 rows, adults and non-adults. Fit this model, using [quadratic approximation]{.underline}:
+
+$$h_{i} \sim {\sf Normal}(µ_{i}, \sigma)$$
+$$µ_{i} = \alpha + \beta {\sf log}(w_{i})$$
+
+$$\alpha \sim {\sf Normal}(178,20)$$
+
+$$\beta \sim {\sf Log-Normal}(0,1)$$
+
+$$\sigma \sim {\sf Uniform}(0,50)$$
+
+where $h_{i}$ is the height of individual $i$ and $w_{i}$ is the weight (in kg) of individual $i$. The function for computing a natural log in R is just log. Can you interpret the resulting estimates?
+
+```{r}
+data(Howell1)
+d4 <- Howell1
+
+m4.5 <- quap(
+  alist(
+    height ~ dnorm(mu, sigma),
+    mu <- a + b * log(weight),
+    a ~ dnorm(178,20),
+    b ~ dlnorm(0,1),
+    sigma ~ dunif(0,50)
+  ), data=d4
+)
+
+precis(m4.5) 
+```
+
+\(b\) Begin with the plot (raw data). Then use samples from the quadratic approximate posterior of the model in (a) to superimpose on the plot: (1) the [predicted mean height as a function of weight]{.underline}, (2) the [97% interval for the mean]{.underline}, and (3) the [97% interval for predicted heights]{.underline}.
+
+```{r}
+# define a sequence of weights FIRST
+weight.seq <- seq(4, 70, by=1)
+
+# Use link to create matrix of possible a and b pairs for each weight in weight.seq 
+mu4 <- link(m4.5, data=list(weight=weight.seq))
+mu4.mean <- apply(mu4, 2, mean)
+mu4.PI <- apply(mu4, 2, PI, prob=0.97)
+
+# plotting the raw data
+plot( height ~ weight, data=Howell1, col=col.alpha(rangi2,0.4))
+
+
+# Superimpose MAP regression line 
+lines(weight.seq, mu4.mean)
+
+# Superimpose shaded region for 97% PI for the mean 
+shade(mu4.PI, weight.seq)
+
+# Sumperimpose shaded region for 97% PI for the predicted heights 
+sim.height <- sim(m4.5, data=list(weight=weight.seq))
+height4.PI <- apply(sim.height, 2, PI, prob=.97)
+
+shade(height4.PI, weight.seq)
+```
+
+**4H4**. Plot the prior predictive distribution for the polynomial regression model in the chapter. You can modify the code that plots the linear regression prior predictive distribution. Can you modify the prior distributions of α, β1, and β2 so that the prior predictions stay within the biologically reasonable outcome space? That is to say: Do not try to fit the data by hand. But do try to keep the curves consistent with what you know about height and weight, before seeing these exact data.
+
+```{r}
+"# Standardize weights!!
+d4$weight_s <- ( d4$weight - mean(d4$weight) )/sd(d4$weight)
+d4$weight_s2 <- d4$weight_s^2
+
+# quap model
+m_poly <- quap(
+  alist(
+    height ~ dnorm(mu, sigma),
+    mu <- a + b1*weight_s + b2*weight_s2,
+    a ~ dnorm(178,20),
+    b1 ~ dlnorm(0,1),
+    b2 ~ dnorm(0,1),
+    sigma ~ dunif(0,50)
+  ), data=d4
+)
+
+# plotting
+weight.seq <- seq(min(d4$weight_s), max(d4$weight_s), by=1)
+
+mu <- link(m_poly, data=list(
+  weight = weight.seq,
+  weight_sqrd = weight.seq^2
+))
+
+mu.mean <- apply(mu, 2, mean)
+mu.PI <- apply(mu, 2, PI, prob=0.97)
+
+plot(height ~ weight, data=d, col=col.alpha(rangi2, 0.4))
+lines(weight.seq, mu.mean)
+shade(mu.PI, weight.seq)"
+```

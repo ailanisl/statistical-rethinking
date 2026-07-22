@@ -1,0 +1,58 @@
+---
+title: "SR_Ch7_practice"
+format: html
+editor: visual
+---
+
+## Chapter 7 Practice
+
+## Easy
+
+**7E1**. Three motivating criteria that define information entropy.
+
+> 1.  Uncertainty should be continuous (no discrete values)
+> 2.  Uncertainty should increase as the number of events increase
+> 3.  Uncertainty should be additive ( conditions add more uncertainty)
+
+**7E2**. Suppose a coin is weighted such that, when it is tossed and lands on a table, it comes up heads 70% of the time. What is the entropy of this coin?
+
+```{r}
+p <- c(0.7, 0.3)
+-sum(p* log(p))
+```
+
+**7E3**. Suppose a four-sided die is loaded such that, when tossed onto a table, it shows “1” 20%, “2” 25%, ”3” 25%, and ”4” 30% of the time. What is the entropy of this die?
+
+```{r}
+p <- c(0.2, 0.25, 0.25, 0.3)
+-sum(p*log(p))
+```
+
+**7E4**. Suppose another four-sided die is loaded such that it never shows “4”. The other three sides show equally often. What is the entropy of this die?
+
+```{r}
+p <- c(0.333,0.333,0.333)
+-sum(p*log(p))
+```
+
+## Medium
+
+**7M1**. Write down and compare the definitions of AIC and WAIC. Which of these criteria is most general? Which assumptions are required to transform the more general criterion into a less general one?
+
+> AIC requires that (1) priors are flat or overwhelmed by the likelihood, (2) the posterior distribution is approx multivariate Gaussian, and (3) that the sample size is much greater than the number of parameters. This makes it very restricted use case, whereas WAIC is much more general. WAIC only necessitates a large sample to converge with the cross-validation score because WAIC uses KL-Divergence to get to the same metric (a finite sample may result in diff score).
+
+**7M2**. Explain the difference between model selection and model comparison. What information is lost under model selection?
+
+> When selecting a model, you are choosing a model with the best info criterion and discarding the others.. In theory, you should not be doing model selection because you will lose information gained from comparisons to cross-validation, PSIS, WAIC, etc. Model comparison is comparing the predictive accuracy of various models relative to each other, which allows us to understand how much influence certain parameters have on predictions. Model comparison can later be paired with a more causal model to understand implied conditional independencies among variables (confounds) and thus causal relationships.
+
+7M3. When comparing models with an information criterion, why must all models be fit to exactly the same observations? What would happen to the information criterion values, if the models were fit to different numbers of observations? Perform some experiments, if you are not sure.
+
+> Information Criteria measures the out-of-sample KL-Divergence (or Deviance), which is the sum (not mean) of the observations. So a change in the number of observations would affect the information criteria values.
+
+7M4. What happens to the effective number of parameters, as measured by PSIS or WAIC, as a prior becomes more concentrated? Why? Perform some experiments, if you are not sure.
+
+> 
+
+7M5. Provide an informal explanation of why informative priors reduce overfitting.
+
+7M6. Provide an informal explanation of why overly informative priors result in underfitting.
