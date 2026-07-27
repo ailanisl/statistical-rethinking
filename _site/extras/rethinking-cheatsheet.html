@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>SR_Ch05_practice – Statistical Rethinking Notes</title>
+<title>Rethinking Cheatsheet – Statistical Rethinking Notes</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -136,6 +136,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -170,7 +171,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch05-multivariate-regression/SR_Ch05_notes.html">Ch 5: Multivariate Regression</a></li><li class="breadcrumb-item"><a href="../ch05-multivariate-regression/SR_Ch05_practice.html">SR_Ch05_practice</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../extras/distributions_for_priors.html">Extras</a></li><li class="breadcrumb-item"><a href="../extras/rethinking-cheatsheet.html">Rethinking Cheatsheet</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -185,7 +186,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 2-3: Bayesian Sampling</span></a>
+ <span class="menu-text">Bayesian Sampling</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -193,14 +194,14 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../ch02-03-sampling/SR_Ch03_note.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch03_notes</span></a>
+  <a href="../ch02-03-sampling/SR_02_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch2: Small Worlds and Large Worlds</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../ch02-03-sampling/SR_02_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_week1_practice</span></a>
+  <a href="../ch02-03-sampling/SR_Ch03_note.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch3: Sampling the Imaginary</span></a>
   </div>
 </li>
       </ul>
@@ -208,7 +209,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 4: Linear Models</span></a>
+ <span class="menu-text">Linear Models</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -217,25 +218,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch04-linear-models/SR_Ch04_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch04_notes</span></a>
+ <span class="menu-text">Ch 4: Geocentric Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch04-linear-models/SR_Lec03_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec03_notes</span></a>
+ <span class="menu-text">Lec 3: Geocentric Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch04-linear-models/SR_Lec04_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec04_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch04-linear-models/ch04-practice/SR_04_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_04_practice</span></a>
+ <span class="menu-text">Lec4: Categories and Curves</span></a>
   </div>
 </li>
       </ul>
@@ -243,7 +238,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 5: Multivariate Regression</span></a>
+ <span class="menu-text">Multivariate Regression</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -252,13 +247,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch05-multivariate-regression/SR_Ch05_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch05_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch05-multivariate-regression/SR_Ch05_practice.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">SR_Ch05_practice</span></a>
+ <span class="menu-text">Ch5: The Many Variables &amp; the Spurious Waffles</span></a>
   </div>
 </li>
       </ul>
@@ -266,7 +255,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 6: DAGs</span></a>
+ <span class="menu-text">Overfitting &amp; DAGs</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -275,25 +264,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch06-dags/SR_Ch6_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch6_notes</span></a>
+ <span class="menu-text">Ch 6: The Haunted DAG &amp; The Causal Terror</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch06-dags/SR2023_Lec05_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR2023_Lec05_notes</span></a>
+ <span class="menu-text">Lec 5: Elemental Confounds (2023)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch06-dags/SR_Lec06_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec06_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch06-dags/SR_Ch6_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch6_Practice</span></a>
+ <span class="menu-text">Lec 6: Good and Bad Controls</span></a>
   </div>
 </li>
       </ul>
@@ -301,7 +284,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 7: Entropy &amp; Model Comparison</span></a>
+ <span class="menu-text">Entropy &amp; Model Comparison</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -310,19 +293,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch07-entropy-model-comparison/SR_Ch7_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch07_notes</span></a>
+ <span class="menu-text">Ch7: Ulysses’ Compass</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch07-entropy-model-comparison/SR_Lec07_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec07_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch07-entropy-model-comparison/SR_Ch7_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch7_practice</span></a>
+ <span class="menu-text">Lec 7: Fitting Over and Under</span></a>
   </div>
 </li>
       </ul>
@@ -330,7 +307,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Extras</span></a>
+ <span class="menu-text">Conditioning &amp; Interactions</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -338,8 +315,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../ch08-interactions/SR_Ch8_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch 8: Conditional Manatees</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Extras</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../extras/distributions_for_priors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">distributions_explainer</span></a>
+ <span class="menu-text">distributions explainer</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extras/rethinking-cheatsheet.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Rethinking Cheatsheet</span></a>
   </div>
 </li>
       </ul>
@@ -354,19 +354,16 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#chapter-5-practice" id="toc-chapter-5-practice" class="nav-link active" data-scroll-target="#chapter-5-practice">Chapter 5 Practice</a>
-  <ul class="collapse">
-  <li><a href="#medium" id="toc-medium" class="nav-link" data-scroll-target="#medium">Medium</a></li>
-  </ul></li>
+  <li><a href="#quarto-cheatsheet" id="toc-quarto-cheatsheet" class="nav-link active" data-scroll-target="#quarto-cheatsheet">Quarto Cheatsheet</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch05-multivariate-regression/SR_Ch05_notes.html">Ch 5: Multivariate Regression</a></li><li class="breadcrumb-item"><a href="../ch05-multivariate-regression/SR_Ch05_practice.html">SR_Ch05_practice</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../extras/distributions_for_priors.html">Extras</a></li><li class="breadcrumb-item"><a href="../extras/rethinking-cheatsheet.html">Rethinking Cheatsheet</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">SR_Ch05_practice</h1>
+<h1 class="title">Rethinking Cheatsheet</h1>
 </div>
 
 
@@ -383,177 +380,74 @@ window.Quarto = {
 </header>
 
 
-<section id="chapter-5-practice" class="level1">
-<h1>Chapter 5 Practice</h1>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data and copy</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"WaffleDivorce"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> WaffleDivorce</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p><strong>5E1</strong>. Which of the linear models below are multiple linear regressions?</p>
+<p><code>extract.prior</code></p>
 <blockquote class="blockquote">
-<p>(2) <span class="math inline">\(µ_{i} = \beta_{x}x_{i} + \beta_{z}z_{i}\)</span></p>
-<p>(4) <span class="math inline">\(µ_{i} = \alpha + \beta_x x_i + \beta_zz_i\)</span></p>
+<p><strong>Action</strong>: simulates draws using the defined formulas and prior specifications</p>
+<p><strong>Target</strong>: <em>prior</em> distribution</p>
+<p><strong>Purpose</strong>: to perform prior predictive simulation, checking what the model assumes before it looks at real data to ensure priors are not absurd</p>
 </blockquote>
-<div class="callout callout-style-default callout-important callout-titled">
+<p><code>extract.samples</code></p>
+<blockquote class="blockquote">
+<p><strong>Action</strong>: collects samples from a fitted model object (like <code>quap</code>)</p>
+<p><strong>Target</strong>: posterior distribution</p>
+<p><strong>Purpose</strong>: analyze parameter estimates, compute contrasts, run posterior predictive checks after learning from data</p>
+</blockquote>
+<p><code>link</code> function (<code>rethinking</code> package)</p>
+<blockquote class="blockquote">
+<p>Takes the <code>quap</code> approx, samples from the posterior distribution, and computes µ for each case in the data and sample from the post distribution.</p>
+<p>Default behavior: uses original data, so you have to pass it a list of new x-axis values to plot the posterior predictions across (<code>predictor_seq</code>)</p>
+</blockquote>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>predictor_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from=</span>X, <span class="at">to=</span>XX, <span class="at">length.out=</span><span class="dv">30</span>) </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">link</span>(quap_model, <span class="at">post=</span>prior, <span class="at">data=</span><span class="fu">data.frame</span>(<span class="at">predictor_var =</span> predictor_seq))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Wrong answer
+<span class="screen-reader-only">Tip</span>Workflow for generating predictions and intervals from the posterior of a fit model
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<blockquote class="blockquote">
-<p>(3) <span class="math inline">\(µ_{i} = \alpha + \beta(x_{i} - z_{i})\)</span> - It does make use of two variables, but has one slope parameter. governing both. The coefficient on <span class="math inline">\(x_i\)</span> and <span class="math inline">\(z_i\)</span> is constrained to be equal in magnitude — you cannot estimate their effects independently.</p>
-<p>What makes a model MLR?</p>
 <ol type="1">
-<li><strong>Two or more independent predictors</strong>, each with its <strong>own free coefficient</strong></li>
-<li></li>
+<li><code>link</code> to generate distributions of posterior values for µ. - Pass it a list of new horiz axis values you want to plot posterior predictions across</li>
+<li>Summary functions (<code>mean</code> or <code>PI</code>) to find averages and lower and upper bounds of µ for each value of the predictor variable</li>
+<li>Plotting functions (<code>lines</code> or <code>shade)</code> to draw the lines and intervals.
+<ul>
+<li>Or you might plot the distributions of the predictions, or do further numerical calculations with them</li>
+</ul></li>
 </ol>
-</blockquote>
 </div>
 </div>
-<p><strong>5E2</strong>. Write down a multiple regression to evaluate the claim: <em>Animal diversity is linearly related to latitude, but only after controlling for plant diversity.</em> You just need to write down the model definition.</p>
-<p>A → P → L</p>
-<p><span class="math display">\[D_i = \alpha + \beta_PP_i + \beta_LL \]</span></p>
-<p><strong>5E3.</strong> Write down a multiple regression to evaluate the claim: <em>Neither amount of funding nor size of laboratory is by itself a good predictor of time to PhD degree; but together these variables are both positively associated with time to degree.</em> Write down the model definition and indicate which side of zero each slope parameter should be on.</p>
-<p>F → T ← L</p>
-<p><span class="math display">\[T_i = \alpha + \beta_{F}F_i + \beta_LL_i\]</span></p>
-<ul>
-<li>This looks to be a masked relationship. Funding may be positively associated with T, time to degree; while size of lab, L, may be negatively associated with time to degree. Funding should be positively associated with size of lab (more funds coming in means a higher capacity to hire more lab members).</li>
-</ul>
-<p><strong>5E4</strong>. Suppose you have a single categorical predictor with 4 levels (unique values), labeled A, B, C and D. Let Ai be an indicator variable that is 1 where case i is in category A. Also suppose Bi, Ci, and Di for the other categories. Now which of the following linear models are inferentially equivalent ways to include the categorical variable in a regression? Models are <strong>inferentially equivalent</strong> when it’s possible to compute one posterior distribution from the posterior distribution of another model.</p>
-<p>(1) <span class="math inline">\(µ_i = \alpha + \beta_AA_i + \beta_BB_i + \beta_DD_i\)</span></p>
-<p>(2) <span class="math inline">\(µ_i = \alpha + \beta_AA_i + \beta_BB_i + \beta_CC_i + \beta_DD_i\)</span></p>
-<p>(3) <span class="math inline">\(µ_i = \alpha + \beta_AA_i + \beta_CC_i + \beta_DD_i\)</span></p>
-<p>(4) <span class="math inline">\(µ_i = \alpha_AA_i + \alpha_BB_i + \alpha_CC_i + \alpha_DD_i\)</span></p>
-<p>(5) <span class="math inline">\(µ_i = \alpha_A(1 - B_i - C_i - D_i) + \alpha_BB_i + \alpha_CC_i + \alpha_DD_i\)</span></p>
+<p>Categorical Linear Regression</p>
 <blockquote class="blockquote">
-<p>Models (1) and (3) use the indicator method within model, just using different categories as reference variable (the one that’s left out of the model): so C in the case of (1) and B in the case of (2). All four means are recoverable using this method.<br>
-<br>
-Models (4) and (5) are using the index method, both are algebraically identical. $A_i = (1- B_i - C_i - D_i )$</p>
-<p><br>
-Model (2) does not work because it’s over-parameterized (5 free parameters trying to describe 4 means).</p>
+<p><strong>Purpose</strong>: to build models with different <u>intercepts</u> <span class="math inline">\(\alpha\)</span> for categorical predictor variables.</p>
+<p>Can use indicator (0/1) variables or index variables (ID=[1,2,…,k]). McElreath recommends index variables.</p>
 </blockquote>
-<section id="medium" class="level3">
-<h3 class="anchored" data-anchor-id="medium">Medium</h3>
-<p>5M1. Invent your own example of a spurious correlation. An outcome variable should be correlated with both predictor variables. But when both predictors are entered in the same model, the correlation between the outcome and one of the predictors should mostly vanish (or at least be greatly reduced).</p>
-<p>5M2. Invent your own example of a masked relationship. An outcome variable should be correlated with both predictor variables, but in opposite directions. And the two predictor variables should be correlated with one another.</p>
-<p>5M3. It is sometimes observed that the best predictor of fire risk is the presence of firefighters— States and localities with many firefighters also have more fires. Presumably firefighters do not cause fires. Nevertheless, this is not a spurious correlation. Instead fires cause firefighters. Consider the same reversal of causal inference in the context of the divorce and marriage data. How might a high divorce rate cause a higher marriage rate? Can you think of a way to evaluate this relationship, using multiple regression?</p>
-<blockquote class="blockquote">
-<p>Divorced people will tend to marry again, perhaps marry multiple times - so driving up the divorce rates drives up the marriage rates.</p>
-</blockquote>
-<p><strong>5M4</strong>. In the divorce data, States with high numbers of Mormons (members of The Church of Jesus Christ of Latter-day Saints, LDS) have much lower divorce rates than the regression models expected. Find a list of LDS population by State and use those numbers as a predictor variable, predicting divorce rate using marriage rate, median age at marriage, and percent LDS population (possibly standardized). You may want to consider transformations of the raw percent LDS variable.d</p>
+<hr>
+<section id="quarto-cheatsheet" class="level2">
+<h2 class="anchored" data-anchor-id="quarto-cheatsheet">Quarto Cheatsheet</h2>
+<section id="code-fold" class="level4">
+<h4 class="anchored" data-anchor-id="code-fold">Code Fold</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: true</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Click to see the R code"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>LDS <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.0077</span>, <span class="fl">0.0453</span>, <span class="fl">0.0610</span>, <span class="fl">0.0104</span>, <span class="fl">0.0194</span>, <span class="fl">0.0270</span>, <span class="fl">0.0044</span>, <span class="fl">0.0057</span>, <span class="fl">0.0041</span>, <span class="fl">0.0075</span>, <span class="fl">0.0082</span>, <span class="fl">0.0520</span>, <span class="fl">0.2623</span>, <span class="fl">0.0045</span>, <span class="fl">0.0067</span>, <span class="fl">0.0090</span>, <span class="fl">0.0130</span>, <span class="fl">0.0079</span>, <span class="fl">0.0064</span>, <span class="fl">0.0082</span>, <span class="fl">0.0072</span>, <span class="fl">0.0040</span>, <span class="fl">0.0045</span>, <span class="fl">0.0059</span>, <span class="fl">0.0073</span>, <span class="fl">0.0116</span>, <span class="fl">0.0480</span>, <span class="fl">0.0130</span>, <span class="fl">0.0065</span>, <span class="fl">0.0037</span>, <span class="fl">0.0333</span>, <span class="fl">0.0041</span>, <span class="fl">0.0084</span>, <span class="fl">0.0149</span>, <span class="fl">0.0053</span>, <span class="fl">0.0122</span>, <span class="fl">0.0372</span>, <span class="fl">0.0040</span>, <span class="fl">0.0039</span>, <span class="fl">0.0081</span>, <span class="fl">0.0122</span>, <span class="fl">0.0076</span>, <span class="fl">0.0125</span>, <span class="fl">0.6739</span>, <span class="fl">0.0074</span>, <span class="fl">0.0113</span>, <span class="fl">0.0390</span>, <span class="fl">0.0093</span>, <span class="fl">0.0046</span>, <span class="fl">0.1161</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<details class="code-fold">
+<summary>Click to see the R code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="st">"some code here which is hidden, but the output is shown"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#standardize vars </span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>D <span class="ot">&lt;-</span> <span class="fu">standardize</span>(d<span class="sc">$</span>Divorce)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>M <span class="ot">&lt;-</span> <span class="fu">standardize</span>(d<span class="sc">$</span>Marriage)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>A <span class="ot">&lt;-</span> <span class="fu">standardize</span>(d<span class="sc">$</span>MedianAgeMarriage)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>LDS <span class="ot">&lt;-</span> <span class="fu">standardize</span>(<span class="fu">log</span>(d<span class="sc">$</span>LDS))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Bivariate Model for LDS percentage and Divorce Rates</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">D =</span> d<span class="sc">$</span>D,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">LDS =</span> d<span class="sc">$</span>LDS</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>m5.LDS <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bL <span class="sc">*</span> LDS,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.2</span>),</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    bL <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>),</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>dat</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m5.LDS)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>               mean         sd        5.5%     94.5%
-a     -4.570271e-05 0.11243336 -0.17973592 0.1796445
-bL     1.838589e-01 0.13244976 -0.02782139 0.3955392
-sigma  9.613070e-01 0.09479018  0.80981403 1.1128000</code></pre>
-</div>
-</div>
-<ul>
-<li>Should bL be negative? Hmm</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># limits of standardized values for x-axis </span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>xseq <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate priors </span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">extract.prior</span>(m5.LDS)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">link</span>(m5.LDS, <span class="at">post =</span> prior, <span class="at">data =</span> <span class="fu">list</span>(<span class="at">LDS =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>)))</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plot lines over the range of 2 standard deviations for both outcome, predictor </span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">2</span>), <span class="at">xlab=</span><span class="st">"LDS percentage (std)"</span>, <span class="at">ylab=</span><span class="st">"divorce rate (std)"</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>) <span class="fu">lines</span>(xseq, mu[i,], <span class="at">col=</span><span class="fu">col.alpha</span>(<span class="st">"black"</span>,<span class="fl">0.3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="SR_Ch05_practice_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(d<span class="sc">$</span>LDS) <span class="co"># around -1 to 3.5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -1.060412  3.628444</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>LDS_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">4</span>, <span class="at">length.out =</span> <span class="dv">30</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">link</span>(m5.LDS, <span class="at">data=</span><span class="fu">list</span>(<span class="at">LDS=</span>LDS_seq))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>mu_mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(mu, <span class="dv">2</span>, mean)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>mu_PI <span class="ot">&lt;-</span> <span class="fu">apply</span>(mu, <span class="dv">2</span>, PI)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(d<span class="sc">$</span>D <span class="sc">~</span> d<span class="sc">$</span>LDS, <span class="at">col=</span>rangi2)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(LDS_seq, mu_mean)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">shade</span>(mu_PI, LDS_seq)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="SR_Ch05_practice_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>m5M4 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bA<span class="sc">*</span>A <span class="sc">+</span> bM<span class="sc">*</span>M <span class="sc">+</span> bL <span class="sc">*</span> LDS,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.2</span>),</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    bA <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>),</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    bM <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    bL <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.5</span>),</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span> d</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m5M4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>               mean         sd       5.5%      94.5%
-a      9.016640e-06 0.09390062 -0.1500623  0.1500804
-bA    -6.995986e-01 0.15140390 -0.9415713 -0.4576259
-bM     7.290248e-02 0.16220792 -0.1863371  0.3321421
-bL    -2.908726e-01 0.14931749 -0.5295108 -0.0522344
-sigma  7.520155e-01 0.07472052  0.6325977  0.8714334</code></pre>
-</div>
-</div>
-<p>5M5. One way to reason through multiple causation hypotheses is to imagine detailed mechanisms through which predictor variables may influence outcomes. For example, it is sometimes argued that the price of gasoline (predictor variable) is positively associated with lower obesity rates (outcome variable). However, there are at least two important mechanisms by which the price of gas could reduce obesity. First, it could lead to less driving and therefore more exercise. Second, it could lead to less driving, which leads to less eating out, which leads to less consumption of huge restaurant meals. Can you outline one or more multiple regressions that address these two mechanisms? Assume you can have any predictor data you need.</p>
-<ul>
-<li><p>Average monthly miles driven by household</p></li>
-<li><p>Walkability score of city</p></li>
-<li><p>Weekly visits to restaurants by household</p></li>
-</ul>
+</section>
+<section id="hide-source-code-while-still-executing-it" class="level4">
+<h4 class="anchored" data-anchor-id="hide-source-code-while-still-executing-it">Hide source code while still executing it</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="make-output-plots-background-transparent" class="level4">
+<h4 class="anchored" data-anchor-id="make-output-plots-background-transparent">Make Output Plot’s Background Transparent</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| dev: png</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| dev.args: !expr list(bg = "transparent")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>

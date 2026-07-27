@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>SR_Ch6_Practice – Statistical Rethinking Notes</title>
+<title>Glossary – Statistical Rethinking Notes</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,41 +22,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -106,35 +71,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -170,7 +106,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch06-dags/SR_Ch6_notes.html">Ch 6: DAGs</a></li><li class="breadcrumb-item"><a href="../ch06-dags/SR_Ch6_practice.html">SR_Ch6_Practice</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Glossary</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -185,7 +121,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 2-3: Bayesian Sampling</span></a>
+ <span class="menu-text">Bayesian Sampling</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -193,14 +129,14 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../ch02-03-sampling/SR_Ch03_note.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch03_notes</span></a>
+  <a href="../ch02-03-sampling/SR_02_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch2: Small Worlds and Large Worlds</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../ch02-03-sampling/SR_02_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_week1_practice</span></a>
+  <a href="../ch02-03-sampling/SR_Ch03_note.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch3: Sampling the Imaginary</span></a>
   </div>
 </li>
       </ul>
@@ -208,7 +144,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 4: Linear Models</span></a>
+ <span class="menu-text">Linear Models</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -217,25 +153,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch04-linear-models/SR_Ch04_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch04_notes</span></a>
+ <span class="menu-text">Ch 4: Geocentric Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch04-linear-models/SR_Lec03_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec03_notes</span></a>
+ <span class="menu-text">Lec 3: Geocentric Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch04-linear-models/SR_Lec04_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec04_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch04-linear-models/ch04-practice/SR_04_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_04_practice</span></a>
+ <span class="menu-text">Lec4: Categories and Curves</span></a>
   </div>
 </li>
       </ul>
@@ -243,7 +173,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 5: Multivariate Regression</span></a>
+ <span class="menu-text">Multivariate Regression</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -252,13 +182,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch05-multivariate-regression/SR_Ch05_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch05_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch05-multivariate-regression/SR_Ch05_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch05_practice</span></a>
+ <span class="menu-text">Ch5: The Many Variables &amp; the Spurious Waffles</span></a>
   </div>
 </li>
       </ul>
@@ -266,7 +190,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 6: DAGs</span></a>
+ <span class="menu-text">Overfitting &amp; DAGs</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -275,25 +199,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch06-dags/SR_Ch6_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch6_notes</span></a>
+ <span class="menu-text">Ch 6: The Haunted DAG &amp; The Causal Terror</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch06-dags/SR2023_Lec05_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR2023_Lec05_notes</span></a>
+ <span class="menu-text">Lec 5: Elemental Confounds (2023)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch06-dags/SR_Lec06_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec06_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch06-dags/SR_Ch6_practice.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">SR_Ch6_Practice</span></a>
+ <span class="menu-text">Lec 6: Good and Bad Controls</span></a>
   </div>
 </li>
       </ul>
@@ -301,7 +219,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 7: Entropy &amp; Model Comparison</span></a>
+ <span class="menu-text">Entropy &amp; Model Comparison</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -310,19 +228,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch07-entropy-model-comparison/SR_Ch7_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch07_notes</span></a>
+ <span class="menu-text">Ch7: Ulysses’ Compass</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch07-entropy-model-comparison/SR_Lec07_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec07_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch07-entropy-model-comparison/SR_Ch7_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch7_practice</span></a>
+ <span class="menu-text">Lec 7: Fitting Over and Under</span></a>
   </div>
 </li>
       </ul>
@@ -339,7 +251,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../extras/distributions_for_priors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">distributions_explainer</span></a>
+ <span class="menu-text">distributions explainer</span></a>
   </div>
 </li>
       </ul>
@@ -354,17 +266,27 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#medium." id="toc-medium." class="nav-link active" data-scroll-target="#medium.">Medium.</a></li>
-  <li><a href="#hard." id="toc-hard." class="nav-link" data-scroll-target="#hard.">Hard.</a></li>
+  <li><a href="#a" id="toc-a" class="nav-link active" data-scroll-target="#a">A</a></li>
+  <li><a href="#b" id="toc-b" class="nav-link" data-scroll-target="#b">B</a></li>
+  <li><a href="#c" id="toc-c" class="nav-link" data-scroll-target="#c">C</a></li>
+  <li><a href="#d" id="toc-d" class="nav-link" data-scroll-target="#d">D</a></li>
+  <li><a href="#e" id="toc-e" class="nav-link" data-scroll-target="#e">E</a></li>
+  <li><a href="#f" id="toc-f" class="nav-link" data-scroll-target="#f">F</a></li>
+  <li><a href="#g" id="toc-g" class="nav-link" data-scroll-target="#g">G</a></li>
+  <li><a href="#h" id="toc-h" class="nav-link" data-scroll-target="#h">H</a></li>
+  <li><a href="#i" id="toc-i" class="nav-link" data-scroll-target="#i">I</a></li>
+  <li><a href="#j" id="toc-j" class="nav-link" data-scroll-target="#j">J</a></li>
+  <li><a href="#k" id="toc-k" class="nav-link" data-scroll-target="#k">K</a></li>
+  <li><a href="#l" id="toc-l" class="nav-link" data-scroll-target="#l">L</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch06-dags/SR_Ch6_notes.html">Ch 6: DAGs</a></li><li class="breadcrumb-item"><a href="../ch06-dags/SR_Ch6_practice.html">SR_Ch6_Practice</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">SR_Ch6_Practice</h1>
+<h1 class="title">Glossary</h1>
 </div>
 
 
@@ -381,199 +303,41 @@ window.Quarto = {
 </header>
 
 
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"WaffleDivorce"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> WaffleDivorce</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<section id="medium." class="level2">
-<h2 class="anchored" data-anchor-id="medium.">Medium.</h2>
-<p><strong>6M1.</strong> Modify <code>dag_6.1</code> to include the variable <span class="math inline">\(V\)</span>, an unobserved cause of C and Y: C ← V → Y. Reanalyze the DAG, How many paths connect X to Y? Which must be closed? Which variables should you condition on now?</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dag_6<span class="fl">.1</span>a <span class="ot">&lt;-</span> <span class="fu">dagitty</span>( <span class="st">"dag {</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">  U [unobserved]</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">  V [unobserved]</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">  X -&gt; Y</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">  X &lt;- U &lt;- A -&gt; C -&gt; Y</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">  C &lt;- V -&gt; Y</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">  U -&gt; B &lt;- C</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">}"</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>( dag_6<span class="fl">.1</span>a ) <span class="ot">&lt;-</span> <span class="fu">list</span>( <span class="at">x=</span><span class="fu">c</span>(<span class="at">A=</span><span class="dv">2</span>, <span class="at">U=</span><span class="dv">1</span>, <span class="at">C=</span><span class="dv">3</span>, <span class="at">B=</span><span class="dv">2</span>, <span class="at">X=</span><span class="dv">1</span>, <span class="at">Y=</span><span class="dv">3</span>, <span class="at">V=</span><span class="fl">3.5</span>) ,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                                <span class="at">y=</span><span class="fu">c</span>(<span class="at">A=</span><span class="fl">1.5</span>, <span class="at">U=</span><span class="dv">2</span>, <span class="at">C=</span><span class="dv">2</span>, <span class="at">B=</span><span class="fl">2.5</span>, <span class="at">X=</span><span class="dv">3</span>, <span class="at">Y=</span><span class="dv">3</span>, <span class="at">V=</span><span class="fl">2.5</span>) )</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">drawdag</span>( dag_6<span class="fl">.1</span>a )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="SR_Ch6_practice_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<ol type="1">
-<li><span class="math inline">\(Y ← V → C ← A → U → X\)</span></li>
-<li><span class="math inline">\(Y ← V → C → B ← U → X\)</span></li>
-<li><span class="math inline">\(Y ← C ← A → U → X\)</span></li>
-<li><span class="math inline">\(Y ← C → B ← U → X\)</span></li>
-</ol>
-<p>Path 1, Path 2, and Path 4 must be closed, since each has a collider variable: <span class="math inline">\(C\)</span> for Path 1 and <span class="math inline">\(B\)</span> for Paths 2 and 4.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>( dag_6<span class="fl">.1</span>a , <span class="at">exposure=</span><span class="st">"X"</span> , <span class="at">outcome=</span><span class="st">"Y"</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{ A }</code></pre>
-</div>
-</div>
-<p>Condition on <span class="math inline">\(A\)</span>, since <span class="math inline">\(A\)</span> is a fork.</p>
+<section id="a" class="level2">
+<h2 class="anchored" data-anchor-id="a">A</h2>
 </section>
-<section id="hard." class="level2">
-<h2 class="anchored" data-anchor-id="hard.">Hard.</h2>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="SR_Ch6_practice_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>6H1</strong>. Use the Waffle House data, <code>data(WaffleDivorce)</code>, to find the <u><strong>total</strong> causal influence</u> of number of Waffle Houses on divorce rate. Justify your model or models with a causal graph.</p>
-<p><span class="math inline">\(W → D\)</span></p>
-<p><span class="math inline">\(W ← S → M → D\)</span></p>
-<p><span class="math inline">\(W ← S → M ← A → D\)</span></p>
-<p><span class="math inline">\(W ← S → A → M → D\)</span></p>
-<p><span class="math inline">\(W ← S → A → D\)</span></p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(dag_6<span class="fl">.2</span>, <span class="at">exposure =</span> <span class="st">"W"</span>, <span class="at">outcome=</span><span class="st">"D"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>{ A, M }
-{ S }</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># standardize variables</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>W <span class="ot">&lt;-</span> <span class="fu">scale</span>(d<span class="sc">$</span>WaffleHouses)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>D <span class="ot">&lt;-</span> <span class="fu">scale</span>(d<span class="sc">$</span>Divorce)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>M <span class="ot">&lt;-</span> <span class="fu">scale</span>(d<span class="sc">$</span>Marriage)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>S <span class="ot">&lt;-</span> <span class="fu">scale</span>(d<span class="sc">$</span>South)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>A <span class="ot">&lt;-</span> <span class="fu">scale</span>(d<span class="sc">$</span>MedianAgeMarriage)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>m6H1 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b_W <span class="sc">*</span> W <span class="sc">+</span> b_S <span class="sc">*</span> S,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    b_W <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    b_S <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m6H1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>               mean         sd        5.5%     94.5%
-a     -3.054014e-06 0.12907466 -0.20628929 0.2062832
-b_W    3.906911e-02 0.17657871 -0.24313777 0.3212760
-b_S    3.129403e-01 0.17658438  0.03072431 0.5951562
-sigma  9.203949e-01 0.09079971  0.77527940 1.0655103</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(m6H1))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="SR_Ch6_practice_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>The model shows that once we know whether the state is in the South, then we don’t learn anything new about Divorce Rate there by regressing on Waffle Houses in the area.</p>
-<p><strong>6H2</strong>. Build a series of models to test the implied conditional independencies of the causal graph you used in the previous problem. If any of the tests fail, how do you think the graph needs to be amended? Does the graph need more or fewer arrows? Feel free to nominate variables that aren’t in the data.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">impliedConditionalIndependencies</span>(dag_6<span class="fl">.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>A _||_ W | S
-D _||_ S | A, M, W
-M _||_ W | S</code></pre>
-</div>
-</div>
-<p>1) “Median age of marriage should be independent of Waffle Houses, conditioning on a State being in the south.”</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>m6C1 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    A <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> b_W<span class="sc">*</span>W <span class="sc">+</span> b_S<span class="sc">*</span>S,</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(b_W, b_S) <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m6C1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>               mean         sd       5.5%       94.5%
-a      3.263241e-07 0.13281101 -0.2122573  0.21225797
-b_W    8.791715e-02 0.18154135 -0.2022210  0.37805529
-b_S   -3.028316e-01 0.18154669 -0.5929783 -0.01268491
-sigma  9.475093e-01 0.09343997  0.7981741  1.09684438</code></pre>
-</div>
-</div>
-<ul>
-<li><p>Yup, looks like once we know about <span class="math inline">\(\beta_{South}\)</span>, we don’t learn anything more with <span class="math inline">\(\beta_{WaffleHouse}\)</span></p></li>
-<li><p>So A is independent of W when conditioned by S</p></li>
-</ul>
-<p>2) “Divorce and being in the south should be independent when we simultaneously condition on all of median age of marriage, marriage rate, and Waffle Houses.”</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>m6C2 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    D <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bS<span class="sc">*</span>S <span class="sc">+</span> bA<span class="sc">*</span>A <span class="sc">+</span> bM<span class="sc">*</span>M <span class="sc">+</span> bW<span class="sc">*</span>W,</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(bW, bS, bA, bM) <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m6C2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>               mean         sd       5.5%      94.5%
-a      7.878883e-06 0.10657714 -0.1703230  0.1703387
-bW     8.801112e-02 0.14685571 -0.1466927  0.3227149
-bS     1.415432e-01 0.15139595 -0.1004168  0.3835032
-bA    -5.932483e-01 0.15962662 -0.8483625 -0.3381342
-bM    -6.724651e-02 0.15499092 -0.3149519  0.1804589
-sigma  7.579310e-01 0.07495955  0.6381312  0.8777308</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">precis</span>(m6C2))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="SR_Ch6_practice_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>m6C3 <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    M <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a <span class="sc">+</span> bS<span class="sc">*</span>S <span class="sc">+</span> bW<span class="sc">*</span>W,</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    a <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(bW, bS) <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>d</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m6C3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>               mean        sd       5.5%     94.5%
-a      2.648747e-06 0.1367812 -0.2186001 0.2186054
-bW    -5.005307e-02 0.1867856 -0.3485726 0.2484664
-bS     1.138934e-01 0.1867864 -0.1846273 0.4124141
-sigma  9.763657e-01 0.0962386  0.8225578 1.1301736</code></pre>
-</div>
-</div>
+<section id="b" class="level2">
+<h2 class="anchored" data-anchor-id="b">B</h2>
+</section>
+<section id="c" class="level2">
+<h2 class="anchored" data-anchor-id="c">C</h2>
+</section>
+<section id="d" class="level2">
+<h2 class="anchored" data-anchor-id="d">D</h2>
+</section>
+<section id="e" class="level2">
+<h2 class="anchored" data-anchor-id="e">E</h2>
+</section>
+<section id="f" class="level2">
+<h2 class="anchored" data-anchor-id="f">F</h2>
+</section>
+<section id="g" class="level2">
+<h2 class="anchored" data-anchor-id="g">G</h2>
+</section>
+<section id="h" class="level2">
+<h2 class="anchored" data-anchor-id="h">H</h2>
+</section>
+<section id="i" class="level2">
+<h2 class="anchored" data-anchor-id="i">I</h2>
+</section>
+<section id="j" class="level2">
+<h2 class="anchored" data-anchor-id="j">J</h2>
+</section>
+<section id="k" class="level2">
+<h2 class="anchored" data-anchor-id="k">K</h2>
+</section>
+<section id="l" class="level2">
+<h2 class="anchored" data-anchor-id="l">L</h2>
 
 
 </section>

@@ -35,11 +35,17 @@ website:
         contents:
           - ch07-entropy-model-comparison/SR_Ch7_notes.qmd
           - ch07-entropy-model-comparison/SR_Lec07_notes.qmd
+      - section: "Conditioning & Interactions"
+        contents:
+          - ch08-interactions/SR_Ch8_notes.qmd
+          - ch08-interactions/SR_Ch8_practice.qmd
       - section: "Extras"
         contents:
           - extras/distributions_for_priors.qmd
+          - extras/rethinking-cheatsheet.qmd
 
 format:
   html:
     theme: cosmo
+    css: styles.css
     toc: true

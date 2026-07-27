@@ -171,7 +171,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_02_notes.Rmd">Bayesian Sampling</a></li><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_Ch03_note.html">Ch3: Sampling the Imaginary</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_02_notes.html">Bayesian Sampling</a></li><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_Ch03_note.html">Ch3: Sampling the Imaginary</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -192,6 +192,12 @@ window.Quarto = {
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch02-03-sampling/SR_02_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch2: Small Worlds and Large Worlds</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch02-03-sampling/SR_Ch03_note.html" class="sidebar-item-text sidebar-link active">
@@ -334,7 +340,7 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_02_notes.Rmd">Bayesian Sampling</a></li><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_Ch03_note.html">Ch3: Sampling the Imaginary</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_02_notes.html">Bayesian Sampling</a></li><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_Ch03_note.html">Ch3: Sampling the Imaginary</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Ch3: Sampling the Imaginary</h1>
 </div>
@@ -481,14 +487,14 @@ Note
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(samples <span class="sc">&lt;</span> <span class="fl">0.5</span>) <span class="sc">/</span> <span class="fl">1e4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.1715</code></pre>
+<pre><code>[1] 0.1694</code></pre>
 </div>
 </div>
 <p>Also get how much post prob lies between 0.5 and 0.75:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(samples <span class="sc">&gt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> samples <span class="sc">&lt;</span> <span class="fl">0.75</span>) <span class="sc">/</span> <span class="fl">1e4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.6038</code></pre>
+<pre><code>[1] 0.6118</code></pre>
 </div>
 </div>
 </section>
@@ -501,7 +507,7 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(samples, <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      80% 
-0.7617618 </code></pre>
+0.7587588 </code></pre>
 </div>
 </div>
 <p>Middle 80% interval is between the 10th percentile and 90th percentile:</p>
@@ -509,7 +515,7 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(samples, <span class="fu">c</span>(<span class="fl">0.1</span>,<span class="fl">0.9</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      10%       90% 
-0.4493493 0.8139139 </code></pre>
+0.4464464 0.8138138 </code></pre>
 </div>
 </div>
 <p><strong>Percentile intervals</strong>: communicate the shape of distribution, given that the distribution is not too asymmetrical. But imperfect when trying to support inferences about which parameters are consistent with data.</p>
@@ -525,7 +531,7 @@ Note
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">PI</span>(samples, <span class="at">prob=</span><span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      25%       75% 
-0.7107107 0.9319319 </code></pre>
+0.7107107 0.9309309 </code></pre>
 </div>
 </div>
 <p><code>PI(samples, prob)</code> from the <code>rethinking</code> package computes the central percentile compatibility interval</p>
@@ -535,7 +541,7 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">HPDI</span>(samples, <span class="at">prob =</span> <span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     |0.5      0.5| 
-0.8418418 1.0000000 </code></pre>
+0.8448448 1.0000000 </code></pre>
 </div>
 </div>
 <p>This interval captures the parameters w/ highest posterior prob, and is noticeably narrower: 0.16 in width compared to the 0.23 for the PI.</p>
@@ -551,14 +557,14 @@ Note
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">PI</span>(samples, <span class="at">prob=</span><span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      25%       75% 
-0.5435435 0.7397397 </code></pre>
+0.5415415 0.7397397 </code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">HPDI</span>(samples, <span class="at">prob =</span> <span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     |0.5      0.5| 
-0.5545546 0.7497497 </code></pre>
+0.5615616 0.7557558 </code></pre>
 </div>
 </div>
 <p><strong>Disadvantages of HPDI</strong>: more computationally intensive, suffers greater simulation variance (sensitive to how many samples are drawn from the posterior)</p>
@@ -590,18 +596,18 @@ Note
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chainmode</span>(samples, <span class="at">adj=</span><span class="fl">0.01</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.6821159</code></pre>
+<pre><code>[1] 0.6903896</code></pre>
 </div>
 </div>
 <p>Why mode verses posterior mean or median?</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(samples)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.6369047</code></pre>
+<pre><code>[1] 0.6377347</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(samples)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.6466466</code></pre>
+<pre><code>[1] 0.6486486</code></pre>
 </div>
 </div>
 <p><strong>Loss function</strong>: rule that displays the cost associated with using any particular point estimate</p>
@@ -634,7 +640,7 @@ Note
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(samples)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.6466466</code></pre>
+<pre><code>[1] 0.6486486</code></pre>
 </div>
 </div>
 <p>Different loss functions nominate diff point estimates. Two common ones:</p>
@@ -680,7 +686,7 @@ Note
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rbinom</span>(<span class="dv">10</span>, <span class="at">size=</span><span class="dv">2</span>, <span class="at">prob=</span><span class="fl">0.7</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 1 2 1 2 2 1 2 2 2 1</code></pre>
+<pre><code> [1] 2 2 2 0 2 1 1 2 1 1</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -689,7 +695,7 @@ Note
 <div class="cell-output cell-output-stdout">
 <pre><code>dummy_w
       0       1       2 
-0.08980 0.42023 0.48997 </code></pre>
+0.09050 0.42011 0.48939 </code></pre>
 </div>
 </div>
 <div class="cell">

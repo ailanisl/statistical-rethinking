@@ -526,6 +526,90 @@ precis(d)
 
 - At age 18, they become able to marry, and then gradually more individuals are married each year. So at older ages, more individuals are married. But at all ages, the happiest individuals are more likely to be married.
 
+$$\mu_i = \alpha_{{\sf MID}[i]} + \beta_A A_i$$
+
+- MID\[i\]: index for marriage status of individual i, with 1 meaning single and 2 as married
+
+  - Categorical variable strategy from Ch4
+
+```{r}
+# rescale age so that the range 18-65 is one unit 
+d2 <- d[d$age>17,] # only adults 
+d2$A <- (d2$age - 18) / (65-18)
+
+# Var A ranges from 0-1, where 0 is age 18 and 1 is age 65 
+```
+
+Determining our priors:
+
+- Happiness on scale from -2 to +2 (arbitrary)
+
+- Imaginary strongest relationship (happiness from max to min) has slope with rise over run of (2 -(-2))/1 = 4.
+
+  - remember that 95% of the mass of a normal distribution is contained within 2 SDs
+
+  - If we set the SD of prior to half of 4, we expect that 95% of plausible slopes to be less than maximally strong
+
+    - not strong prior, but bounds inference to realistic ranges
+
+- Intercepts
+
+  - Each $\alpha$ is value of $\mu_i$ when $A_i = 0$ (which here is Age 18).
+
+  - So need to allow $\alpha$ to cover the full range of happiness scores
+
+  - $Normal(0,1)$ will put 95% of the mass in the -2 to 2 interval
+
+Approximate the Posterior
+
+```{r}
+# Construct marriage status index variable
+d2$mid <- d2$married + 1
+
+m6.9 <- quap(
+  alist(
+    happiness ~ dnorm(mu, sigma),
+    mu <- a[mid] + bA *A, 
+    a[mid] ~ dnorm(0,1),
+    bA ~ dnorm(0,2),
+    sigma ~ dexp(1)
+    
+  ), data=d2
+)
+precis(m6.9, depth=2)
+```
+
+- This model is certain that age is negatively associated with happiness
+
+Compare to model that omits marriage status
+
+```{r}
+m6.10 <- quap(
+  alist(
+    happiness ~ dnorm(mu, sigma),
+    mu <- a + bA *A, 
+    a ~ dnorm(0,1),
+    bA ~ dnorm(0,2),
+    sigma ~ dexp(1)
+  ), data=d2
+)
+precis(m6.10)
+```
+
+- This model finds no association between age and happiness.
+
+Such is the pattern of a conditioning on a collider.
+
+- Collider = marriage status, common consequence of age and happiness. When conditioned upon, we induce a spurious association between age and happiness.
+
+- In model m6.9, negative association between age and happiness is just a *statistical* association, not a *causal* association. Once we know if someone is married or not, then age won't provide any new information about how happy they are.
+
+  - Looking only at married status: older people have lower avg happiness because most older people are married so the mean happiness among married people approaches the population avg of 0.
+
+  - Looking only at unmarried status: mean happiness declines with age because happier individuals migrate over time to the married sub-population.
+
+  - In both married and unmarried sub-pops, there is a negative relationship between age and happiness. But in neither sub-pop does this accurately reflect causation.
+
 **Haunted DAG**
 
 - Unmeasured causes can also induce collider bias (haunted)

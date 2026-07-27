@@ -1,10 +1,8 @@
 ---
-title: "SR_Lec07_notes"
+title: "Lec 7: Fitting Over and Under"
 format: html
 editor: visual
 ---
-
-## Lecture 7: Fitting Over & Under
 
 ::: {.callout-note appearance="simple"}
 ## Key Points

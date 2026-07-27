@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>SR_Lec07_notes – Statistical Rethinking Notes</title>
+<title>Lec 7: Fitting Over and Under – Statistical Rethinking Notes</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -135,7 +135,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch07-entropy-model-comparison/SR_Ch7_notes.html">Ch 7: Entropy &amp; Model Comparison</a></li><li class="breadcrumb-item"><a href="../ch07-entropy-model-comparison/SR_Lec07_notes.html">SR_Lec07_notes</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch07-entropy-model-comparison/SR_Ch7_notes.html">Entropy &amp; Model Comparison</a></li><li class="breadcrumb-item"><a href="../ch07-entropy-model-comparison/SR_Lec07_notes.html">Lec 7: Fitting Over and Under</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -150,7 +150,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 2-3: Bayesian Sampling</span></a>
+ <span class="menu-text">Bayesian Sampling</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -158,14 +158,14 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../ch02-03-sampling/SR_Ch03_note.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch03_notes</span></a>
+  <a href="../ch02-03-sampling/SR_02_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch2: Small Worlds and Large Worlds</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../ch02-03-sampling/SR_02_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_week1_practice</span></a>
+  <a href="../ch02-03-sampling/SR_Ch03_note.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch3: Sampling the Imaginary</span></a>
   </div>
 </li>
       </ul>
@@ -173,7 +173,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 4: Linear Models</span></a>
+ <span class="menu-text">Linear Models</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -182,25 +182,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch04-linear-models/SR_Ch04_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch04_notes</span></a>
+ <span class="menu-text">Ch 4: Geocentric Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch04-linear-models/SR_Lec03_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec03_notes</span></a>
+ <span class="menu-text">Lec 3: Geocentric Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch04-linear-models/SR_Lec04_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec04_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch04-linear-models/ch04-practice/SR_04_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_04_practice</span></a>
+ <span class="menu-text">Lec4: Categories and Curves</span></a>
   </div>
 </li>
       </ul>
@@ -208,7 +202,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 5: Multivariate Regression</span></a>
+ <span class="menu-text">Multivariate Regression</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -217,13 +211,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch05-multivariate-regression/SR_Ch05_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch05_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch05-multivariate-regression/SR_Ch05_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch05_practice</span></a>
+ <span class="menu-text">Ch5: The Many Variables &amp; the Spurious Waffles</span></a>
   </div>
 </li>
       </ul>
@@ -231,7 +219,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 6: DAGs</span></a>
+ <span class="menu-text">Overfitting &amp; DAGs</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -240,25 +228,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch06-dags/SR_Ch6_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch6_notes</span></a>
+ <span class="menu-text">Ch 6: The Haunted DAG &amp; The Causal Terror</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch06-dags/SR2023_Lec05_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR2023_Lec05_notes</span></a>
+ <span class="menu-text">Lec 5: Elemental Confounds (2023)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch06-dags/SR_Lec06_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec06_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch06-dags/SR_Ch6_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch6_Practice</span></a>
+ <span class="menu-text">Lec 6: Good and Bad Controls</span></a>
   </div>
 </li>
       </ul>
@@ -266,7 +248,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
- <span class="menu-text">Ch 7: Entropy &amp; Model Comparison</span></a>
+ <span class="menu-text">Entropy &amp; Model Comparison</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -275,19 +257,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch07-entropy-model-comparison/SR_Ch7_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch07_notes</span></a>
+ <span class="menu-text">Ch7: Ulysses’ Compass</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch07-entropy-model-comparison/SR_Lec07_notes.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">SR_Lec07_notes</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../ch07-entropy-model-comparison/SR_Ch7_practice.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Ch7_practice</span></a>
+ <span class="menu-text">Lec 7: Fitting Over and Under</span></a>
   </div>
 </li>
       </ul>
@@ -304,7 +280,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../extras/distributions_for_priors.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">distributions_explainer</span></a>
+ <span class="menu-text">distributions explainer</span></a>
   </div>
 </li>
       </ul>
@@ -319,11 +295,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#lecture-7-fitting-over-under" id="toc-lecture-7-fitting-over-under" class="nav-link active" data-scroll-target="#lecture-7-fitting-over-under">Lecture 7: Fitting Over &amp; Under</a>
-  <ul class="collapse">
-  <li><a href="#leave-one-out-cross-validation" id="toc-leave-one-out-cross-validation" class="nav-link" data-scroll-target="#leave-one-out-cross-validation">Leave-one-out Cross-validation</a></li>
+  <li><a href="#leave-one-out-cross-validation" id="toc-leave-one-out-cross-validation" class="nav-link active" data-scroll-target="#leave-one-out-cross-validation">Leave-one-out Cross-validation</a></li>
   <li><a href="#regularization" id="toc-regularization" class="nav-link" data-scroll-target="#regularization">Regularization</a></li>
-  </ul></li>
   <li><a href="#prediction-in-the-absence-of-intervention" id="toc-prediction-in-the-absence-of-intervention" class="nav-link" data-scroll-target="#prediction-in-the-absence-of-intervention">Prediction in the Absence of Intervention</a>
   <ul class="collapse">
   <li><a href="#importance-sampling-psis" id="toc-importance-sampling-psis" class="nav-link" data-scroll-target="#importance-sampling-psis">Importance sampling (PSIS)</a></li>
@@ -336,9 +309,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch07-entropy-model-comparison/SR_Ch7_notes.html">Ch 7: Entropy &amp; Model Comparison</a></li><li class="breadcrumb-item"><a href="../ch07-entropy-model-comparison/SR_Lec07_notes.html">SR_Lec07_notes</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch07-entropy-model-comparison/SR_Ch7_notes.html">Entropy &amp; Model Comparison</a></li><li class="breadcrumb-item"><a href="../ch07-entropy-model-comparison/SR_Lec07_notes.html">Lec 7: Fitting Over and Under</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">SR_Lec07_notes</h1>
+<h1 class="title">Lec 7: Fitting Over and Under</h1>
 </div>
 
 
@@ -355,8 +328,6 @@ window.Quarto = {
 </header>
 
 
-<section id="lecture-7-fitting-over-under" class="level2">
-<h2 class="anchored" data-anchor-id="lecture-7-fitting-over-under">Lecture 7: Fitting Over &amp; Under</h2>
 <div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -453,7 +424,6 @@ window.Quarto = {
 <li><p>For pure prediction, can tune the prior using cross-validation (often done in ML)</p></li>
 <li><p>Practical use: Many tasks are a mix of inference and prediction</p></li>
 </ul>
-</section>
 </section>
 </section>
 <section id="prediction-in-the-absence-of-intervention" class="level2">

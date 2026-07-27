@@ -136,6 +136,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -191,6 +192,12 @@ window.Quarto = {
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch02-03-sampling/SR_02_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch2: Small Worlds and Large Worlds</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch02-03-sampling/SR_Ch03_note.html" class="sidebar-item-text sidebar-link">
@@ -292,7 +299,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../ch07-entropy-model-comparison/SR_Lec07_notes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">SR_Lec07_notes</span></a>
+ <span class="menu-text">Lec 7: Fitting Over and Under</span></a>
   </div>
 </li>
       </ul>
@@ -300,7 +307,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Extras</span></a>
+ <span class="menu-text">Conditioning &amp; Interactions</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -308,8 +315,31 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../ch08-interactions/SR_Ch8_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch 8: Conditional Manatees</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Extras</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../extras/distributions_for_priors.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">distributions explainer</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extras/rethinking-cheatsheet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Rethinking Cheatsheet</span></a>
   </div>
 </li>
       </ul>
@@ -394,7 +424,7 @@ window.Quarto = {
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prod</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">runif</span>(<span class="dv">12</span>,<span class="dv">0</span>,<span class="fl">0.1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.899116</code></pre>
+<pre><code>[1] 2.015368</code></pre>
 </div>
 </div>
 <ul>
@@ -779,7 +809,7 @@ male     0.4724265  0.4996986  0.000000   1.00000    ▇▁▁▁▁▁▁▁▁
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">PI</span>(sample.sigma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      5%      94% 
-7.323232 8.252525 </code></pre>
+7.323232 8.272727 </code></pre>
 </div>
 </div>
 <p>Since these samples are just vectors of numbers, you can compute any statistic from them that you could from ordinary data.</p>
@@ -881,9 +911,9 @@ male     0.4724265  0.4996986  0.000000   1.00000    ▇▁▁▁▁▁▁▁▁
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">#look at posterior distribution </span></span>
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m4<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>            mean        sd      5.5%      94.5%
-mu    154.607031 0.4119946 153.94858 155.265478
-sigma   7.731331 0.2913859   7.26564   8.197022</code></pre>
+<pre><code>            mean        sd       5.5%      94.5%
+mu    154.607058 0.4119930 153.948613 155.265502
+sigma   7.731302 0.2913831   7.265616   8.196989</code></pre>
 </div>
 </div>
 <p>These numbers provide Gaussian approximations for each parameter’s <em>marginal</em> distribution. This means the plausibility of each value of µ, after averaging over the plausibilities of each value of σ, is given by a Gaussian distribution with mean 154.6 and standard deviation 0.4.</p>
@@ -912,8 +942,8 @@ sigma   7.731331 0.2913859   7.26564   8.197022</code></pre>
 <span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m4<span class="fl">.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           mean        sd      5.5%     94.5%
-mu    177.86375 0.1002354 177.70356 178.02395
-sigma  24.51756 0.9289232  23.03297  26.00216</code></pre>
+mu    177.86417 0.1002354 177.70397 178.02436
+sigma  24.52921 0.9300026  23.04289  26.01553</code></pre>
 </div>
 </div>
 <p>Sampling from quap.</p>
@@ -929,8 +959,8 @@ sigma  24.51756 0.9289232  23.03297  26.00216</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(m4<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                mu        sigma
-mu    0.1697395234 0.0002182073
-sigma 0.0002182073 0.0849057204</code></pre>
+mu    0.1697382456 0.0002187742
+sigma 0.0002187742 0.0849041163</code></pre>
 </div>
 </div>
 <p>A variance-covariance matrix can be factored into two elements: (1) a vector of variances for the parameters and (2) a correlation matrix that tells us how changes in any parameter lead to correlated changes in the others.</p>
@@ -938,13 +968,13 @@ sigma 0.0002182073 0.0849057204</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(<span class="fu">vcov</span>(m4<span class="fl">.1</span>)) <span class="co"># list of variances, if squared = the SDs in precis output </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        mu      sigma 
-0.16973952 0.08490572 </code></pre>
+0.16973825 0.08490412 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cov2cor</span>(<span class="fu">vcov</span>(m4<span class="fl">.1</span>)) <span class="co"># correlation matrix </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               mu       sigma
-mu    1.000000000 0.001817646
-sigma 0.001817646 1.000000000</code></pre>
+mu    1.000000000 0.001822392
+sigma 0.001822392 1.000000000</code></pre>
 </div>
 </div>
 <ul>
@@ -960,21 +990,21 @@ sigma 0.001817646 1.000000000</code></pre>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(post)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        mu    sigma
-1 154.4396 8.075498
-2 154.7473 7.724383
-3 154.8098 8.043616
-4 154.5094 7.827165
-5 154.1050 7.648885
-6 154.3617 7.958263</code></pre>
+1 154.6637 7.616402
+2 154.7412 8.201641
+3 154.4582 8.216583
+4 154.4269 7.706028
+5 154.1390 7.888685
+6 154.8240 7.966039</code></pre>
 </div>
 </div>
 <p>You end up with a data frame, post, with 10,000 (1e4) rows and two columns, one column for µ and one for σ. Each value is a sample from the posterior</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(post)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>            mean        sd       5.5%      94.5%    histogram
-mu    154.602170 0.4069462 153.955790 155.255320     ▁▁▁▅▇▂▁▁
-sigma   7.730445 0.2927892   7.257834   8.199296 ▁▁▁▂▅▇▇▃▁▁▁▁</code></pre>
+<pre><code>            mean        sd       5.5%      94.5%   histogram
+mu    154.605490 0.4079482 153.959843 155.261298    ▁▁▁▅▇▂▁▁
+sigma   7.729377 0.2901327   7.266432   8.186276 ▁▁▁▂▅▇▇▃▁▁▁</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Vs m4.1 posterior"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -982,9 +1012,9 @@ sigma   7.730445 0.2927892   7.257834   8.199296 ▁▁▁▂▅▇▇▃▁▁�
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m4<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>            mean        sd      5.5%      94.5%
-mu    154.607031 0.4119946 153.94858 155.265478
-sigma   7.731331 0.2913859   7.26564   8.197022</code></pre>
+<pre><code>            mean        sd       5.5%      94.5%
+mu    154.607058 0.4119930 153.948613 155.265502
+sigma   7.731302 0.2913831   7.265616   8.196989</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Compare o the grid approx</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(post)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

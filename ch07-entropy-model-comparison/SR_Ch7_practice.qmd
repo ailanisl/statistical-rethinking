@@ -6,6 +6,16 @@ editor: visual
 
 ## Chapter 7 Practice
 
+```{r}
+#| output: false
+#| error: false
+#| warning: false
+#| message: false
+
+library(rethinking)
+
+```
+
 ## Easy
 
 **7E1**. Three motivating criteria that define information entropy.
@@ -28,7 +38,7 @@ p <- c(0.2, 0.25, 0.25, 0.3)
 -sum(p*log(p))
 ```
 
-**7E4**. Suppose another four-sided die is loaded such that it never shows “4”. The other three sides show equally often. What is the entropy of this die?
+**7E4**. Suppose another four-sided die is loaded such that it never shows “4”. The other three sides show equally often. What is the entropy of this die?ˇ
 
 ```{r}
 p <- c(0.333,0.333,0.333)
@@ -45,14 +55,280 @@ p <- c(0.333,0.333,0.333)
 
 > When selecting a model, you are choosing a model with the best info criterion and discarding the others.. In theory, you should not be doing model selection because you will lose information gained from comparisons to cross-validation, PSIS, WAIC, etc. Model comparison is comparing the predictive accuracy of various models relative to each other, which allows us to understand how much influence certain parameters have on predictions. Model comparison can later be paired with a more causal model to understand implied conditional independencies among variables (confounds) and thus causal relationships.
 
-7M3. When comparing models with an information criterion, why must all models be fit to exactly the same observations? What would happen to the information criterion values, if the models were fit to different numbers of observations? Perform some experiments, if you are not sure.
+**7M3**. When comparing models with an information criterion, why must all models be fit to exactly the same observations? What would happen to the information criterion values, if the models were fit to different numbers of observations? Perform some experiments, if you are not sure.
 
 > Information Criteria measures the out-of-sample KL-Divergence (or Deviance), which is the sum (not mean) of the observations. So a change in the number of observations would affect the information criteria values.
 
-7M4. What happens to the effective number of parameters, as measured by PSIS or WAIC, as a prior becomes more concentrated? Why? Perform some experiments, if you are not sure.
+**7M4**. What happens to the effective number of parameters, as measured by PSIS or WAIC, as a prior becomes more concentrated? Why? Perform some experiments, if you are not sure.
 
-> 
+> Penalty is higher if priors are flatter, whereas the penalty gets smaller if the priors are more informative. The more informative the prior is, we reduce the overfitting of the model - thus the penalty (which is the sum of the variances of the posterior prediction for each observation) is smaller.
+>
+> When the priors are flat, the penalty is about the number of the parameters in the model. When the priors are more concentrated, the penalty approaches zero.
 
-7M5. Provide an informal explanation of why informative priors reduce overfitting.
+**7M5**. Provide an informal explanation of why informative priors reduce overfitting.
 
-7M6. Provide an informal explanation of why overly informative priors result in underfitting.
+> Informative priors reduce overfitting by allowing the model to learn regularities from the observed data but slows the rate of learning. So the more informed priors could be more skeptical of values that are beyond its +/-2 SDs, letting the model know that these are more extreme values in the dataset and disregard them (not assign high posterior probabilities).
+
+**7M6**. Provide an informal explanation of why overly informative priors result in underfitting.
+
+> Overly informative priors may result in underfitting because the model will rely too much on the priors (which may be badly informed priors), rather than the observed data to make out-of-sample predictions.
+
+## Hard
+
+**7H1**. In 2007, *The Wall Street Journal* published an editorial (“We’re Number One, Alas”) with a graph of corporate tax rates in 29 countries plotted against tax revenue. A badly fit curve was drawn in (reconstructed at right), seemingly by hand, to make the argument that the relationship between tax rate and tax revenue increases and then declines, such that higher tax rates can actually produce less tax revenue. I want you to actually fit a curve to these data, found in `data(Laffer)`. Consider models that use [tax rate to predict tax revenue]{.underline}. **Compare, using WAIC or PSIS, a straight-line model to any curved models you like. What do you conclude about the relationship between tax rate and tax revenue**?
+
+```{r}
+data("Laffer") 
+d <- Laffer
+d$V <- scale(Laffer$tax_revenue)
+d$R <- scale(Laffer$tax_rate)
+
+plot(Laffer)
+
+plot(d$V ~ d$R)
+```
+
+```{r}
+mean(V)
+```
+
+**My Proposed Linear Model**
+
+Revenue \~ Normal(µ, sigma)\
+µ = alpha + beta \* Rate_i\
+alpha \~ Normal(0,0.1)\
+beta \~ Normal(0,0.2)\
+sigma \~ Exponential(1)
+
+```{r}
+m7H1a <- quap(
+  alist(
+    V ~ dnorm(mu, sigma),
+    mu <- a + b*R, 
+    a ~ dnorm(0,0.2),
+    b ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+  ), data=d 
+)
+```
+
+Let's simulate my priors to make sure....
+
+```{r}
+set.seed(20)
+prior <- extract.prior(m7H1a)
+mu <- link(m7H1a, post=prior, data=list(R=c(-2,2)))
+
+plot(NULL, xlim=c(-2,2), ylim=c(-2,3), xlab="Tax rate (Std)", ylab="Tax Rev (Std)")
+for (i in 1:50) lines(c(-2,2), mu[i,], col=col.alpha("black", 0.4))
+           
+```
+
+Eh looks okay, i guess.
+
+Now, posterior predictions for the model:
+
+```{r}
+R_seq <- seq(-3, 1, length.out=30)
+mu <- link(m7H1, data=list(R=R_seq))
+mu.mean <- apply(mu, 2, mean)
+mu.PI <- apply(mu, 2, PI)
+
+plot(V ~ R, data=d, col=rangi2)
+lines(R_seq, mu.mean, lwd=2)
+shade(mu.PI,R_seq)
+```
+
+My Proposed Curved Model (Quadratic)
+
+```{r}
+m7H1b <- quap(
+  alist(
+    V ~ dnorm(mu, sigma),
+    mu <- a + b[1]*R + b[2]*R^2,
+    a ~ dnorm(0,0.2),
+    b ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+  ),data=d, start=list(b=rep(0,2))
+)
+```
+
+```{r}
+post <- extract.samples(m7H1b)
+l <- link(m7H1b, data=list(R=R_seq))
+mu <- apply(l,2,mean)
+ci <- apply(l,2,PI)
+plot(V~R, data=d)
+shade(ci, R_seq)
+```
+
+Cubic Model
+
+```{r}
+m7H1c <- quap(
+  alist(
+    V ~ dnorm(mu, sigma),
+    mu <- a + b[1]*R + b[2]*R^2 + b[3]*R^3,
+    a ~ dnorm(0,0.2),
+    b ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+  ),data=d, start=list(b=rep(0,3))
+)
+post <- extract.samples(m7H1c)
+l <- link(m7H1c, data=list(R=R_seq))
+mu <- apply(l,2,mean)
+ci <- apply(l,2,PI)
+plot(V~R, data=d)
+shade(ci, R_seq)
+```
+
+Model Comparison
+
+```{r}
+compare(m7H1a, m7H1b,m7H1c)
+plot(compare(m7H1a, m7H1b,m7H1c))
+```
+
+> According to the WAIC model comparison, we see that the lowest WAIC score is for the linear model (m7H1, straight line), at 87.6; however, the 2nd order polynomial only differs by 0.2 units. The polynomial regressions have higher penalty scores. But it is unclear which model does significantly better. So we cannot ascertain what relationship there is between the tax revenue and rate.
+
+**7H2**. In the `Laffer` data, there is one country with a high tax revenue that is an outlier. Use PSIS and WAIC to measure the importance of this outlier in the models you fit in the previous problem. Then use robust regression with a Student’s t distribution to revisit the curve fitting problem. How much does a curved relationship depend upon the outlier point?
+
+```{r}
+compare(m7H1a, m7H1b,m7H1c, func=PSIS)
+```
+
+```{r}
+PSIS_m7H1a <- PSIS(m7H1a, pointwise = TRUE)
+WAIC_m7H1a <- WAIC(m7H1a, pointwise = TRUE)
+
+plot(PSIS_m7H1a$k, WAIC_m7H1a$penalty, xlab="PSIS Pareto k", ylab="WAIC penalty", col=rangi2, lwd=2)
+```
+
+Pareto k value over 2, and WAIC penalty score about 5.
+
+```{r}
+m7H1b_t <- quap(
+  alist(
+    V ~ dstudent(2, mu, sigma),
+    mu <- a + b[1]*R + b[2]*R^2,
+    a ~ dnorm(0,0.2),
+    b ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+  ),data=d, start=list(b=rep(0,2))
+)
+
+PSIS(m7H1b_t)
+WAIC(m7H1b_t)
+```
+
+```{r}
+precis(m7H1b, depth=2)
+precis(m7H1b_t, depth=2)
+```
+
+- The influence of the outlier has been reduced (smaller PSIS score). The beta value did not change much however. The outlier has a small influence over the curved relationship.
+
+**7H3**. Consider three fictional Polynesian islands. On each there is a Royal Ornithologist charged by the king with surveying the bird population. They have each found the following proportions of 5 important bird species:
+
+|          | Species A | Species B | Species C | Species D | Species E |
+|----------|-----------|-----------|-----------|-----------|-----------|
+| Island 1 | 0.2       | 0.2       | 0.2       | 0.2       | 0.2       |
+| Island 2 | 0.8       | 0.1       | 0.05      | 0.025\`   | 0.025     |
+| Island 3 | 0.05      | 0.15      | 0.7       | 0.05      | 0.05      |
+
+Notice that each row sums to 1, all the birds. This problem has two parts. It is not computationally complicated. But it is conceptually tricky. [First, compute the entropy of each island’s bird distribution]{.underline}. Interpret these entropy values. Second, use each island’s bird distribution to predict the other two. This means to [compute the K-L Divergence of each island from the other]{.underline}s, treating each island as if it were a statistical model of the other islands. You should end up with 6 different K-L Divergence values. Which island predicts the others best? Why?
+
+```{r}
+# Computing the entropy 
+
+p1 <- c(0.2,0.2,0.2,0.2,0.2)
+ent1 <- -sum(p1*log(p1))
+
+p2 <- c(0.8, 0.1, 0.05, 0.025, 0.025)
+ent2 <- -sum(p2*log(p2))
+
+p3 <- c(0.05, 0.15, 0.7, 0.05, 0.05)
+ent3 <- -sum(p3*log(p3))
+
+print(ent1)
+print(ent2)
+print(ent3)
+```
+
+Interpretation of entropies
+
+> Island 1 has highest entropy because the probability of seeing any one of the five species is evenly distributed (higher uncertainty about which bird you will see). Island 3 has higher entropy than Island 2 because Island 2 is very likely to see Species A (80%) while remaining other species probabilities are somewhat spread out, compared to Island 3's birds of Species C, which are 70%.
+
+```{r}
+# 1 -> 2 
+sum(p2 * log(p2/p1))
+
+# 1 -> 3
+sum(p3 * log(p3/p1))
+
+# 2 -> 1 
+sum(p1 *log(p1/p2))
+
+# 2 -> 3 
+sum(p3 *log(p3/p2))
+
+# 3 -> 1
+sum(p1 * log(p1/p3))
+
+# 3 -> 2
+sum(p2 * log(p2/p3))
+```
+
+> Using Island 1 as a statistical model to predict Island 3 (also 2) minimizes the K-L divergence, compared to any of the other pairs. Island 1 has least biases compared to Island 2 or 3, both of which prefer a different type of bird species. Using Island 1 as a neutral predictor performs better for Island 3, because it has slightly more variability in species than Island 2.
+
+**7H4**. Recall the marriage, age, and happiness collider bias example from Chapter 6. Run models m6.9 and m6.10 again. Compare these two models using WAIC (or LOO, they will produce identical results). Which model is expected to make better predictions? Which model provides the correct causal inference about the influence of age on happiness? Can you explain why the answers to these two questions disagree?
+
+```{r}
+# simulation algorithm included in package
+library(rethinking)
+
+# run it out for 1000 years and collect data
+d <- sim_happiness(seed = 1977, N_years = 1000)
+
+# rescale age so that the range 18-65 is one unit 
+d2 <- d[d$age>17,] # only adults 
+d2$A <- (d2$age - 18) / (65-18)
+
+# Var A ranges from 0-1, where 0 is age 18 and 1 is age 65 
+
+# Construct marriage status index variable
+d2$mid <- d2$married + 1
+
+# Model that conditions on marriage status (Collider)
+m6.9 <- quap(
+  alist(
+    happiness ~ dnorm(mu, sigma),
+    mu <- a[mid] + bA *A, 
+    a[mid] ~ dnorm(0,1),
+    bA ~ dnorm(0,2),
+    sigma ~ dexp(1)
+  ), data=d2
+)
+
+precis(m6.9, depth=2)
+
+# Model that omits marriage as variable 
+m6.10 <- quap(
+  alist(
+    happiness ~ dnorm(mu, sigma),
+    mu <- a + bA *A, 
+    a ~ dnorm(0,1),
+    bA ~ dnorm(0,2),
+    sigma ~ dexp(1)
+  ), data=d2
+)
+precis(m6.10)
+
+compare(m6.9, m6.10)
+```
+
+> Model `m6.9` makes better predictions, while model `m6.10` provides the correct causal inference about the influence of age on happiness. Making predictions is different than making causal inferences. WAIC and PSIS are measures of what models make the best predictions (rather than causal judgments), and usually adding more variables and conditions - even if these variables are confounding – can lead the model to make better statistical predictions. On the other hand, it can mislead if we are trying to look for causality - here, marriage is a collider (common effect of both age and happiness): when conditioned upon there is a negative association between age and happiness, when not there is no association. Once we know marriage status, age does not provide any information about happiness.
+
+**7H5**. Revisit the urban fox data, `data(foxes)`, from the previous chapter’s practice problems. Use WAIC or PSIS based model comparison on five different models, each using weight as the outcome, and containing these sets of predictor variables: (1) `avgfood + groupsize + area` (2) `avgfood + groupsize` (3) `groupsize + area` (4) `avgfood` (5) `area`. Can you explain the relative differences in WAIC scores, using the fox DAG from last week’s homework? Be sure to pay attention to the standard error of the score differences (`dSE`).
+
+???

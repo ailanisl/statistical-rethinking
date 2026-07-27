@@ -1,0 +1,110 @@
+---
+title: "Ch 8 Practice Problems"
+editor: visual
+---
+
+# Chapter 8 Practice 
+
+## Easy
+
+::: {#question-block style="background-color: AliceBlue;border-radius: 15px;"}
+**8E1**. Name a hypothetical third variable that would lead to an interaction effect:
+:::
+
+\(1\) Bread dough rises because of yeast.
+
+> Third variable: humidity
+
+\(2\) Education leads to higher income
+
+> Third variable: city of origin, race
+
+\(3\) Gasoline makes a car go
+
+> Third variable: mileage/age of car?
+
+::: question-block
+**8E2**. Which of the following explanations invokes an interaction?
+:::
+
+(1) **Caramelizing onions requires cooking over low heat and making sure the onions do not dry out.**
+(2) A car will go faster when it has more cylinders or when it has a better fuel injector.
+(3) Most people acquire their political beliefs from their parents, unless they get them instead from their friends.
+(4) Intelligent animal species tend to be either highly social or have manipulative appendages (hands, tentacles, etc.).
+
+> Caramelizing onions example is the only one that involves an interaction (pay attention to the *and* conjunction). The other examples' predictor variables are either additive or independent of each other.
+
+::: question-block
+**8E3**. For each of the explanations in 8E2, write a linear model that expresses the stated relationship.
+:::
+
+|  |  |
+|-----------------|-------------------------------------------------------|
+| Caramelizing onions | 
+$$caramelization \sim {\sf Normal} (\mu_i, \sigma)\\
+\mu_i = \alpha + \beta_H H_i + \beta_{D}D_i + \beta_{HD}H_iD_i$$ |
+| Car speed | 
+$$Speed \sim {\sf Normal}(\mu_i,\sigma)\\
+\mu_i = \alpha + \beta_C C_i + \beta_FF_i$$ |
+| Political beliefs | 
+$$Political \: belief \sim {\sf Normal}(\mu_i, \sigma)\\
+\mu_i = \alpha + \beta_pP_i + \beta_F F_i$$ |
+| Animal intelligence | 
+$$Intelligence \sim {\sf Normal}(\mu_i,\sigma)\\
+\mu_i = \alpha + \beta_S S_i + \beta_AA_i $$ |
+
+## Medium
+
+::: question-block
+**8M1**. Recall the tulips example from the chapter. Suppose another set of treatments adjusted the temperature in the greenhouse over two levels: cold and hot. The data in the chapter were collected at the cold temperature. You find none of the plants grown under the hot temperature developed any blooms at all, regardless of the water and shade levels. Can you explain this result in terms of interactions between water, shade, and temperature?
+:::
+
+Temperature serves as a on-off switch, only when it's on (cold) does that activate the interaction between water and shade levels. When it is off (hot), all predictor variables are void.
+
+::: question-box
+**8M2**. Can you invent a regression equation that would make the bloom size zero, whenever the temperature is hot?
+:::
+
+Temperature is categorical - either hot or cold, and adds to make a three-way interaction. Multiply the originl continuous intreaction model by a $Temp$ variable that =0 when hot and = 1 when cold.
+
+$$B_i \sim \text{Normal}(\mu_i, \sigma)$$
+
+$$\mu_i = \text{Temp}_i \times (\alpha_i + \beta_WW_i + \beta_SS_i + B_{WS}W_iS_i)$$
+
+where
+
+$$\text{Temp}_i= \begin{cases} 1 & \text{if cold} \\ 0 & \text{if hot} \end{cases}$$
+
+::: question-block
+**8M3**. In parts of North America, ravens depend upon wolves for their food. This is because ravens are carnivorous but cannot usually kill or open carcasses of prey. Wolves however can and do kill and tear open animals, and they tolerate ravens co-feeding at their kills. This species relationship is generally described as a “species interaction.” Can you invent a hypothetical set of data on raven population size in which this relationship would manifest as a statistical interaction? Do you think the biological interaction could be linear? Why or why not?
+:::
+
+The hypothetical dataset would need to consist of prey population, wolf population, and the raven population (outcome variable).
+
+Following the interaction models we learned in Chapter 8, a linear regression model would look something like this:
+
+$$R \sim \text{Normal}(\mu, \sigma)$$
+
+$$\mu_i = \alpha_i + \beta_pP_i + \beta_wW_i + \beta_{p,w} P_i W_i$$
+
+Where P = prey population, W = wolf population.
+
+The biological interaction would probably not be linear, however, because population growth tends to be exponential. When there are no wolves, there are little to no ravens (depend on wolves to eat carcasses). An increasing number of wolves may correspond with an increasing number of ravens. However, up to a certain size of wolf population, little carcasses (food for ravens) will be left, which may lead to a fall off in raven population.
+
+## Hard 
+
+::: question-block
+**8H1**. Return to the data(tulips) example in the chapter. Now include the bed variable as a pre- dictor in the interaction model. Don’t interact bed with the other predictors; just include it as a main effect. Note that bed is categorical. So to use it properly, you will need to either construct dummy variables or rather an index variable, as explained in Chapter 6.
+:::
+
+::: question-block
+**8H2**. Use WAIC to compare the model from 8H1 to a model that omits bed. What do you infer from this comparison? Can you reconcile the WAIC results with the posterior distribution of the bed coefficients?
+:::
+
+::: question-block
+**8H3**. Consider again the data(rugged) data on economic development and terrain ruggedness, examined in this chapter. One of the African countries in that example, Seychelles, is far outside the cloud of other nations, being a rare country with both relatively high GDP and high ruggedness. Seychelles is also unusual, in that it is a group of islands far from the coast of mainland Africa, and its main economic activity is tourism.
+
+\(a\) Focus on model `m8.5` from the chapter. Use WAIC pointwise penalties and PSIS Pareto k values to measure relative influence of each country. By these criteria, is Seychelles influencing the results? Are there other nations that are relatively influential? If so, can you explain why?
+
+\(b\) Now use robust regression, as described in the previous chapter. Modify `m8.5` to use a Student-t distribution with $ν = 2$. Does this change the results in a substantial way?
+:::
