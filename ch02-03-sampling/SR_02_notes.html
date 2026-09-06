@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-04-10">
+
+<title>Ch2: Small Worlds and Large Worlds – Statistical Rethinking Notes</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-1b8143a5af30aa0587ead8c64582f750.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Statistical Rethinking Notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_02_notes.html">Bayesian Sampling</a></li><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_02_notes.html">Ch2: Small Worlds and Large Worlds</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Bayesian Sampling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch02-03-sampling/SR_02_notes.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Ch2: Small Worlds and Large Worlds</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch02-03-sampling/SR_Ch03_note.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch3: Sampling the Imaginary</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Linear Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch04-linear-models/SR_Ch04_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch 4: Geocentric Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch04-linear-models/SR_Lec03_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec 3: Geocentric Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch04-linear-models/SR_Lec04_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec4: Categories and Curves</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Confounds &amp; DAGs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch05-multivariate-regression/SR_Ch05_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch5: The Many Variables &amp; the Spurious Waffles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch06-dags/SR_Ch6_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch 6: The Haunted DAG &amp; The Causal Terror</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch06-dags/SR2023_Lec05_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec 5: Elemental Confounds (2023)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch06-dags/SR_Lec06_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec 6: Good and Bad Controls</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Entropy &amp; Model Comparison</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch07-entropy-model-comparison/SR_Ch7_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch7: Ulysses’ Compass</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch07-entropy-model-comparison/SR_Lec07_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec 7: Fitting Over and Under</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Conditioning &amp; Interactions</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch08-interactions/SR_Ch8_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch 8: Conditional Manatees</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Markov Chain Monte Carlo</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch09-mcmc/SR_Ch9_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch 9: Markov Chain Monte Carlo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch09-mcmc/SR_Lec08_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec 8: MCMC</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Extras</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extras/distributions_for_priors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Priors Primer</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extras/rethinking-cheatsheet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Rethinking Cheatsheet</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#workflow" id="toc-workflow" class="nav-link active" data-scroll-target="#workflow">Workflow</a></li>
+  <li><a href="#probability" id="toc-probability" class="nav-link" data-scroll-target="#probability">Probability</a></li>
+  <li><a href="#test-before-you-estimate" id="toc-test-before-you-estimate" class="nav-link" data-scroll-target="#test-before-you-estimate">Test Before You Est(imate)</a>
+  <ul class="collapse">
+  <li><a href="#code-a-generative-simulation" id="toc-code-a-generative-simulation" class="nav-link" data-scroll-target="#code-a-generative-simulation">(1) Code a generative simulation</a>
+  <ul class="collapse">
+  <li><a href="#test-the-simulation-on-extreme-settings" id="toc-test-the-simulation-on-extreme-settings" class="nav-link" data-scroll-target="#test-the-simulation-on-extreme-settings">2.5-2.6 Test the simulation on extreme settings</a></li>
+  </ul></li>
+  <li><a href="#code-the-estimator" id="toc-code-the-estimator" class="nav-link" data-scroll-target="#code-the-estimator">(2) Code the estimator</a>
+  <ul class="collapse">
+  <li><a href="#function-to-compute-posterior-distribution" id="toc-function-to-compute-posterior-distribution" class="nav-link" data-scroll-target="#function-to-compute-posterior-distribution">2.7 Function to compute posterior distribution</a></li>
+  </ul></li>
+  <li><a href="#test-2-with-1" id="toc-test-2-with-1" class="nav-link" data-scroll-target="#test-2-with-1">(3) Test (2) with (1)</a>
+  <ul class="collapse">
+  <li><a href="#use-the-estimator-on-our-generative-simulations" id="toc-use-the-estimator-on-our-generative-simulations" class="nav-link" data-scroll-target="#use-the-estimator-on-our-generative-simulations">2.9 Use the estimator on our generative simulations</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#adding-more-possibilities" id="toc-adding-more-possibilities" class="nav-link" data-scroll-target="#adding-more-possibilities">Adding More Possibilities</a>
+  <ul class="collapse">
+  <li><a href="#proper-code" id="toc-proper-code" class="nav-link" data-scroll-target="#proper-code">Proper code</a></li>
+  <li><a href="#some-important-points-about-bayesian-inference" id="toc-some-important-points-about-bayesian-inference" class="nav-link" data-scroll-target="#some-important-points-about-bayesian-inference">Some important points about Bayesian Inference</a></li>
+  </ul></li>
+  <li><a href="#from-posterior-to-prediction-analyze-sample-summarize" id="toc-from-posterior-to-prediction-analyze-sample-summarize" class="nav-link" data-scroll-target="#from-posterior-to-prediction-analyze-sample-summarize">From Posterior to Prediction (analyze sample, summarize)</a>
+  <ul class="collapse">
+  <li><a href="#what-can-we-do-with-the-posterior-distribution-a-kind-of-estimate" id="toc-what-can-we-do-with-the-posterior-distribution-a-kind-of-estimate" class="nav-link" data-scroll-target="#what-can-we-do-with-the-posterior-distribution-a-kind-of-estimate">What can we do with the posterior distribution (a kind of estimate?)</a></li>
+  <li><a href="#sampling-the-posterior" id="toc-sampling-the-posterior" class="nav-link" data-scroll-target="#sampling-the-posterior">Sampling the posterior</a>
+  <ul class="collapse">
+  <li><a href="#posterior-predictive-distribution" id="toc-posterior-predictive-distribution" class="nav-link" data-scroll-target="#posterior-predictive-distribution">Posterior Predictive Distribution</a></li>
+  <li><a href="#sampling-is-easy-and-fun" id="toc-sampling-is-easy-and-fun" class="nav-link" data-scroll-target="#sampling-is-easy-and-fun">Sampling is easy and fun</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a>
+  <ul class="collapse">
+  <li><a href="#bayesian-data-analysis" id="toc-bayesian-data-analysis" class="nav-link" data-scroll-target="#bayesian-data-analysis">Bayesian Data Analysis</a></li>
+  <li><a href="#bayesian-modesty" id="toc-bayesian-modesty" class="nav-link" data-scroll-target="#bayesian-modesty">Bayesian modesty</a></li>
+  </ul></li>
+  <li><a href="#textbook-notes" id="toc-textbook-notes" class="nav-link" data-scroll-target="#textbook-notes">Textbook Notes</a>
+  <ul class="collapse">
+  <li><a href="#components-of-the-model" id="toc-components-of-the-model" class="nav-link" data-scroll-target="#components-of-the-model">Components of the model</a>
+  <ul class="collapse">
+  <li><a href="#variables" id="toc-variables" class="nav-link" data-scroll-target="#variables">Variables</a></li>
+  <li><a href="#observed-variables" id="toc-observed-variables" class="nav-link" data-scroll-target="#observed-variables">Observed Variables</a></li>
+  <li><a href="#unobserved-variables" id="toc-unobserved-variables" class="nav-link" data-scroll-target="#unobserved-variables">Unobserved Variables</a></li>
+  <li><a href="#summarize-model" id="toc-summarize-model" class="nav-link" data-scroll-target="#summarize-model">Summarize model</a></li>
+  </ul></li>
+  <li><a href="#bayes-theorem" id="toc-bayes-theorem" class="nav-link" data-scroll-target="#bayes-theorem">Bayes Theorem</a></li>
+  <li><a href="#fitting-the-model" id="toc-fitting-the-model" class="nav-link" data-scroll-target="#fitting-the-model">Fitting the Model</a>
+  <ul class="collapse">
+  <li><a href="#grid-approximation" id="toc-grid-approximation" class="nav-link" data-scroll-target="#grid-approximation">Grid approximation</a></li>
+  <li><a href="#quadratic-approximation" id="toc-quadratic-approximation" class="nav-link" data-scroll-target="#quadratic-approximation">Quadratic approximation</a></li>
+  <li><a href="#markov-chain-monte-carlo" id="toc-markov-chain-monte-carlo" class="nav-link" data-scroll-target="#markov-chain-monte-carlo">3. Markov chain Monte-Carlo</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_02_notes.html">Bayesian Sampling</a></li><li class="breadcrumb-item"><a href="../ch02-03-sampling/SR_02_notes.html">Ch2: Small Worlds and Large Worlds</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Ch2: Small Worlds and Large Worlds</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 10, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="workflow" class="level3">
+<h3 class="anchored" data-anchor-id="workflow">Workflow</h3>
+<ol type="1">
+<li>Define generative model of sample</li>
+<li>Define a specific estimand</li>
+<li>Design a statistical way to produce estimate</li>
+<li>Test (3) using (1)</li>
+<li>Analyze sample, summarize</li>
+</ol>
+</section>
+<section id="probability" class="level3">
+<h3 class="anchored" data-anchor-id="probability">Probability</h3>
+<p>Think of the Earth as a 4-sided globe.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"W"</span>,<span class="st">"L"</span>,<span class="st">"W"</span>,<span class="st">"W"</span>, <span class="st">"W"</span>, <span class="st">"L"</span>, <span class="st">"W"</span>,<span class="st">"L"</span>,<span class="st">"W"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">sum</span>(sample<span class="sc">==</span><span class="st">"W"</span>) <span class="co">#number of W observed </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>L <span class="ot">&lt;-</span> <span class="fu">sum</span>(sample<span class="sc">==</span><span class="st">"L"</span>) <span class="co"># number of L observed </span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>, <span class="dv">1</span>) <span class="co"># proportions W</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>ways <span class="ot">&lt;-</span> <span class="fu">sapply</span>(p, <span class="cf">function</span>(q) (q <span class="sc">*</span><span class="dv">4</span>)<span class="sc">^</span>W <span class="sc">*</span>((<span class="dv">1</span><span class="sc">-</span>q)<span class="sc">*</span><span class="dv">4</span>)<span class="sc">^</span>L)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>prob <span class="ot">&lt;-</span> ways<span class="sc">/</span><span class="fu">sum</span>(ways)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(p, ways, prob)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        p ways       prob
+[1,] 0.00    0 0.00000000
+[2,] 0.25   27 0.02129338
+[3,] 0.50  512 0.40378549
+[4,] 0.75  729 0.57492114
+[5,] 1.00    0 0.00000000</code></pre>
+</div>
+</div>
+</section>
+<section id="test-before-you-estimate" class="level1">
+<h1>Test Before You Est(imate)</h1>
+<section id="code-a-generative-simulation" class="level2">
+<h2 class="anchored" data-anchor-id="code-a-generative-simulation">(1) Code a generative simulation</h2>
+<p>###2.3 function to toss a globe covered p by water N times</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sim_globe <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">p=</span><span class="fl">0.7</span>, <span class="at">N=</span><span class="dv">9</span>) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"W"</span>,<span class="st">"L"</span>), <span class="at">size=</span>N, <span class="at">prob=</span><span class="fu">c</span>(p, <span class="dv">1</span><span class="sc">-</span>p), <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "W" "W" "L" "W" "W" "W" "W" "W" "W"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">replicate</span>(<span class="fu">sim_globe</span>(<span class="at">p=</span><span class="fl">0.5</span>,<span class="at">N=</span><span class="dv">9</span>), <span class="at">n=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+ [1,] "W"  "W"  "W"  "W"  "L"  "W"  "L"  "W"  "W"  "L"  
+ [2,] "W"  "L"  "W"  "W"  "W"  "W"  "L"  "L"  "L"  "W"  
+ [3,] "L"  "W"  "W"  "L"  "L"  "W"  "L"  "L"  "L"  "L"  
+ [4,] "W"  "L"  "L"  "W"  "W"  "L"  "L"  "L"  "W"  "L"  
+ [5,] "W"  "L"  "W"  "W"  "L"  "W"  "L"  "W"  "W"  "W"  
+ [6,] "W"  "W"  "L"  "W"  "L"  "W"  "W"  "L"  "W"  "L"  
+ [7,] "W"  "L"  "L"  "L"  "W"  "W"  "L"  "L"  "L"  "W"  
+ [8,] "L"  "L"  "W"  "W"  "L"  "W"  "W"  "W"  "L"  "L"  
+ [9,] "L"  "W"  "W"  "L"  "L"  "L"  "W"  "L"  "L"  "L"  </code></pre>
+</div>
+</div>
+<section id="test-the-simulation-on-extreme-settings" class="level3">
+<h3 class="anchored" data-anchor-id="test-the-simulation-on-extreme-settings">2.5-2.6 Test the simulation on extreme settings</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_globe</span>(<span class="at">p=</span><span class="dv">1</span>, <span class="at">N=</span><span class="dv">11</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "W" "W" "W" "W" "W" "W" "W" "W" "W" "W" "W"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">sim_globe</span>(<span class="at">p=</span><span class="fl">0.5</span>, <span class="at">N=</span><span class="fl">1e4</span>) <span class="sc">==</span> <span class="st">"W"</span>) <span class="sc">/</span> <span class="fl">1e4</span>  <span class="co">#the proportion of water should be very close to 0.5 </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4971</code></pre>
+</div>
+</div>
+<p><em>If you test nothing, you miss everything</em></p>
+</section>
+</section>
+<section id="code-the-estimator" class="level2">
+<h2 class="anchored" data-anchor-id="code-the-estimator">(2) Code the estimator</h2>
+<p>Ways for p to produce <span class="math inline">\(W,L = (4p)^W * (4-4p)^L\)</span></p>
+<section id="function-to-compute-posterior-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="function-to-compute-posterior-distribution">2.7 Function to compute posterior distribution</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>compute_posterior <span class="ot">&lt;-</span> <span class="cf">function</span>(the_sample, <span class="at">poss=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="fl">0.75</span>,<span class="dv">1</span>)) {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  W <span class="ot">&lt;-</span> <span class="fu">sum</span>(the_sample<span class="sc">==</span><span class="st">"W"</span>) <span class="co"># number of W observed</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  L <span class="ot">&lt;-</span> <span class="fu">sum</span>(sample<span class="sc">==</span><span class="st">"L"</span>) <span class="co"># number of L observed </span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  ways <span class="ot">&lt;-</span> <span class="fu">sapply</span>(poss, <span class="cf">function</span>(q) (q <span class="sc">*</span><span class="dv">4</span>)<span class="sc">^</span>W <span class="sc">*</span>((<span class="dv">1</span><span class="sc">-</span>q)<span class="sc">*</span><span class="dv">4</span>)<span class="sc">^</span>L)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  post <span class="ot">&lt;-</span> ways<span class="sc">/</span><span class="fu">sum</span>(ways)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  bars <span class="ot">&lt;-</span> <span class="fu">sapply</span>(post, <span class="cf">function</span>(q) <span class="fu">make_bar</span>(q))</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(poss, ways, <span class="at">post=</span><span class="fu">round</span>(post,<span class="dv">3</span>), bars)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#cbind(poss, ways, post)</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="test-2-with-1" class="level2">
+<h2 class="anchored" data-anchor-id="test-2-with-1">(3) Test (2) with (1)</h2>
+<section id="use-the-estimator-on-our-generative-simulations" class="level3">
+<h3 class="anchored" data-anchor-id="use-the-estimator-on-our-generative-simulations">2.9 Use the estimator on our generative simulations</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compute_posterior</span>(<span class="fu">sim_globe</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  poss ways  post                 bars
+1 0.00    0 0.000                     
+2 0.25   27 0.008                     
+3 0.50 1024 0.316 ######              
+4 0.75 2187 0.675 ##############      
+5 1.00    0 0.000                     </code></pre>
+</div>
+</div>
+<p>The posterior probability is the probability of seeing W on the next toss (I think?)</p>
+<p>Simulate the experiment many times to see the sampling variation across experiments and how that changes with sample size and assumptions about the generative process.</p>
+<ol type="1">
+<li>Test the estimator where the answer is known.</li>
+<li>Explore different sampling designs</li>
+<li>Develop intuition for sampling and estimation</li>
+</ol>
+</section>
+</section>
+</section>
+<section id="adding-more-possibilities" class="level1">
+<h1>Adding More Possibilities</h1>
+<p>Instead of just a 4-sided globe, there are infinite sides. We need every possible proportion. * 4-sided globe: 5 possibilities for the proportion of W [0, 0.25, 0.5, 0.75, 1.0] * 10-sided globe: 11 possibilities: [0, 0.1, 0.2, 0.3, 0.4,0.5,0.6,0.7,0.8,0.9,1] * 20-sided globe: 21 possibilities</p>
+<p>With greater n possibilities, the hill of posterior possibilities gets smoother (and shorter)</p>
+<p>Globe: polyhedron with an infinite number of sides</p>
+<ul>
+<li><p>The posterior probability of any “side” p is proportional to: <span class="math inline">\(p^{W}(1-p)^{L}\)</span></p></li>
+<li><p>The product is the relative number of ways that any value p could produce any particular sample with W and L</p></li>
+<li><p>Only trick is normalizing to probability. After a little calculus:</p></li>
+</ul>
+<p>Posterior probability of <span class="math inline">\(p = \frac{(W+L+1)!}{W!L!}p^{W}(1-p)^{L}\)</span></p>
+<p>With infinite number of possibilities, we call the post prob <em>density</em></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="at">length.out=</span><span class="dv">200</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, p, <span class="at">type =</span> <span class="st">"l"</span>,<span class="at">main =</span> <span class="st">"W"</span>, <span class="at">ylab=</span><span class="st">"density"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, (p<span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>p)), <span class="at">type =</span> <span class="st">"l"</span>,<span class="at">main=</span><span class="st">"W L"</span>, <span class="at">ylab=</span><span class="st">"density"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, (p<span class="sc">^</span><span class="dv">2</span> <span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>p)),<span class="at">type =</span> <span class="st">"l"</span>, <span class="at">main=</span><span class="st">"W L W"</span>, <span class="at">ylab=</span><span class="st">"density"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, (p<span class="sc">^</span><span class="dv">3</span> <span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>p)),<span class="at">type =</span> <span class="st">"l"</span>, <span class="at">main=</span><span class="st">"W L W W"</span>, <span class="at">ylab=</span><span class="st">"density"</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, (p<span class="sc">^</span><span class="dv">4</span> <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>p)),<span class="at">type =</span> <span class="st">"l"</span>, <span class="at">main=</span><span class="st">"W L W W W"</span>, <span class="at">ylab=</span><span class="st">"density"</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, (p<span class="sc">^</span><span class="dv">4</span> <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>p)<span class="sc">^</span><span class="dv">2</span> ),<span class="at">type =</span> <span class="st">"l"</span>, <span class="at">main=</span><span class="st">"W L W W W L"</span>, <span class="at">ylab=</span><span class="st">"density"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_02_notes_files/figure-html/infinite-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>More tosses, higher density in narrower p space (above 0.5 and we know the Earth is covered by more W than L).</p>
+<p>Last three tosses:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>, <span class="at">length.out=</span><span class="dv">200</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, (p<span class="sc">^</span><span class="dv">5</span> <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>p)<span class="sc">^</span><span class="dv">2</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">main=</span><span class="st">"W L W W W L W"</span>, <span class="at">ylab=</span><span class="st">"density"</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, (p<span class="sc">^</span><span class="dv">5</span> <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>p)<span class="sc">^</span><span class="dv">3</span>), <span class="at">type =</span> <span class="st">"l"</span>,<span class="at">main=</span><span class="st">"W L W W W L W L"</span>, <span class="at">ylab=</span><span class="st">"density"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p, (p<span class="sc">^</span><span class="dv">6</span> <span class="sc">*</span> (<span class="dv">1</span><span class="sc">-</span>p)<span class="sc">^</span><span class="dv">3</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">main=</span><span class="st">"W L W W W L W L W"</span>, <span class="at">ylab=</span><span class="st">"density"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_02_notes_files/figure-html/last-tosses-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="proper-code" class="level3">
+<h3 class="anchored" data-anchor-id="proper-code">Proper code</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_02_notes_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="some-important-points-about-bayesian-inference" class="level2">
+<h2 class="anchored" data-anchor-id="some-important-points-about-bayesian-inference">Some important points about Bayesian Inference</h2>
+<ol type="1">
+<li><p><strong>There is no minimum sample size (minimum is 1)</strong></p>
+<ul>
+<li>Not informative, but accurately representing the relative confidence we should assign to each of the possible proportions.</li>
+</ul></li>
+<li><p><strong>Shape embodies sample size (all info about the generative process, proportion)</strong></p>
+<ul>
+<li><p>Post distribution embodies the sample size</p></li>
+<li><p>When we observe more data, no need to go to original dataset, just take the post distribution and update it (where each possibility can produce new obs)</p></li>
+</ul></li>
+<li><p><strong>No point estimates: the posterior distribution <em>is</em> the point distribution</strong></p>
+<ul>
+<li><p>When we work with it, we’re working with the whole distribution everytime</p></li>
+<li><p>Mode: max of the hill</p></li>
+<li><p>Mean: central probability estimate</p></li>
+<li><p>No point by itself is sufficient</p></li>
+<li><p>when we compute things from the post distribution, we use the <strong>entire distribution, never a point from the distribution</strong></p></li>
+</ul></li>
+<li><p><strong>No one true interval of the distribution</strong></p>
+<ul>
+<li><p>Intervals are unimportant.</p></li>
+<li><p>merely quick <strong>summaries of the shape of posterior distribution</strong></p>
+<ul>
+<li><p>Confidence intervals - 50%, 89%, 99% (the lower and upper bounds)</p></li>
+<li><p>nothing special happens at the boundary (arbitrary)</p></li>
+<li><p>only thing 95% intervals try to do is reduce Type I error (significance testing), but that’s not what we’re trying to do here. We’re trying to estimate something.</p></li>
+</ul></li>
+</ul></li>
+</ol>
+</section>
+</section>
+<section id="from-posterior-to-prediction-analyze-sample-summarize" class="level1">
+<h1>From Posterior to Prediction (analyze sample, summarize)</h1>
+<p>We produced the posterior distribution, we got an estimate in principle, but you need to know what you can do with that curve on your screen.</p>
+<section id="what-can-we-do-with-the-posterior-distribution-a-kind-of-estimate" class="level3">
+<h3 class="anchored" data-anchor-id="what-can-we-do-with-the-posterior-distribution-a-kind-of-estimate">What can we do with the posterior distribution (a kind of estimate?)</h3>
+<p>Depends on the scientific purpose in the particular context/stage of the research project</p>
+<p><strong>Whatever you do with it</strong></p>
+<ul>
+<li><p>Implications of model depend upon <strong>entire</strong> posterior</p></li>
+<li><p><strong>Must</strong> average any inference over the entire posterior (averaging over the uncertainty in the post)</p></li>
+<li><p>This usually requires integral calculus</p></li>
+<li><p>Or, we can just take samples from the posterior</p></li>
+</ul>
+</section>
+<section id="sampling-the-posterior" class="level2">
+<h2 class="anchored" data-anchor-id="sampling-the-posterior">Sampling the posterior</h2>
+<ul>
+<li><p>Draw 1000 (1e3) samples from the posterior distribution = post_samples (proportions of water)</p></li>
+<li><p>(6+1) and (3+1) are the way that the beta distribution arguments represent the data (??)</p></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>post_samples <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="fl">1e3</span>, <span class="dv">6</span><span class="sc">+</span><span class="dv">1</span>, <span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>(post_samples, <span class="at">lwd=</span><span class="dv">4</span>, <span class="at">col=</span><span class="dv">2</span>, <span class="at">xlab=</span><span class="st">"proportion water"</span>, <span class="at">adj=</span><span class="fl">0.1</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>( <span class="fu">dbeta</span>(x,<span class="dv">6</span><span class="sc">+</span><span class="dv">1</span>,<span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">lty=</span><span class="dv">2</span>, <span class="at">lwd=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_02_notes_files/figure-html/2.19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>Red jagged thing is very narrowly estimated density from the samples</p>
+<ul>
+<li><p>It’s a sample = finite, local areas = jaggy, produces great approx of real distribution shape</p></li>
+<li><p>better distribution = more samples</p></li>
+</ul></li>
+</ul>
+<p>What do you want to calculate from this?</p>
+<section id="posterior-predictive-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="posterior-predictive-distribution">Posterior Predictive Distribution</h3>
+<p>Prediction for future experiment made from existing estimate.</p>
+<p>Given what we’ve learned about globe so far, what would we bet if we got more samples/tosses from it?</p>
+<p>Ten more tosses, how many W’s do we expect to see.</p>
+<p>Randomly sampling any particular value from the posterior distribution. Drawing random samples in proportion to posterior distribution.</p>
+<ul>
+<li><p>For each of the particular samples, we can calculate the sampling/predictive distribution for p for possible experiments (9 more tosses)</p></li>
+<li><p>Count the number of W tosses in 9 more tosses</p></li>
+<li><p>Comes from the sim_globe function</p></li>
+<li><p>Red bar is central tendency</p></li>
+<li><p>Then add it to the posterior predictive distribution</p>
+<ul>
+<li><p>flatter and more spread out because it contains samples from all the of the predictive distributions, but it contains samples in proportion to how plausible they are</p></li>
+<li><p>contains samples from predictive distributions that are more plausible</p></li>
+<li><p>accurately characterizes all the uncertainty in our estimate (posterior distr) about what would happen if we do the experiment again</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#post_samples &lt;- rbeta(1e4, 6+1,3+1)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#pred_post &lt;- sapply(post_samples, function(p){sum(sim_globe(p,10)=="W")})</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#tab_post &lt;- table(pred_post)</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#for (i in 0:10) lines(c(i,i), c(0,tab_post[i+1]), lwd=4, col=4)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Numerical Monte-Carlo way to do the interval calculus</p>
+</section>
+<section id="sampling-is-easy-and-fun" class="level3">
+<h3 class="anchored" data-anchor-id="sampling-is-easy-and-fun">Sampling is easy and fun</h3>
+<ul>
+<li><p>Sample from posterior, compute desired quantity for each sample, profit</p></li>
+<li><p>Much easier than doing integrals</p></li>
+<li><p>Turn a calc problem into a data summary problem</p></li>
+<li><p>MCMC produces only samples anyway</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<section id="bayesian-data-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="bayesian-data-analysis">Bayesian Data Analysis</h3>
+<blockquote class="blockquote">
+<p>for each possible explanation of data,</p>
+<p>count all the ways the data can happen.</p>
+<p>Explanations with more ways to produce the data are more plausible.</p>
+</blockquote>
+</section>
+<section id="bayesian-modesty" class="level3">
+<h3 class="anchored" data-anchor-id="bayesian-modesty">Bayesian modesty</h3>
+<p>Bayesian inference gives no guarantees except that it’s logical.</p>
+<p>Probability theory is a method of logically deducing implications of data under assumptions that you must choose.</p>
+<ul>
+<li><p>Doesn’t really tell us what’s happening in the world, but helps us figure out what’s happening in the world because it lets us work with logical implications of assumptions and compare those with data. Then, theory-development loop thru that action</p></li>
+<li><p>Quantitative asset that activates our qualitative knowledge as scientists</p>
+<ul>
+<li>Bayesian inference = objective</li>
+<li>Inputs into it = subjective (expertise, revise beliefs, activate objective procedure, etc.)</li>
+</ul></li>
+</ul>
+<p>Any framework selling you more is hiding assumptions.</p>
+</section>
+</section>
+<section id="textbook-notes" class="level1">
+<h1>Textbook Notes</h1>
+<section id="components-of-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="components-of-the-model">Components of the model</h2>
+<section id="variables" class="level3">
+<h3 class="anchored" data-anchor-id="variables">Variables</h3>
+<ul>
+<li><p><strong>Parameters</strong>: unobserved variables</p>
+<ul>
+<li>target of inference, p, the proportion of water on the globe (the estimand defined)</li>
+</ul></li>
+<li><p><strong>Observed variables</strong>: counts of water and land</p>
+<ul>
+<li><strong>Likelihood</strong>: a distribution function assigned to an observed variable</li>
+</ul></li>
+</ul>
+</section>
+<section id="observed-variables" class="level3">
+<h3 class="anchored" data-anchor-id="observed-variables">Observed Variables</h3>
+<section id="binomial-distribution" class="level4">
+<h4 class="anchored" data-anchor-id="binomial-distribution">Binomial Distribution</h4>
+<p>The common “coin tossing” distribution. Assumptions that (1) every toss is independent of the other tosses and (2) the prob of W is the same on every toss</p>
+<blockquote class="blockquote">
+<p>The counts of “water” W and “land” L are distributed binomially, with probability p of “water” on each toss</p>
+</blockquote>
+<p>Binomial function is built into R (dbinom, or density binomial) Compute likelihood of the data (6 Ws in 9 tosses) under any value of p with:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="dv">6</span>, <span class="at">size=</span><span class="dv">9</span>, <span class="at">prob=</span><span class="fl">0.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1640625</code></pre>
+</div>
+</div>
+<p><strong>Maximum entropy</strong>: There are two events, and the probabilities of each in each trial are p and 1-p.&nbsp;</p>
+</section>
+</section>
+<section id="unobserved-variables" class="level3">
+<h3 class="anchored" data-anchor-id="unobserved-variables">Unobserved Variables</h3>
+<p>A Bayesian machine must have an initial plausibility (prior) assignment for each possible value of the parameter.</p>
+<p>Where do priors come from? Engineering assumptions chosen to help the machine learn, and Scientific assumptions chosen to reflect what we know about the phenomenon.</p>
+<ul>
+<li><p>Flat priors (when N=0) are common, but hardly the base prior</p></li>
+<li><p>Can try out different priors when at a loss for a strong argument for any particular prior</p></li>
+</ul>
+<blockquote class="blockquote">
+<p>Because the prior is an assumption, it should be interrogated like other assumptions: by altering it and checking how sensitive inference is to the assumption.</p>
+</blockquote>
+</section>
+<section id="summarize-model" class="level3">
+<h3 class="anchored" data-anchor-id="summarize-model">Summarize model</h3>
+<p>The observed vars W and l are given relative counts thru the binomial distribution. Shortcut: $ W ~ Binomial(N,p) $ where $ N = W + L <span class="math inline">\(. Assumption here is the relative counts of ways to realize W in N trials with probability p on each trial comes from the binomial distribution. And the unobserved parameter p similarly gets:\)</span> p ~ Uniform(0,1) $ Which means that p has a uniform (FLAT) prior over its entire possible range, from 0 to one.</p>
+<ul>
+<li>this is obviously not the best we could do, since we know the Earth has more water than land, even if we do not know the exact proportion yet.</li>
+</ul>
+</section>
+</section>
+<section id="bayes-theorem" class="level2">
+<h2 class="anchored" data-anchor-id="bayes-theorem">Bayes Theorem</h2>
+<p>Def of posterior distribution.</p>
+<p>Joint prob of data W and L and any particular value of <span class="math inline">\(p\)</span> is:</p>
+<p><span class="math inline">\(Pr(W, L, p) = Pr(W,L | p)Pr(p)\)</span></p>
+<ul>
+<li><em>Probability of rain and cold on same day is equal to prob of rain, given it’s cold multiplied by the prob that it’s cold</em></li>
+</ul>
+<p>Take the reverse: <em>Probability of rain and cold on the same day is also equal to the prob of cold, given that it’s rainy, multiplied by the prob that it’s rainy.</em></p>
+<p><span class="math inline">\(Pr(W,L,p) = Pr(p|W,L)Pr(W,L)\)</span></p>
+<p>These two defs equal each other so:</p>
+<p><span class="math inline">\(Pr(W,L | p)Pr(p) = Pr(p|W,L)Pr(W,L)\)</span></p>
+<p>So to solve for <span class="math inline">\(Pr(p|W,L)\)</span>:</p>
+<p><span class="math inline">\(Pr(p|W,L) = \frac{Pr(W,L|p)Pr(p)}{Pr(W,L)}\)</span></p>
+<p>What’s the weird thing in the denom? It;s the average probability of the data, which standardizes the posterior (ensure it sums to 1)</p>
+<p>The posterior is proportional to the product of the prior and the probability of the data.</p>
+</section>
+<section id="fitting-the-model" class="level2">
+<h2 class="anchored" data-anchor-id="fitting-the-model">Fitting the Model</h2>
+<section id="grid-approximation" class="level3">
+<h3 class="anchored" data-anchor-id="grid-approximation">Grid approximation</h3>
+<p>Can get a great approx of continuous posterior with only a finite grid of parameter values</p>
+<p>Mainly useful as pedagogical tool, but scales poorly when parameters INC.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define grid</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>p_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>( <span class="at">from=</span><span class="dv">0</span> , <span class="at">to=</span><span class="dv">1</span> , <span class="at">length.out=</span><span class="dv">20</span> )</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># define prior</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>prior <span class="ot">&lt;-</span> <span class="fu">rep</span>( <span class="dv">1</span> , <span class="dv">20</span> )</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># compute likelihood at each value in grid</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>likelihood <span class="ot">&lt;-</span> <span class="fu">dbinom</span>( <span class="dv">6</span> , <span class="at">size=</span><span class="dv">9</span> , <span class="at">prob=</span>p_grid )</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#compute unstandardized posterior at each parameter value (product of likelihood and prior) </span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>unstd.posterior <span class="ot">&lt;-</span> likelihood <span class="sc">*</span> prior</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># standardize the posterior, so it sums to 1</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>posterior <span class="ot">&lt;-</span> unstd.posterior <span class="sc">/</span> <span class="fu">sum</span>(unstd.posterior)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co"># DISPLAY </span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p_grid, posterior, <span class="at">type=</span><span class="st">"b"</span>, <span class="at">xlab=</span><span class="st">"prob of water"</span>, <span class="at">ylab =</span><span class="st">"posterior prob"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_02_notes_files/figure-html/grid_approx-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>step_prior <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( p_grid <span class="sc">&lt;</span> <span class="fl">0.5</span> , <span class="dv">0</span> , <span class="dv">1</span> )</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(step_prior, <span class="at">type =</span><span class="st">"l"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_02_notes_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="lets-try-the-prior-where-we-assume-a-0-chance-of-the-true-proportion-of-water-being-less-than-50" class="level4">
+<h4 class="anchored" data-anchor-id="lets-try-the-prior-where-we-assume-a-0-chance-of-the-true-proportion-of-water-being-less-than-50">Let’s try the prior where we assume a 0% chance of the true proportion of water being less than 50%</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>( <span class="at">from=</span><span class="dv">0</span> , <span class="at">to=</span><span class="dv">1</span> , <span class="at">length.out=</span><span class="dv">200</span> )</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#define prior</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>step_prior <span class="ot">&lt;-</span> <span class="fu">ifelse</span>( p_grid <span class="sc">&lt;</span> <span class="fl">0.5</span> , <span class="dv">0</span> , <span class="dv">1</span> )</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># compute likelihood at each value in grid</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>likelihood <span class="ot">&lt;-</span> <span class="fu">dbinom</span>( <span class="dv">6</span> , <span class="at">size=</span><span class="dv">9</span> , <span class="at">prob=</span>p_grid )</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#compute unstandardized posterior at each parameter value (product of likelihood and prior) </span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>unstd.posterior <span class="ot">&lt;-</span> likelihood <span class="sc">*</span> step_prior</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co"># standardize the posterior, so it sums to 1</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>posterior <span class="ot">&lt;-</span> unstd.posterior <span class="sc">/</span> <span class="fu">sum</span>(unstd.posterior)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># DISPLAY </span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p_grid, posterior, <span class="at">type=</span><span class="st">"l"</span>, <span class="at">xlab=</span><span class="st">"prob of water"</span>, <span class="at">ylab =</span><span class="st">"posterior prob"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_02_notes_files/figure-html/2.52-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="lets-try-that-with-a-peaked-prior-that-shifts-and-skews-the-posterior-relative-to-the-likelihood." class="level4">
+<h4 class="anchored" data-anchor-id="lets-try-that-with-a-peaked-prior-that-shifts-and-skews-the-posterior-relative-to-the-likelihood.">Let’s try that with a peaked prior that shifts and skews the posterior, relative to the likelihood.</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define prior</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>peaked_prior <span class="ot">&lt;-</span> <span class="fu">exp</span>( <span class="sc">-</span><span class="dv">5</span><span class="sc">*</span><span class="fu">abs</span>( p_grid <span class="sc">-</span> <span class="fl">0.5</span> ) )</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(peaked_prior, <span class="at">type =</span><span class="st">"l"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_02_notes_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>( <span class="at">from=</span><span class="dv">0</span> , <span class="at">to=</span><span class="dv">1</span> , <span class="at">length.out=</span><span class="dv">200</span> )</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#define prior</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>peaked_prior <span class="ot">&lt;-</span> <span class="fu">exp</span>( <span class="sc">-</span><span class="dv">5</span><span class="sc">*</span><span class="fu">abs</span>( p_grid <span class="sc">-</span> <span class="fl">0.5</span> ) )</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># compute likelihood at each value in grid</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>likelihood <span class="ot">&lt;-</span> <span class="fu">dbinom</span>( <span class="dv">6</span> , <span class="at">size=</span><span class="dv">9</span> , <span class="at">prob=</span>p_grid )</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#compute unstandardized posterior at each parameter value (product of likelihood and prior) </span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>unstd.posterior <span class="ot">&lt;-</span> likelihood <span class="sc">*</span> peaked_prior</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co"># standardize the posterior, so it sums to 1</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>posterior <span class="ot">&lt;-</span> unstd.posterior <span class="sc">/</span> <span class="fu">sum</span>(unstd.posterior)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co"># DISPLAY </span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p_grid, posterior, <span class="at">type=</span><span class="st">"l"</span>, <span class="at">xlab=</span><span class="st">"prob of water"</span>, <span class="at">ylab =</span><span class="st">"posterior prob"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_02_notes_files/figure-html/2.53-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="quadratic-approximation" class="level3">
+<h3 class="anchored" data-anchor-id="quadratic-approximation">Quadratic approximation</h3>
+<p>Under quite general conditions, the region near the peak of the posterior distribution will be nearly Gaussian—or “normal”—in shape. This means the posterior distribution can be usefully approximated by a <strong>Gaussian distribution</strong>. A Gaussian distribution is convenient, because it can be completely described by only two numbers: the location of its center (mean) and its spread (variance).</p>
+<ul>
+<li>A Gaussian approximation is called “quadratic approximation” because the logarithm of a Gaussian distribution forms a parabola. And a parabola is a quadratic function. So this approximation essentially represents any log-posterior with a parabola.</li>
+</ul>
+<p>More Later</p>
+</section>
+<section id="markov-chain-monte-carlo" class="level3">
+<h3 class="anchored" data-anchor-id="markov-chain-monte-carlo">3. Markov chain Monte-Carlo</h3>
+<ul>
+<li><p>Capable of handling highly complex models</p></li>
+<li><p>Counter-intuitive model fitting</p>
+<ul>
+<li><p>MCMC draws samples from the posterior, where you end up with a collection of parameter values, and the frequencies of these values correspond to the posterior plausibilities</p></li>
+<li><p>Build a picture of the posterior from the histogram of these samples</p></li>
+</ul></li>
+</ul>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

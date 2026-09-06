@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Ch 9: Markov Chain Monte Carlo – Statistical Rethinking Notes</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-1b8143a5af30aa0587ead8c64582f750.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Statistical Rethinking Notes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch09-mcmc/SR_Ch9_notes.html">Markov Chain Monte Carlo</a></li><li class="breadcrumb-item"><a href="../ch09-mcmc/SR_Ch9_notes.html">Ch 9: Markov Chain Monte Carlo</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Bayesian Sampling</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch02-03-sampling/SR_02_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch2: Small Worlds and Large Worlds</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch02-03-sampling/SR_Ch03_note.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch3: Sampling the Imaginary</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Linear Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch04-linear-models/SR_Ch04_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch 4: Geocentric Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch04-linear-models/SR_Lec03_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec 3: Geocentric Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch04-linear-models/SR_Lec04_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec4: Categories and Curves</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Confounds &amp; DAGs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch05-multivariate-regression/SR_Ch05_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch5: The Many Variables &amp; the Spurious Waffles</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch06-dags/SR_Ch6_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch 6: The Haunted DAG &amp; The Causal Terror</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch06-dags/SR2023_Lec05_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec 5: Elemental Confounds (2023)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch06-dags/SR_Lec06_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec 6: Good and Bad Controls</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Entropy &amp; Model Comparison</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch07-entropy-model-comparison/SR_Ch7_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch7: Ulysses’ Compass</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch07-entropy-model-comparison/SR_Lec07_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec 7: Fitting Over and Under</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Conditioning &amp; Interactions</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch08-interactions/SR_Ch8_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ch 8: Conditional Manatees</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Markov Chain Monte Carlo</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch09-mcmc/SR_Ch9_notes.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Ch 9: Markov Chain Monte Carlo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../ch09-mcmc/SR_Lec08_notes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lec 8: MCMC</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Extras</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extras/distributions_for_priors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Priors Primer</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../extras/rethinking-cheatsheet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Rethinking Cheatsheet</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#simulate-king-markovs-islands-journey" id="toc-simulate-king-markovs-islands-journey" class="nav-link active" data-scroll-target="#simulate-king-markovs-islands-journey">Simulate King Markov’s Islands journey</a></li>
+  <li><a href="#metropolis-algorithms" id="toc-metropolis-algorithms" class="nav-link" data-scroll-target="#metropolis-algorithms">Metropolis Algorithms</a>
+  <ul class="collapse">
+  <li><a href="#gibbs-sampling" id="toc-gibbs-sampling" class="nav-link" data-scroll-target="#gibbs-sampling">Gibbs sampling</a></li>
+  </ul></li>
+  <li><a href="#hamiltonian-monte-carlo" id="toc-hamiltonian-monte-carlo" class="nav-link" data-scroll-target="#hamiltonian-monte-carlo">Hamiltonian Monte Carlo</a>
+  <ul class="collapse">
+  <li><a href="#limitations-hmc" id="toc-limitations-hmc" class="nav-link" data-scroll-target="#limitations-hmc">Limitations HMC</a></li>
+  </ul></li>
+  <li><a href="#easy-hmc-ulam" id="toc-easy-hmc-ulam" class="nav-link" data-scroll-target="#easy-hmc-ulam">Easy HMC: <code>ulam</code></a>
+  <ul class="collapse">
+  <li><a href="#preparation" id="toc-preparation" class="nav-link" data-scroll-target="#preparation">Preparation</a></li>
+  <li><a href="#sampling-from-posterior" id="toc-sampling-from-posterior" class="nav-link" data-scroll-target="#sampling-from-posterior">Sampling from posterior</a></li>
+  <li><a href="#sampling-again-in-parallel" id="toc-sampling-again-in-parallel" class="nav-link" data-scroll-target="#sampling-again-in-parallel">Sampling again, in parallel</a></li>
+  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">Visualization</a></li>
+  <li><a href="#checking-the-mcmc" id="toc-checking-the-mcmc" class="nav-link" data-scroll-target="#checking-the-mcmc">Checking the MCMC</a></li>
+  </ul></li>
+  <li><a href="#preparing-and-troubleshooting-markov-chains" id="toc-preparing-and-troubleshooting-markov-chains" class="nav-link" data-scroll-target="#preparing-and-troubleshooting-markov-chains">Preparing and Troubleshooting Markov Chains</a>
+  <ul class="collapse">
+  <li><a href="#how-many-samples-do-you-need" id="toc-how-many-samples-do-you-need" class="nav-link" data-scroll-target="#how-many-samples-do-you-need">How many samples do you need?</a></li>
+  <li><a href="#how-many-chains-do-you-need" id="toc-how-many-chains-do-you-need" class="nav-link" data-scroll-target="#how-many-chains-do-you-need">How many chains do you need?</a></li>
+  <li><a href="#taming-a-wild-chain" id="toc-taming-a-wild-chain" class="nav-link" data-scroll-target="#taming-a-wild-chain">Taming a Wild Chain</a></li>
+  <li><a href="#non-identifiable-parameters" id="toc-non-identifiable-parameters" class="nav-link" data-scroll-target="#non-identifiable-parameters">Non-identifiable Parameters</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../ch09-mcmc/SR_Ch9_notes.html">Markov Chain Monte Carlo</a></li><li class="breadcrumb-item"><a href="../ch09-mcmc/SR_Ch9_notes.html">Ch 9: Markov Chain Monte Carlo</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Ch 9: Markov Chain Monte Carlo</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Chapter Overview
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Introduces the fundamentals of Markov chain Monte Carlo (MCMC). Covers algorithms such as Metropolis, Gibbs sampling, and Hamiltonian Monte Carlo algorithms.</p>
+<p><code>ulam</code> function in rethinking package introduced - it uses the Stan Hamiltonian Monte Carlo engine to fit models.</p>
+<p>General advice about setting up MCMC and diagnosing poor MCMC fits.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Terms
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<dl>
+<dt>Markov Chain Monte Carlo</dt>
+<dd>
+<p>stochastic process to estimate the posterior probability distributions</p>
+</dd>
+<dt>Stan</dt>
+<dd>
+<p>probabilistic programming language implementing statistical inference</p>
+</dd>
+<dt>Metropolis algorithm</dt>
+<dd>
+<p>MCMC algorithm (King Markov’s islands) used to generate samples from complex probability distributions without knowing its normalizing constant, requiring only that the relative probability density between two points can be calculated.</p>
+<p>Slow, random-walk behavior</p>
+</dd>
+<dt>Gibbs sampling</dt>
+<dd>
+<p>MCMC algorithm that breaks complex multidimensional joint distribution into simpler conditional distributions for each variable, updating each parameter one at a time and conditioning on the most recent values of all other parameters.</p>
+</dd>
+<dt>concentration of measure</dt>
+<dd>
+<p>most of the probability mass of a high-dimension distribution is always very far from the mode of the distribution</p>
+</dd>
+<dt>Hamiltonian Markov Chain</dt>
+<dd>
+<p>MCMC algorithm that uses the <strong>gradients</strong> of a target probability density to efficiently sample from continuous distributions. Simulates mechanics from physics (Skate Park Bowl) to avoid the slow random-walk behavior of Metropolis.</p>
+</dd>
+<dt>gradient</dt>
+<dd>
+<p>a vector that contains all the partial derivatives of a multi-variable function. It represents the direction of steepest ascent and the rate of change of that function at any given point</p>
+</dd>
+<dt>leapfrog steps</dt>
+<dd>
+<p>Discrete steps of some small interval <span class="math inline">\(\epsilon\)</span></p>
+</dd>
+<dt>step size</dt>
+<dd>
+<p><span class="math inline">\(\epsilon\)</span> of leapfrog steps</p>
+</dd>
+<dt>U-turn problem</dt>
+<dd>
+<p>when a simulated physical trajectory starts to double back and retrace its path in parameter space</p>
+</dd>
+<dt>trace plot</dt>
+<dd>
+<p>plots Markov chain samples in sequential order, joined by a line. Useful for diagnosing common problems with HMC algorithm</p>
+</dd>
+<dt>trace rank (trank) plot</dt>
+<dd>
+<p>Markov chain visualization that plots the distribution of all the samples for each individual parameter and ranks them (lowest sample gets Rank 1; largest sample gets max rank=No.&nbsp;samples across all chains). Draws histogram of these ranks for each individual chain.</p>
+</dd>
+<dt>Effective Sample Size</dt>
+<dd>
+Estimate of the number of independent samples from the posterior distribution
+</dd>
+</dl>
+</div>
+</div>
+<p>Moving away from <code>quap</code> maximal approximatization, we’ll instead produce samples directly from the joint posterior without assuming a Gaussian, or any other, shape, for it.</p>
+<ul>
+<li><p>Pros: escape awkwardness of assuming multivariate normality; ability to estimate models (GLM, Multilevel models)</p></li>
+<li><p>Cons: less efficient estimation computation, as well as more effort to specify the model</p></li>
+</ul>
+<section id="simulate-king-markovs-islands-journey" class="level2">
+<h2 class="anchored" data-anchor-id="simulate-king-markovs-islands-journey">Simulate King Markov’s Islands journey</h2>
+<p><u>Contract</u>: King Markov must visit each island in proportion to its population size.</p>
+<p><u>Advisor Metropolis’s Algorithm</u></p>
+<ol type="1">
+<li>Flip a coin to choose island on left or right (1/2, 1/2). Call it the “proposal” island (the coin proposes that he moves to certain island)</li>
+<li>Find population of proposal island, say the right-side island, <span class="math inline">\(p_n\)</span></li>
+<li>Find population of current island, <span class="math inline">\(p_{n-1}\)</span></li>
+<li>Move to proposal, with probability <span class="math inline">\(\frac{p_n}{p_{n-1}}\)</span></li>
+<li>Repeat from (1)</li>
+</ol>
+<p>This procedure ensures visiting each island in proportion to its population, <em>in the long run</em>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>num_weeks <span class="ot">&lt;-</span> <span class="fl">1e5</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>positions <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>,num_weeks)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>current <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>num_weeks) {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># record current position</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  positions[i] <span class="ot">&lt;-</span> current </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># flip coin to generate proposal </span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  proposal <span class="ot">&lt;-</span> current <span class="sc">+</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">size=</span><span class="dv">1</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># now make sure he loops around the archipelago </span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (proposal <span class="sc">&lt;</span> <span class="dv">1</span>) proposal <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (proposal <span class="sc">&gt;</span> <span class="dv">10</span> ) proposal <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># move?</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  prob_move <span class="ot">&lt;-</span> proposal<span class="sc">/</span>current</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  current <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">runif</span>(<span class="dv">1</span>) <span class="sc">&lt;</span> prob_move, proposal, current)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, positions[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>], <span class="at">col=</span>rangi2, <span class="at">xlab=</span><span class="st">"week"</span>, <span class="at">ylab=</span><span class="st">"island"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">table</span>(positions), <span class="at">col=</span>rangi2, <span class="at">xlab=</span><span class="st">"island"</span>, <span class="at">ylab=</span><span class="st">"number of weeks"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>After the entire 100,000 weeks (2000 years approx) of the simulation, the proportion of time spent on each island converges to be almost exactly proportional to the relative populations of the islands.</p>
+<ul>
+<li><p>Still works when we allow king to be equally likely to propose a move from any island to any island (not just neighbors). Key: King uses the ratio of the proposal island’s population to the current island’s as his probability of moving.</p></li>
+<li><p>Still works with unknown number of islands. Key: king needs to know at any point in time, the population of the current island and the population of proposal island</p></li>
+</ul>
+</section>
+<section id="metropolis-algorithms" class="level2">
+<h2 class="anchored" data-anchor-id="metropolis-algorithms">Metropolis Algorithms</h2>
+<p>Example of MCMC</p>
+<p>Goal: draw samples from an unknown and usually complex target distribution, like a posterior probability distribution.</p>
+<ul>
+<li><p>Islands = parameter values (discrete or continuous)</p></li>
+<li><p>Population sizes = posterior probabilities at each parameter value</p></li>
+<li><p>Weeks = samples taken from the joint posterior of the parameters in the model</p></li>
+</ul>
+<p>Provided the way we choose our proposed parameter values at each step is symmetric (equal chance of proposing from A to B and from B to A) - then Metropolis algorithm eventually gives a collection of samples from the joint posterior</p>
+<section id="gibbs-sampling" class="level3">
+<h3 class="anchored" data-anchor-id="gibbs-sampling">Gibbs sampling</h3>
+<p>Better than plain Metropolis, common in applied Bayesian statistics (though being replaced by other algorithms). Metropolis algorithm works when the proposal distribution is <strong>symmetric</strong>. Metropolis-Hastings is more general, allows asymmetric proposals (King’s coin biased toward clockwise move).</p>
+<p>Why asymmetric proposals?</p>
+<ol type="1">
+<li>Easier to handle parameters that have boundaries at zero (e.g., SDs)</li>
+<li>Allows generation of “savvy” proposals that explore posterior distribution more efficiently (i.e., ability to get an equally good image of posterior distribution in fewer steps).</li>
+</ol>
+<p>Gibbs sampling: common way to generate savvy proposals more efficiently. Variant of Metropolis-Hastings algorithm that uses clever proposals. Improvement arises from <em>adaptive</em> proposals in which the distribution of proposed parameter values adjusts itself intelligently, depending on the parameter values at the moment</p>
+<p>Computation depends on <em>conjugate pairs</em>, which are particular combinations of prior distributions and likelihoods that have analytic solutions for the posterior distribution of an individual parameter.</p>
+<section id="high-dimensional-problems" class="level4">
+<h4 class="anchored" data-anchor-id="high-dimensional-problems">High-dimensional problems</h4>
+<p>Gibbs Limitations:</p>
+<ol type="1">
+<li>Don’t want to use conjugate pairs (especially for multilevel models)</li>
+<li>More parameters → less efficiency with Metropolis or Gibbs sampling (tend to get stuck in small regions of the posterior for long time)
+<ul>
+<li>Models with more parameters nearly always have regions of high correlation in posterior - 2+ parameters are covariates → narrow ridge of high probability combinations, both Metropolis and Gibbs make many dumb prposals of where to go next.</li>
+</ul></li>
+</ol>
+<p>Proposals are generated by adding random Gaussian noise to each parameter, with SD of 0.01 (=step size)</p>
+<p>Trade-off between step size and efficiency (proposals don’t know enough about the global shape of the posterior)</p>
+<ul>
+<li><p>small step size: higher acceptance rate, slower chain</p></li>
+<li><p>Larger step size: lower acceptance rate, faster chain</p></li>
+</ul>
+<p><strong>Concentration of measure</strong>: fact that most of the probability mass of a high-dimension distribution is always very far from the mode of the distribution</p>
+<p>This means that the combination of parameter values that maximizes posterior probability, the mode, is not actually in a region of parameter values that are highly plausible. So, when we properly sample from a high dimensional distribution, we won’t get any points near the mode.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># demo of concentration of measure </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># sample randomly from a high-dimension distribution (10dim)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="dv">10</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>T <span class="ot">&lt;-</span> <span class="fl">1e3</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(T, <span class="fu">rep</span>(<span class="dv">0</span>,D), <span class="fu">diag</span>(D))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># plot the radial distances from the points</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>rad_dist <span class="ot">&lt;-</span> <span class="cf">function</span>(Y)<span class="fu">sqrt</span>(<span class="fu">sum</span>(Y<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>Rd <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span>T, <span class="cf">function</span>(i) <span class="fu">rad_dist</span>(Y[i,]))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dens</span>(Rd)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Need for other MCMC algorithms that focus on the entire posterior at once, instead of just a few dimensions at a time. Otherwise, get stuck in narrow, highly curving region of parameter space.</p>
+</section>
+</section>
+</section>
+<section id="hamiltonian-monte-carlo" class="level2">
+<h2 class="anchored" data-anchor-id="hamiltonian-monte-carlo">Hamiltonian Monte Carlo</h2>
+<blockquote class="blockquote">
+<p>It appears to be a quite general principle that, whenever there is a randomized way of doing something, then there is a nonrandomized way that delivers better performance but requires more thought. - ET Jaynes</p>
+</blockquote>
+<p>Metropolis + Gibbs = highly random sampling procedures. A less random way probably exists that is better.</p>
+<p><strong>Hamiltonian Monte Carlo</strong> (Hybrid Monte Carlo, HMC): more computationally costly, more efficient proposals. Doesn’t need as many samples to describe posterior distribution.</p>
+<p>Suppose the data are 100 <em>x</em> values and 100 <em>y</em> values sampled from Normal(0,1) and the model is:</p>
+<p><span class="math display">\[x_i \sim \text{Normal}(\mu_x, 1)\]</span></p>
+<p><span class="math display">\[y_i \sim \text{Normal}(\mu_y, 1)\]</span></p>
+<p><span class="math display">\[\mu_x \sim \text{Normal}(0,0.5)\]</span></p>
+<p><span class="math display">\[mu_y \sim \text{Normal}(0,0.5) \]</span></p>
+<p>HMC needs 2 functions and 2 settings:</p>
+<ul>
+<li>(<u><strong>Function 1</strong></u>) First function computes log-prob of data and parameters (top part of Bayes formula). Tells the algorithm the “elevation” of any set of parameter values.</li>
+</ul>
+<p><span class="math display">\[\sum_i \text{log}\;p(y_i|\mu_y , 1) + \sum_i \text{log}\;p(x_i| \mu_x ,1) +\text{log}\;p(\mu_y|0,0.5)  +\text{log}\;p(\mu_x|0,0.5) \]</span> where <span class="math inline">\(p(x|a, b)\)</span> means the Gaussian density of <span class="math inline">\(x\)</span> at mean <span class="math inline">\(a\)</span> and SD <span class="math inline">\(b\)</span>.</p>
+<ul>
+<li><p>(<u><strong>Function 2</strong></u>) Second function is the <strong>gradient</strong> = slope in all directions at the current position (=two derivatives). Differentiate the expression above with respect to <span class="math inline">\(\mu_x\)</span> and then <span class="math inline">\(\mu_y\)</span>.</p></li>
+<li><p>(<u><strong>Settings 1 and 2</strong></u><strong>)</strong>: Choice of number of <strong>leapfrog steps</strong> and choice of <strong>step size</strong> for each.</p>
+<ul>
+<li><p>Each path in the simulation (curve between visits) is dvidied into the number of leapfrog steps. Many steps = long path; few steps = short path.</p></li>
+<li><p>Size of each step is determined by step size. If step size is small =. particle turns sharply. If step size large = each leap will be large, may overshoot the point where the simulation would want to turn around.</p></li>
+</ul></li>
+</ul>
+<p>The process repeats with random direction and momentum in both dimensions each time. With good <em>combination of leapfrog steps and step size</em> and with enough samples, can get an excellent approximation with very low autocorrelation.</p>
+<p>Low autocorrelation is NOT automatic. <strong>U-Turn</strong> problem occurs when paths return close to where they started (simulations returning to same neighborhood)</p>
+<blockquote class="blockquote">
+<p>Efficiency in HMC comes at the expense of having to tune leapfrog steps and step size in each application.</p>
+</blockquote>
+<p>How to deal with U-Turns:</p>
+<ul>
+<li><p>Stan and <code>rstan</code> package (Fancy HMC samplers)</p>
+<ul>
+<li><p>Chooses the leapfrog steps and step size for you by conducting a <strong>warmup</strong> phase, where they try to figure out which step size explores the posterior efficiently</p>
+<ul>
+<li>Not sampling from the posterior, but just <em>tuning the simulation</em>.</li>
+</ul></li>
+<li><p>No-U-Turn Samples (NUTS): clever algorithm to adaptively set the number of leapfrog steps. It guesses from the shape of the posterior when the path is turning around, then stops the simulation.</p></li>
+</ul></li>
+</ul>
+<section id="overthinking-hamiltonian-monte-carlo-raw" class="level4" style="border: 1px solid lightgray;border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.056);padding: 1rem 2rem;">
+<h4 class="anchored" data-anchor-id="overthinking-hamiltonian-monte-carlo-raw">Overthinking: Hamiltonian Monte Carlo Raw</h4>
+<p>HMC algorithm needs 5 things:</p>
+<blockquote class="blockquote">
+<ol type="1">
+<li>function <code>U</code> that returns the negative log-probability of the data at the current position (parameter values)</li>
+<li>a function <code>grad_U</code> that returns the <em>gradient</em> of the negative log-probability at the current position.</li>
+<li>a step size <code>epsilon</code></li>
+<li>a count of leapfrog steps <code>L</code></li>
+<li>a starting position <code>current_q</code></li>
+</ol>
+</blockquote>
+<p>Position = vector of parameter value (Gradient also needs to return vector of same length)</p>
+<p><strong>Custom 2D Gaussian Example</strong></p>
+<p><code>U</code> function expresses the <u>log-posterior</u></p>
+<p><span class="math display">\[\sum_i\text{log}\;p(y_i|\mu_y,1) + \sum_i \text{log}\;p(x_i|\mu_x,1) +\text{log}\;p(\mu_y|0,0.5)  +\text{log}\;p(\mu_x|0,0.5) \]</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># so it's just 4 calls to dnorm:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>U <span class="ot">&lt;-</span> <span class="cf">function</span>(q, <span class="at">a=</span><span class="dv">0</span>, <span class="at">b=</span><span class="dv">1</span>, <span class="at">k=</span><span class="dv">0</span>, <span class="at">d=</span><span class="dv">1</span>) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  muy <span class="ot">&lt;-</span> q[<span class="dv">1</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  mux <span class="ot">&lt;-</span> q[<span class="dv">2</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  U <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dnorm</span>(y, muy, <span class="dv">1</span>, <span class="at">log=</span><span class="cn">TRUE</span>)) <span class="sc">+</span> <span class="fu">sum</span>(<span class="fu">dnorm</span>(x,mux,<span class="dv">1</span>,<span class="at">log=</span><span class="cn">TRUE</span>)) <span class="sc">+</span> <span class="fu">dnorm</span>(muy,a,b,<span class="at">log=</span><span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">dnorm</span>(mux,k,d,<span class="at">log=</span><span class="cn">TRUE</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="sc">-</span>U)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The derivative of the logarithm of any <strong>univariate Gaussian</strong> with mean a and SD b with respect to a is:</p>
+<p><span class="math display">\[\frac{\partial\text{log N}(y|a,b)}{\partial a} = \frac{y-q}{b^2}\]</span></p>
+<p>Since the derivative of a sum is a sum of derivatives:</p>
+<p><span class="math display">\[\frac{\partial U}{\partial \mu_x} = \frac{\partial \text{logN}(x|\mu_x,1)}{\partial \mu_x} + \frac{\partial\text{logN}(\mu_x|0,0.5)}{\partial\mu_x} \\= \sum_i \frac{x_i - \mu_x}{1^2} + \frac{0-\mu_u}{0.5^2}\]</span></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gradient function </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># need vector of partial derivatives of U with respect to vector q</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>U_gradient <span class="ot">&lt;-</span> <span class="cf">function</span>(q, <span class="at">a=</span><span class="dv">0</span>, <span class="at">b=</span><span class="dv">1</span>, <span class="at">k=</span><span class="dv">0</span>, <span class="at">d=</span><span class="dv">1</span>){</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  muy <span class="ot">&lt;-</span> q[<span class="dv">1</span>]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  mux <span class="ot">&lt;-</span> q[<span class="dv">2</span>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  G1 <span class="ot">&lt;-</span> <span class="fu">sum</span>(y <span class="sc">-</span> muy) <span class="sc">+</span> (a <span class="sc">-</span> muy)<span class="sc">/</span>b<span class="sc">^</span><span class="dv">2</span> <span class="co"># dU/dmuy</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  G2 <span class="ot">&lt;-</span> <span class="fu">sum</span>(x <span class="sc">-</span> mux) <span class="sc">+</span> (k <span class="sc">-</span> mux)<span class="sc">/</span>d<span class="sc">^</span><span class="dv">2</span> <span class="co"># dU/dmux</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">c</span>(<span class="sc">-</span>G1, <span class="sc">-</span>G2)) <span class="co"># negative bc energy is neg-log-prob</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># test data </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(x))</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">scale</span>(y))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shape) <span class="co"># for fancy arrows </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Q<span class="sc">$</span>q <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>,<span class="fl">0.2</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>pr <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NULL</span>, <span class="at">ylab=</span><span class="st">"muy"</span>, <span class="at">xlab=</span><span class="st">"mux"</span>, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span>pr,pr), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span>pr,pr))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>step <span class="ot">&lt;-</span> <span class="fl">0.03</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>L <span class="ot">&lt;-</span> <span class="dv">11</span> <span class="co"># 0.03/28 for U-turns --- 11 for working example</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>n_samples <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>path_col <span class="ot">&lt;-</span> <span class="fu">col.alpha</span>(<span class="st">"black"</span>,<span class="fl">0.5</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(Q<span class="sc">$</span>q[<span class="dv">1</span>], Q<span class="sc">$</span>q[<span class="dv">2</span>], <span class="at">pch=</span><span class="dv">4</span>, <span class="at">col=</span><span class="st">"black"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy and pasted from p. 283</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ( i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_samples ) {</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  Q <span class="ot">&lt;-</span> <span class="fu">HMC2</span>( U , U_gradient , step , L , Q<span class="sc">$</span>q )</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> ( n_samples <span class="sc">&lt;</span> <span class="dv">10</span> ) {</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ( j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>L ) {</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      K0 <span class="ot">&lt;-</span> <span class="fu">sum</span>(Q<span class="sc">$</span>ptraj[j,]<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span><span class="dv">2</span> <span class="co"># kinetic energy</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lines</span>( Q<span class="sc">$</span>traj[j<span class="sc">:</span>(j<span class="sc">+</span><span class="dv">1</span>),<span class="dv">1</span>] , Q<span class="sc">$</span>traj[j<span class="sc">:</span>(j<span class="sc">+</span><span class="dv">1</span>),<span class="dv">2</span>] , <span class="at">col=</span>path_col , <span class="at">lwd=</span><span class="dv">1</span><span class="sc">+</span><span class="dv">2</span><span class="sc">*</span>K0 )</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">points</span>( Q<span class="sc">$</span>traj[<span class="dv">1</span><span class="sc">:</span>L<span class="sc">+</span><span class="dv">1</span>,] , <span class="at">pch=</span><span class="dv">16</span> , <span class="at">col=</span><span class="st">"white"</span> , <span class="at">cex=</span><span class="fl">0.35</span> )</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Arrows</span>( Q<span class="sc">$</span>traj[L,<span class="dv">1</span>] , Q<span class="sc">$</span>traj[L,<span class="dv">2</span>] , Q<span class="sc">$</span>traj[L<span class="sc">+</span><span class="dv">1</span>,<span class="dv">1</span>] , Q<span class="sc">$</span>traj[L<span class="sc">+</span><span class="dv">1</span>,<span class="dv">2</span>] ,</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>            <span class="at">arr.length=</span><span class="fl">0.35</span> , <span class="at">arr.adj =</span> <span class="fl">0.7</span> )</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text</span>( Q<span class="sc">$</span>traj[L<span class="sc">+</span><span class="dv">1</span>,<span class="dv">1</span>] , Q<span class="sc">$</span>traj[L<span class="sc">+</span><span class="dv">1</span>,<span class="dv">2</span>] , i , <span class="at">cex=</span><span class="fl">0.8</span> , <span class="at">pos=</span><span class="dv">4</span> , <span class="at">offset=</span><span class="fl">0.4</span> )</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">points</span>( Q<span class="sc">$</span>traj[L<span class="sc">+</span><span class="dv">1</span>,<span class="dv">1</span>] , Q<span class="sc">$</span>traj[L<span class="sc">+</span><span class="dv">1</span>,<span class="dv">2</span>] , <span class="at">pch=</span><span class="fu">ifelse</span>( Q<span class="sc">$</span>accept<span class="sc">==</span><span class="dv">1</span> , <span class="dv">16</span> , <span class="dv">1</span> ) ,</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>          <span class="at">col=</span><span class="fu">ifelse</span>( <span class="fu">abs</span>(Q<span class="sc">$</span>dH)<span class="sc">&gt;</span><span class="fl">0.1</span> , <span class="st">"red"</span> , <span class="st">"black"</span> ) )</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/9.7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Function <code>HMC2</code> is built into <code>rethinking</code> package.</p>
+</section>
+<section id="limitations-hmc" class="level3">
+<h3 class="anchored" data-anchor-id="limitations-hmc">Limitations HMC</h3>
+<ul>
+<li><p>HMC requires continuous parameters, can’t glide through discrete parameters</p>
+<ul>
+<li>Imputation of discrete missing data has to be done differently with HMC</li>
+</ul></li>
+<li><p>HMC will encounter divergent transition for some difficult posterior distributions</p></li>
+</ul>
+</section>
+</section>
+<section id="easy-hmc-ulam" class="level2">
+<h2 class="anchored" data-anchor-id="easy-hmc-ulam">Easy HMC: <code>ulam</code></h2>
+<p>rethinking package - ulam function to compile lists of formulas (like with <code>quap</code>) into Stan HMC code</p>
+<p>Housekeeping: preprocess any variable transformations, and construct a clean data list with only variables you will use.</p>
+<p>Use same helper functions: <code>extract.samples</code>, <code>extract.prior</code>, <code>link</code>, <code>sim</code>, etc.</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Revisit the Ruggedness Example (<a href="../ch07-entropy-model-comparison/SR_Ch7_notes.html">Chapter 7</a>)</strong></p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rethinking)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(rugged)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> rugged</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>d<span class="sc">$</span>log_gdp <span class="ot">&lt;-</span> <span class="fu">log</span>(d<span class="sc">$</span>rgdppc_2000)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> d[<span class="fu">complete.cases</span>(d<span class="sc">$</span>rgdppc_2000),] <span class="co"># reduce data to cases with outcome variable of interest</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>log_gdp_std <span class="ot">&lt;-</span> dd<span class="sc">$</span>log_gdp <span class="sc">/</span> <span class="fu">mean</span>(dd<span class="sc">$</span>log_gdp)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>rugged_std <span class="ot">&lt;-</span> dd<span class="sc">$</span>rugged <span class="sc">/</span> <span class="fu">max</span>(dd<span class="sc">$</span>rugged)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>dd<span class="sc">$</span>cid <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(dd<span class="sc">$</span>cont_africa<span class="sc">==</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Old interaction model with <code>quap</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>m8<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">quap</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    log_gdp_std <span class="sc">~</span> <span class="fu">dnorm</span>( mu , sigma ) ,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a[cid] <span class="sc">+</span> b[cid]<span class="sc">*</span>( rugged_std <span class="sc">-</span> <span class="fl">0.215</span> ) ,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    a[cid] <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">1</span> , <span class="fl">0.1</span> ) ,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    b[cid] <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="fl">0.3</span> ) ,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>( <span class="dv">1</span> )</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ) , <span class="at">data=</span>dd )</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>( m8<span class="fl">.3</span> , <span class="at">depth=</span><span class="dv">2</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            mean          sd        5.5%       94.5%
+a[1]   0.8865640 0.015674552  0.86151302  0.91161495
+a[2]   1.0505666 0.009935872  1.03468714  1.06644602
+b[1]   0.1324981 0.074199237  0.01391344  0.25108286
+b[2]  -0.1426057 0.054745410 -0.23009945 -0.05511197
+sigma  0.1094859 0.005934188  0.10000194  0.11896990</code></pre>
+</div>
+</div>
+<section id="preparation" class="level3">
+<h3 class="anchored" data-anchor-id="preparation">Preparation</h3>
+<p>Fit model using HMC, no more quadratic approximation: if the posterior distribution is non-Gaussian, we’ll get whatever non-Gaussian shape it has.</p>
+<p>Can use the same formula list, but do two additional things</p>
+<blockquote class="blockquote">
+<ol type="1">
+<li><strong>Preprocess all variable transformations</strong>. If the outcome is transformed somehow, like by taking the logarithm, then do this before fitting the model by constructing a new var in the data frame. Likewise, if any predictor variables are transforms (e.g., including squaring and cubing to build polynomial models), then compute these transformed values before fitting the model.
+<ul>
+<li>If not → wastes computing power</li>
+</ul></li>
+<li><strong>Make new trimmed down data frame that contains only variables of interest.</strong> Not strict requirement, but helps avoid problems.</li>
+</ol>
+</blockquote>
+<p>We already pre-transformed variables. Now, need a slim list of the vars to be used:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use list rather than data.frame (elements in list can be any length)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>dat_slim <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_gdp_std =</span> dd<span class="sc">$</span>log_gdp_std,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">rugged_std =</span> dd<span class="sc">$</span>rugged_std,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">cid =</span> <span class="fu">as.integer</span>(dd<span class="sc">$</span>cid)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat_slim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 3
+ $ log_gdp_std: num [1:170] 0.88 0.965 1.166 1.104 0.915 ...
+ $ rugged_std : num [1:170] 0.138 0.553 0.124 0.125 0.433 ...
+ $ cid        : int [1:170] 1 2 2 2 2 2 2 2 2 1 ...</code></pre>
+</div>
+</div>
+</section>
+<section id="sampling-from-posterior" class="level3">
+<h3 class="anchored" data-anchor-id="sampling-from-posterior">Sampling from posterior</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>m9<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    log_gdp_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a[cid] <span class="sc">+</span> b[cid] <span class="sc">*</span> (rugged_std <span class="sc">-</span> <span class="fl">0.215</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    a[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span>,<span class="fl">0.1</span>),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    b[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.3</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>dat_slim, <span class="at">chains=</span><span class="dv">1</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 1 chain, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 Exception: normal_lpdf: Scale parameter is 0, but must be positive! (in '/var/folders/ps/vyzw7nlj3pq0nhzg43cd1cjc0000gn/T/RtmpeffG1a/model-10b964d31e42d.stan', line 19, column 4 to column 39)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 1 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 1 finished in 0.0 seconds.</code></pre>
+</div>
+</div>
+<ul>
+<li><p>Underneath the <code>ulam</code> hood: translates the formula list into a Stan model, and then Stan defines the sampler and does the hard part</p></li>
+<li><p>After messages about compiling, sampling, <code>ulam</code> returns an object that contains summary info and samples from the posterior distribution</p></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m9<span class="fl">.1</span>, <span class="at">depth=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            mean          sd        5.5%       94.5%      rhat ess_bulk
+a[1]   0.8866340 0.016468587  0.86139787  0.91486312 1.0002930 756.0330
+a[2]   1.0506553 0.009640634  1.03546273  1.06587318 1.0031907 553.8664
+b[1]   0.1325226 0.077242188  0.01489931  0.25487263 0.9998140 464.5399
+b[2]  -0.1418860 0.054981882 -0.23247181 -0.05137775 1.0098120 533.2321
+sigma  0.1118482 0.006444116  0.10194717  0.12232719 0.9983509 526.6919</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>n_eff vs ess_bulk
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note: <code>n_eff</code> has been deprecated and replaced by <code>ess_bulk</code>. <code>n_eff</code> calculated the Effective Sample Size (ESS) in MCMC (crude number of independent samples it managed to get). <code>ess_bulk</code> measures sampling efficiency specifically at the center/bulk of a distribution (rank-normalized)</p>
+</div>
+</div>
+<p><code>Rhat</code> is complicated estimate of the convergence of the Markov chains to the target distribution. Should approach 1.00 from above, when all is well.</p>
+</section>
+<section id="sampling-again-in-parallel" class="level3">
+<h3 class="anchored" data-anchor-id="sampling-again-in-parallel">Sampling again, in parallel</h3>
+<p>Since this is an easy problem, 1000 samples is enough for accurate inference. (In fact, as few as 200 is effective for good posterior approx). But want to run multiple chains for other reasons (next section).</p>
+<p>Run four independent Markov chains and distribute them across separate cores in your computer → <code>chains=</code> and <code>cores=</code> argument</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>m9<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    log_gdp_std <span class="sc">~</span> <span class="fu">dnorm</span>(mu, sigma),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a[cid] <span class="sc">+</span> b[cid] <span class="sc">*</span> (rugged_std <span class="sc">-</span> <span class="fl">0.215</span>),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    a[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span>,<span class="fl">0.1</span>),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    b[cid] <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>,<span class="fl">0.3</span>),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  ), <span class="at">data=</span>dat_slim, <span class="at">chains=</span><span class="dv">4</span>, <span class="at">cores=</span><span class="dv">4</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show() reminds you of model formula and how long each chain ran for:</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(m9<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hamiltonian Monte Carlo approximation
+2000 samples from 4 chains
+
+Sampling durations (seconds):
+  chain_id warmup sampling total
+1        1   0.02     0.01  0.03
+2        2   0.02     0.01  0.03
+3        3   0.01     0.01  0.03
+4        4   0.01     0.01  0.03
+
+Formula:
+log_gdp_std ~ dnorm(mu, sigma)
+mu &lt;- a[cid] + b[cid] * (rugged_std - 0.215)
+a[cid] ~ dnorm(1, 0.1)
+b[cid] ~ dnorm(0, 0.3)
+sigma ~ dexp(1)</code></pre>
+</div>
+</div>
+<p>There were 2000 samples from all four chains because each 1000 sample chain uses by default the first half of the samples to adapt.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m9<span class="fl">.1</span>,<span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            mean         sd        5.5%       94.5%     rhat ess_bulk
+a[1]   0.8863253 0.01586873  0.86027900  0.91192704 1.005838 2401.879
+a[2]   1.0503469 0.01054348  1.03350049  1.06746869 1.001264 2888.507
+b[1]   0.1325217 0.07744245  0.01117379  0.25708510 1.001309 2162.936
+b[2]  -0.1410281 0.05651196 -0.22990011 -0.04959232 1.001889 2380.297
+sigma  0.1116768 0.00618057  0.10237178  0.12217610 1.000035 2232.189</code></pre>
+</div>
+</div>
+<p>Look at the Effective Sample Size summary (<code>ess_bulk</code>): Something curious happens.</p>
+<blockquote class="blockquote">
+<p>If there were only 2000 samples in total, how we can have more than 2000 effective samples for each parameter? It’s no mistake. The adaptive sampler that Stan uses is so good, it can actually produce sequential samples that are better than uncorrelated. They are anti-correlated. This means it can explore the posterior distribution so efficiently that it can beat random. It’s Jaynes’ rule in action.</p>
+</blockquote>
+</section>
+<section id="visualization" class="level3">
+<h3 class="anchored" data-anchor-id="visualization">Visualization</h3>
+<p>By plotting the samples, you can see how Gaussian (quadratic) the actual posterior density turned out to be:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(m9<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in par(usr): argument 1 does not name a graphical parameter
+Warning in par(usr): argument 1 does not name a graphical parameter
+Warning in par(usr): argument 1 does not name a graphical parameter
+Warning in par(usr): argument 1 does not name a graphical parameter
+Warning in par(usr): argument 1 does not name a graphical parameter</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/9.19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Still a matrix of bivariate scatter plots, but we also see along the diagonal, the smoothed histogram of each parameter (with the name of parameter). Lower left triangle of matrix → correlation between each pair of parameters shown</li>
+</ul>
+<p>For this model+data → posterior distribution is quite nearly multivariate Gaussian. Density for <code>sigma</code> is skewed in the expected direction for Gaussian as well. (Simple model structure with Gaussian priors - no surprises here)</p>
+</section>
+<section id="checking-the-mcmc" class="level3">
+<h3 class="anchored" data-anchor-id="checking-the-mcmc">Checking the MCMC</h3>
+<section id="trace-plot" class="level4">
+<h4 class="anchored" data-anchor-id="trace-plot">Trace Plot</h4>
+<p>Plots the samples in sequential order joined by a line. Best thing for diagnosing common problems in HMC (often the first check one does).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">traceplot</span>(m9<span class="fl">.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>Think of the zig-zag trace of each parameter as the path the chain took through each dimension of the parameter space.</p></li>
+<li><p>Grey region in plots = <em>adaptation</em> samples (500 here)</p>
+<ul>
+<li>MC is learning to more efficiently sample from the posterior distribution (thus, not reliable for inference and automatically discarded by <code>extract.samples</code> which returns only the samples shown in the white regions)</li>
+</ul></li>
+</ul>
+<p><strong>How to Diagnose Healthy Trace Plot</strong></p>
+<ol type="1">
+<li><u>Stationarity</u>: the path of each chain staying within the same high-prob portion of the posterior distribution (all stick around stable central tendency, center of gravity of each dimension of posterior)
+<ul>
+<li>mean value of the chain is stable from beginning to end</li>
+</ul></li>
+<li><u>Good Mixing</u>: the chain rapidly explores the full region. Doesn’t slowly wander but rapidly zig-zags around</li>
+<li><u>Convergence</u>: multiple independent chains stick around the same region of high probability</li>
+</ol>
+</section>
+<section id="trace-rank-plot" class="level4">
+<h4 class="anchored" data-anchor-id="trace-rank-plot">Trace Rank Plot</h4>
+<p>Markov chain visualization that plots the distribution of all the samples for each individual parameter and ranks them (lowest sample gets Rank 1; largest sample gets max rank=No.&nbsp;samples across all chains).</p>
+<p>Draws histogram of these ranks for each individual chain. If chains are exploring the same space efficiently, the histograms should be similar to each other and relatively uniform.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trankplot</span>(m9<span class="fl">.1</span>, <span class="at">n_cols =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>Horizontal axis = rank, from 1 to # of samples across all chains (2000 here)</p></li>
+<li><p>Vertical axis = frequency of ranks in each bin of the histogram</p></li>
+</ul>
+<p>Look for: histograms that overlap and stay within the same range.</p>
+</section>
+</section>
+</section>
+<section id="preparing-and-troubleshooting-markov-chains" class="level2">
+<h2 class="anchored" data-anchor-id="preparing-and-troubleshooting-markov-chains">Preparing and Troubleshooting Markov Chains</h2>
+<section id="how-many-samples-do-you-need" class="level3">
+<h3 class="anchored" data-anchor-id="how-many-samples-do-you-need">How many samples do you need?</h3>
+<p>Parameters <code>iter</code> and <code>warmup</code>: defaults are 1000 for iter and warmup = <code>iter/2</code> (500 warmup samples, 500 real samples)</p>
+<p><strong>How many samples do we need for accurate inference about the posterior distribu- tion?</strong></p>
+<p>Effective number of samples (not raw number) is important</p>
+<ul>
+<li><p>estimate of the number of independent samples from the posterior distribution. Markov chains are typically autocorrelated, so that sequential samples are not entirely independent. This reduces the effective number of samples.</p></li>
+<li><p><code>n_eff</code> usually better than raw number of samples</p></li>
+</ul>
+<p><strong>What do you want to know?</strong></p>
+<ul>
+<li><p>If you’re only interested in the means of the posterior → then a couple hundred samples</p>
+<ul>
+<li>In most typical regression applications, you can get a very good estimate of the posterior mean with as few as 200 effective samples. And if the posterior is approximately Gaussian, then all you need in addition is a good estimate of the variance, which can be had with one order of magnitude more, in most cases.</li>
+</ul></li>
+<li><p>If you’re interested in exact shape in the extreme tails of the posterior, the 99th percentile, etc. → need many more</p></li>
+</ul>
+<p>For highly skewed posteriors, you’ll have to think more about which region of the distribution interests you. Stan will sometimes warn you about “tail ESS,” which means the effective sample size in the tails of the posterior. In those cases, it is nervous about the quality of extreme intervals, like 95%. Sampling more usually helps</p>
+<p><strong>How about warmup samples?</strong></p>
+<p>You want to have the shortest warmup possible, though more warmup can mean more efficient sampling. Varies by model.</p>
+<p>If trouble arises, try increasing the warmup period. If not, try reducing it.</p>
+</section>
+<section id="how-many-chains-do-you-need" class="level3">
+<h3 class="anchored" data-anchor-id="how-many-chains-do-you-need">How many chains do you need?</h3>
+<p><code>chains=</code> arument to specify number of independent MCs to sample from.</p>
+<p><code>cores=</code> (optional) distributed the chains across diff processors (run in parallel)</p>
+<p>Three answers:</p>
+<ol type="1">
+<li>When initially debugging your model, use <strong>one chain</strong>. Some error messages don’t show up unless using <code>chain=1</code> (default)</li>
+<li>When deciding whether the chains are valid, need more than one chain</li>
+<li>When beginning the final run that you’ll make inferences from, only need one chain</li>
+</ol>
+<p>General Motto (that may not apply always):</p>
+<blockquote class="blockquote">
+<p>One short chain to debug, four chains for verification and inference.</p>
+</blockquote>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Convergence diagnostics
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When <code>Rhat</code> is above 1.00 → chain has not yet converged (don’t trust samples). If you draw more samples, it could be fine or never converge. BUT, <code>Rhat</code> can reach 1.00 even for invalid chains. View as signal of danger, never of safety.</p>
+</div>
+</div>
+</section>
+<section id="taming-a-wild-chain" class="level3">
+<h3 class="anchored" data-anchor-id="taming-a-wild-chain">Taming a Wild Chain</h3>
+<p>Using flat priors → generates wild, wandering MC that erratically samples extremely positive and negative parameter values.</p>
+<p>Simple Example: estimate mean and SD of two Gaussian observations, -1 and 1. Uses totally flat priors:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>m9<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> <span class="fu">dnorm</span>( mu , sigma ) ,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> alpha ,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    alpha <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">1000</span> ) ,</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>( <span class="fl">0.0001</span> )</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  ) , <span class="at">data=</span><span class="fu">list</span>(<span class="at">y=</span>y) , <span class="at">chains=</span><span class="dv">3</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 3 sequential chains, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 1 finished in 0.0 seconds.
+Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 2 finished in 0.0 seconds.
+Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 3 finished in 0.0 seconds.
+
+All 3 chains finished successfully.
+Mean chain execution time: 0.0 seconds.
+Total execution time: 0.4 seconds.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: 60 of 1500 (4.0%) transitions ended with a divergence.
+See https://mc-stan.org/misc/warnings for details.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m9<span class="fl">.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             mean       sd        5.5%     94.5%     rhat  ess_bulk
+alpha  -0.9499028 297.2134 -418.678096  378.0868 1.137057 120.89026
+sigma 403.1488376 998.1059    2.479432 1789.8791 1.145928  15.08872</code></pre>
+</div>
+</div>
+<ul>
+<li><p>Can’t be right: the mean of -1 and 1 is 0, hope to get mean <span class="math inline">\(\alpha\)</span> value of 0.</p></li>
+<li><p>n_eff and Rhat diagnostics don’t look great either</p>
+<ul>
+<li>Took 1500 samples, but ess_bulk between 15-120.</li>
+</ul></li>
+</ul>
+<p>Warning messages</p>
+<p><code>Warning: 60 of 1500 (4.0%) transitions ended with a divergence. See https://mc-stan.org/misc/warnings for details.</code></p>
+<ul>
+<li><p>Stan detected problems in exploring all of the posterior → <strong>divergent transitions</strong></p>
+<ul>
+<li>These warnings are helpful - arise when the numerical simulation that HMC uses is inaccurate</li>
+</ul></li>
+<li><p>Fix for simple models: increasing the <code>adapt_delta</code> control parameter will usually remove the divergent transitions</p>
+<ul>
+<li>try adding <code>control=list(adapt_delta=0.99)</code> to <code>ulam</code> call (default=0.95) - but doesn’t help in this case</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">traceplot</span>(m9<span class="fl">.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Markov chains seem to drift around and spike occasionally at high values - not healthy</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trankplot</span>(m9<span class="fl">.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Rank histograms spend long periods with one chain above or below the others → poor exploration of the posterior</li>
+</ul>
+<p>Problems: very little data, just 2 observations, and flat priors.</p>
+<ul>
+<li>The flat priors say that every possible value of the parameter is equally plausible, a priori. For parameters that can take a potentially infinite number of values, like <code>alpha</code>, this means the Markov chain needs to occasionally sample some pretty extreme and implausible values, like negative 30 million.</li>
+</ul>
+<p>Taming Solution: use weakly informative priors.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>m9<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> <span class="fu">dnorm</span>(mu,sigma) ,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> alpha ,</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    alpha <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">1</span>,<span class="dv">10</span>) ,</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>(<span class="dv">1</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  ) , <span class="at">data=</span><span class="fu">list</span>(<span class="at">y=</span>y) , <span class="at">chains=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 3 sequential chains, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 1 finished in 0.0 seconds.
+Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 2 finished in 0.0 seconds.
+Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 3 finished in 0.0 seconds.
+
+All 3 chains finished successfully.
+Mean chain execution time: 0.0 seconds.
+Total execution time: 0.4 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>(m9<span class="fl">.3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           mean        sd       5.5%    94.5%     rhat ess_bulk
+alpha 0.1134635 1.2621916 -1.8247023 2.102905 1.008076 404.7578
+sigma 1.6212536 0.9012552  0.6695593 3.312882 1.009462 336.0080</code></pre>
+</div>
+</div>
+<p>Much better.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">traceplot</span>(m9<span class="fl">.3</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">trankplot</span>(m9<span class="fl">.3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="non-identifiable-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="non-identifiable-parameters">Non-identifiable Parameters</h3>
+<p>Collinearity (highly correlated predictors) can create <strong>non-identifiable parameters</strong> (<a href="../ch05-multivariate-regression/SR_Ch05_notes.html">Chapter 5</a>)</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate 100 observations from a Gaussian distribution with mean zero and SD 1</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">41</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>,<span class="at">mean=</span><span class="dv">0</span>,<span class="at">sd=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">384</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>m9<span class="fl">.4</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> <span class="fu">dnorm</span>( mu , sigma ) ,</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a1 <span class="sc">+</span> a2 ,</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    a1 <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">1000</span> ),</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    a2 <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">1000</span> ),</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>( <span class="dv">1</span> )</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  ) , <span class="at">data=</span><span class="fu">list</span>(<span class="at">y=</span>y) , <span class="at">chains=</span><span class="dv">3</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 3 sequential chains, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 1 finished in 0.6 seconds.
+Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 2 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 2 Exception: normal_lpdf: Scale parameter is 0, but must be positive! (in '/var/folders/ps/vyzw7nlj3pq0nhzg43cd1cjc0000gn/T/RtmpeffG1a/model-10b96758a8c4.stan', line 15, column 4 to column 29)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 2 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 2 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 2 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 2 finished in 0.6 seconds.
+Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 3 Informational Message: The current Metropolis proposal is about to be rejected because of the following issue:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 3 Exception: normal_lpdf: Scale parameter is 0, but must be positive! (in '/var/folders/ps/vyzw7nlj3pq0nhzg43cd1cjc0000gn/T/RtmpeffG1a/model-10b96758a8c4.stan', line 15, column 4 to column 29)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 3 If this warning occurs sporadically, such as for highly constrained variable types like covariance matrices, then the sampler is fine,</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 3 but if this warning occurs often then your model may be either severely ill-conditioned or misspecified.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Chain 3 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 3 finished in 0.6 seconds.
+
+All 3 chains finished successfully.
+Mean chain execution time: 0.6 seconds.
+Total execution time: 1.9 seconds.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: 1197 of 1500 (80.0%) transitions hit the maximum treedepth limit of 10.
+See https://mc-stan.org/misc/warnings for details.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>( m9<span class="fl">.4</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             mean           sd         5.5%      94.5%     rhat  ess_bulk
+a1    -350.121054 361.22373611 -961.8128118  98.378998 2.055934  4.060437
+a2     350.311866 361.22069414  -98.2170453 962.066154 2.055908  4.060530
+sigma    1.054776   0.05974911    0.9587145   1.150752 1.236687 10.740867</code></pre>
+</div>
+</div>
+<ul>
+<li><p>The means for <code>a1</code> and <code>a2</code> are about the same distance from 0, but on opposite sides; SDs are massive</p>
+<ul>
+<li>cannot simultaneously estimate a1 and a2 - only can estimate their sum</li>
+</ul></li>
+<li><p>ess_bulk and Rhat values are terrible</p></li>
+</ul>
+<p><code>Warning: 1197 of 1500 (80.0%) transitions hit the maximum treedepth limit of 10. See https://mc-stan.org/misc/warnings for details.</code></p>
+<ul>
+<li>Chains are inefficient because some internal limit was reached.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">traceplot</span>(m9<span class="fl">.4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">trankplot</span>(m9<span class="fl">.4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="SR_Ch9_notes_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Solution, use weakly informative priors</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>m9<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">ulam</span>(</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">alist</span>(</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>    y <span class="sc">~</span> <span class="fu">dnorm</span>( mu , sigma ) ,</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">&lt;-</span> a1 <span class="sc">+</span> a2 ,</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>    a1 <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">10</span> ),</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>    a2 <span class="sc">~</span> <span class="fu">dnorm</span>( <span class="dv">0</span> , <span class="dv">10</span> ),</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>    sigma <span class="sc">~</span> <span class="fu">dexp</span>( <span class="dv">1</span> )</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>  ) , <span class="at">data=</span><span class="fu">list</span>(<span class="at">y=</span>y) , <span class="at">chains=</span><span class="dv">3</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running MCMC with 3 sequential chains, with 1 thread(s) per chain...
+
+Chain 1 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 1 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 1 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 1 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 1 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 1 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 1 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 1 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 1 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 1 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 1 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 1 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 1 finished in 0.2 seconds.
+Chain 2 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 2 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 2 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 2 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 2 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 2 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 2 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 2 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 2 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 2 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 2 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 2 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 2 finished in 0.2 seconds.
+Chain 3 Iteration:   1 / 1000 [  0%]  (Warmup) 
+Chain 3 Iteration: 100 / 1000 [ 10%]  (Warmup) 
+Chain 3 Iteration: 200 / 1000 [ 20%]  (Warmup) 
+Chain 3 Iteration: 300 / 1000 [ 30%]  (Warmup) 
+Chain 3 Iteration: 400 / 1000 [ 40%]  (Warmup) 
+Chain 3 Iteration: 500 / 1000 [ 50%]  (Warmup) 
+Chain 3 Iteration: 501 / 1000 [ 50%]  (Sampling) 
+Chain 3 Iteration: 600 / 1000 [ 60%]  (Sampling) 
+Chain 3 Iteration: 700 / 1000 [ 70%]  (Sampling) 
+Chain 3 Iteration: 800 / 1000 [ 80%]  (Sampling) 
+Chain 3 Iteration: 900 / 1000 [ 90%]  (Sampling) 
+Chain 3 Iteration: 1000 / 1000 [100%]  (Sampling) 
+Chain 3 finished in 0.2 seconds.
+
+All 3 chains finished successfully.
+Mean chain execution time: 0.2 seconds.
+Total execution time: 0.8 seconds.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">precis</span>( m9<span class="fl">.5</span> )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            mean         sd        5.5%     94.5%     rhat ess_bulk
+a1    -0.1416244 6.70720732 -11.5931919  9.906164 1.008183 417.2671
+a2     0.3356675 6.70954989  -9.7347508 11.831068 1.008117 418.1378
+sigma  1.0376377 0.07338983   0.9260105  1.158038 1.006245 545.5782</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>In the end, adding some weakly informative priors saves this model. You might think you’d never accidentally try to fit an unidentified model. But you’d be wrong. Even if you don’t make obvious mistakes, complex models can easily become unidentified or nearly so. With many predictors, and especially with interactions, correlations among parameters can be large. Just a little prior information telling the model “none of these parameters can be 30 million” often helps, and it has no effect on estimates. A flat prior really is flat, all the way to infinity. Unless you believe infinity is a reasonable estimate, don’t use a flat prior. (p.302)</p>
+</blockquote>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
